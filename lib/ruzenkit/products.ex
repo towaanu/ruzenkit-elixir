@@ -210,4 +210,5 @@ defmodule Ruzenkit.Products do
     |> Ecto.Changeset.put_assoc(:configurable_options, [configurable_option])
     |> Repo.update()
   end
+
 end
