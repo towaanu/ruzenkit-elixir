@@ -1,5 +1,6 @@
 defmodule RuzenkitWeb.Graphql.ProductsResolver do
   alias Ruzenkit.Products
+  import Ruzenkit.Utils.Graphql, only: [changeset_error_to_graphql: 2]
 
   def list_products(_root, _args, _info) do
     products = Products.list_products()
@@ -11,8 +12,8 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
       {:ok, product} ->
         {:ok, product}
 
-      _error ->
-        {:error, "could not create product"}
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to create new product", error)}
     end
   end
 
@@ -36,8 +37,9 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
       {:ok, configurable_option} ->
         {:ok, configurable_option}
 
-      _error ->
-        {:error, "could not create configurable option"}
+      error ->
+        {:error, changeset_error_to_graphql("could not create configurable option", error)}
+        # {:error, "could not create configurable option"}
     end
   end
 
@@ -50,9 +52,12 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
       {:ok, product} ->
         {:ok, product}
 
-      _error ->
+      error ->
         {:error,
-         "could not link product #{product_id} with configurable option #{configurable_option_id}"}
+         changeset_error_to_graphql(
+           "could not link product #{product_id} with configurable option #{configurable_option_id}",
+           error
+         )}
     end
   end
 end
