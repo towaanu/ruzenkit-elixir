@@ -124,4 +124,61 @@ defmodule Ruzenkit.ProductsTest do
       assert %Ecto.Changeset{} = Products.change_configurable_option(configurable_option)
     end
   end
+
+  describe "configurable_products" do
+    alias Ruzenkit.Products.ConfigurableProduct
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def configurable_product_fixture(attrs \\ %{}) do
+      {:ok, configurable_product} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Products.create_configurable_product()
+
+      configurable_product
+    end
+
+    test "list_configurable_products/0 returns all configurable_products" do
+      configurable_product = configurable_product_fixture()
+      assert Products.list_configurable_products() == [configurable_product]
+    end
+
+    test "get_configurable_product!/1 returns the configurable_product with given id" do
+      configurable_product = configurable_product_fixture()
+      assert Products.get_configurable_product!(configurable_product.id) == configurable_product
+    end
+
+    test "create_configurable_product/1 with valid data creates a configurable_product" do
+      assert {:ok, %ConfigurableProduct{} = configurable_product} = Products.create_configurable_product(@valid_attrs)
+    end
+
+    test "create_configurable_product/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Products.create_configurable_product(@invalid_attrs)
+    end
+
+    test "update_configurable_product/2 with valid data updates the configurable_product" do
+      configurable_product = configurable_product_fixture()
+      assert {:ok, %ConfigurableProduct{} = configurable_product} = Products.update_configurable_product(configurable_product, @update_attrs)
+    end
+
+    test "update_configurable_product/2 with invalid data returns error changeset" do
+      configurable_product = configurable_product_fixture()
+      assert {:error, %Ecto.Changeset{}} = Products.update_configurable_product(configurable_product, @invalid_attrs)
+      assert configurable_product == Products.get_configurable_product!(configurable_product.id)
+    end
+
+    test "delete_configurable_product/1 deletes the configurable_product" do
+      configurable_product = configurable_product_fixture()
+      assert {:ok, %ConfigurableProduct{}} = Products.delete_configurable_product(configurable_product)
+      assert_raise Ecto.NoResultsError, fn -> Products.get_configurable_product!(configurable_product.id) end
+    end
+
+    test "change_configurable_product/1 returns a configurable_product changeset" do
+      configurable_product = configurable_product_fixture()
+      assert %Ecto.Changeset{} = Products.change_configurable_product(configurable_product)
+    end
+  end
 end

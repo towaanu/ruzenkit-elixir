@@ -211,4 +211,100 @@ defmodule Ruzenkit.Products do
     |> Repo.update()
   end
 
+
+  alias Ruzenkit.Products.ConfigurableProduct
+
+  @doc """
+  Returns the list of configurable_products.
+
+  ## Examples
+
+      iex> list_configurable_products()
+      [%ConfigurableProduct{}, ...]
+
+  """
+  def list_configurable_products do
+    Repo.all(ConfigurableProduct)
+  end
+
+  @doc """
+  Gets a single configurable_product.
+
+  Raises `Ecto.NoResultsError` if the Configurable product does not exist.
+
+  ## Examples
+
+      iex> get_configurable_product!(123)
+      %ConfigurableProduct{}
+
+      iex> get_configurable_product!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_configurable_product!(id), do: Repo.get!(ConfigurableProduct, id)
+
+  @doc """
+  Creates a configurable_product.
+
+  ## Examples
+
+      iex> create_configurable_product(%{field: value})
+      {:ok, %ConfigurableProduct{}}
+
+      iex> create_configurable_product(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_configurable_product(attrs \\ %{}) do
+    %ConfigurableProduct{}
+    |> ConfigurableProduct.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a configurable_product.
+
+  ## Examples
+
+      iex> update_configurable_product(configurable_product, %{field: new_value})
+      {:ok, %ConfigurableProduct{}}
+
+      iex> update_configurable_product(configurable_product, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_configurable_product(%ConfigurableProduct{} = configurable_product, attrs) do
+    configurable_product
+    |> ConfigurableProduct.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a ConfigurableProduct.
+
+  ## Examples
+
+      iex> delete_configurable_product(configurable_product)
+      {:ok, %ConfigurableProduct{}}
+
+      iex> delete_configurable_product(configurable_product)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_configurable_product(%ConfigurableProduct{} = configurable_product) do
+    Repo.delete(configurable_product)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking configurable_product changes.
+
+  ## Examples
+
+      iex> change_configurable_product(configurable_product)
+      %Ecto.Changeset{source: %ConfigurableProduct{}}
+
+  """
+  def change_configurable_product(%ConfigurableProduct{} = configurable_product) do
+    ConfigurableProduct.changeset(configurable_product, %{})
+  end
 end

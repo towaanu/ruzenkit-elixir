@@ -41,12 +41,18 @@ defmodule RuzenkitWeb.Graphql.Schema do
   mutation do
 
     field :create_product, :product do
-      arg :sku, non_null(:string)
-      arg :name, non_null(:string)
-      arg :description, :string
+      arg :product, non_null(:product_input)
 
       resolve &ProductsResolver.create_product/3
     end
+
+    # field :create_product, :product do
+    #   arg :sku, non_null(:string)
+    #   arg :name, non_null(:string)
+    #   arg :description, :string
+
+    #   resolve &ProductsResolver.create_product/3
+    # end
 
     field :create_configurable_option, :configurable_option do
       arg :label, non_null(:string)

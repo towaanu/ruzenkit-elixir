@@ -8,6 +8,8 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
+    field :parent_product, :product, resolve: dataloader(:db)
+    field :child_products, list_of(:product), resolve: dataloader(:db)
     field :configurable_options, list_of(:configurable_option), resolve: dataloader(:db)
   end
 
@@ -15,6 +17,13 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :id, non_null(:id)
     field :label, non_null(:string)
     field :products, list_of(:product), resolve: dataloader(:db)
+  end
+
+  input_object :product_input do
+    field :sku, non_null(:string)
+    field :name, non_null(:string)
+    field :description, non_null(:string)
+    field :parent_product_id, :id
   end
 
 end
