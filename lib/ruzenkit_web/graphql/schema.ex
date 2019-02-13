@@ -46,14 +46,6 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &ProductsResolver.create_product/3
     end
 
-    # field :create_product, :product do
-    #   arg :sku, non_null(:string)
-    #   arg :name, non_null(:string)
-    #   arg :description, :string
-
-    #   resolve &ProductsResolver.create_product/3
-    # end
-
     field :create_configurable_option, :configurable_option do
       arg :label, non_null(:string)
 

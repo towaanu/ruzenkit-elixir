@@ -7,15 +7,6 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, products}
   end
 
-  # def create_product(_root, args, _info) do
-  #   case Products.create_product(args) do
-  #     {:ok, product} ->
-  #       {:ok, product}
-
-  #     {:error, error} ->
-  #       {:error, changeset_error_to_graphql("unable to create new product", error)}
-  #   end
-  # end
   def create_product(_root, %{product: product}, _info) do
     case Products.create_product(product) do
       {:ok, product} ->
