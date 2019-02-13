@@ -21,11 +21,11 @@ defmodule RuzenkitWeb.Router do
   end
 
   forward "/graphql", Absinthe.Plug,
-    schema: RuzenkitWeb.Schema,
+    schema: RuzenkitWeb.Graphql.Schema,
     json_codec: Jason
 
   forward "/graphiql", Absinthe.Plug.GraphiQL,
-    schema: RuzenkitWeb.Schema,
+    schema: RuzenkitWeb.Graphql.Schema,
     interface: :simple,
     json_codec: Jason
 
