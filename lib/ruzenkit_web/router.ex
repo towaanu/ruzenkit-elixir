@@ -18,6 +18,7 @@ defmodule RuzenkitWeb.Router do
 
     get "/", PageController, :index
     resources "/products", ProductController #, except: [:new, :edit]
+    resources "/configurable_options", ConfigurableOptionController
   end
 
   forward "/graphql", Absinthe.Plug,

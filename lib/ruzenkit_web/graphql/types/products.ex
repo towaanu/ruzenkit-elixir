@@ -8,4 +8,9 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :description, non_null(:string)
   end
 
+  object :configurable_option do
+    field :id, non_null(:id)
+    field :label, non_null(:string)
+  end
+
 end

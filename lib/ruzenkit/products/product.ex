@@ -2,11 +2,14 @@ defmodule Ruzenkit.Products.Product do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Ruzenkit.Products.ConfigurableOption
 
   schema "products" do
     field :description, :string
     field :name, :string
     field :sku, :string
+
+    many_to_many :configurable_options, ConfigurableOption, join_through: "products_configurable_options"
 
     timestamps()
   end
