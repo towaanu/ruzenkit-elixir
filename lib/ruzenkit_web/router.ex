@@ -20,6 +20,15 @@ defmodule RuzenkitWeb.Router do
     resources "/products", ProductController #, except: [:new, :edit]
   end
 
+  forward "/graphql", Absinthe.Plug,
+    schema: RuzenkitWeb.Schema,
+    json_codec: Jason
+
+  forward "/graphiql", Absinthe.Plug.GraphiQL,
+    schema: RuzenkitWeb.Schema,
+    interface: :simple,
+    json_codec: Jason
+
   # Other scopes may use custom stacks.
   # scope "/api", RuzenkitWeb do
   #   pipe_through :api
