@@ -35,4 +35,10 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
       {:error, _} -> {:error, "Failed to login"}
     end
   end
+
+  def me(_root, _args, %{context: %{current_user: current_user}}) do
+    {:ok, "Hello #{current_user.first_name} :D"}
+  end
+
+  def me(_root, _args, _info), do: {:ok, "I don't know you :("}
 end

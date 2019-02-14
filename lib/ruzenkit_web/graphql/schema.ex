@@ -48,6 +48,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AccountsResolver.get_user/3
     end
 
+    field :me, :string do
+      resolve &AccountsResolver.me/3
+    end
+
   end
 
   mutation do
