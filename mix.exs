@@ -45,6 +45,7 @@ defmodule Ruzenkit.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:absinthe_plug, "~> 1.4"},
       {:dataloader, "~> 1.0.0"},
+      {:bcrypt_elixir, "~> 2.0"},
     ]
   end
 
