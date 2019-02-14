@@ -1,5 +1,6 @@
 defmodule RuzenkitWeb.Graphql.ProductsResolver do
   alias Ruzenkit.Products
+  alias RuzenkitWeb.Graphql.ResponseUtils
   import Ruzenkit.Utils.Graphql, only: [changeset_error_to_graphql: 2]
 
   def list_products(_root, _args, _info) do
@@ -7,7 +8,7 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, products}
   end
 
-  def create_product(_root, %{product: product}, _info) do
+  def create_product(_root, %{product: product}, %{context: %{is_admin: true}}) do
     case Products.create_product(product) do
       {:ok, product} ->
         {:ok, product}
@@ -17,6 +18,7 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     end
   end
 
+  def create_product(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
   def get_product(_root, %{id: id}, _info) do
     case Products.get_product(id) do
@@ -33,7 +35,7 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, configurable_options}
   end
 
-  def create_configurable_option(_root, args, _info) do
+  def create_configurable_option(_root, args, %{context: %{is_admin: true}}) do
     case Products.create_configurable_option(args) do
       {:ok, configurable_option} ->
         {:ok, configurable_option}
@@ -44,21 +46,31 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     end
   end
 
-  def create_configurable_item_option(_root, %{configurable_item_option: configurable_item_option}, _info) do
+  def create_configurable_option(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
+
+  def create_configurable_item_option(
+        _root,
+        %{configurable_item_option: configurable_item_option},
+        %{context: %{is_admin: true}}
+      ) do
     case Products.create_configurable_item_option(configurable_item_option) do
       {:ok, configurable_item_option} ->
         {:ok, configurable_item_option}
 
       {:error, error} ->
-        {:error, changeset_error_to_graphql("unable to create new configurable item option", error)}
+        {:error,
+         changeset_error_to_graphql("unable to create new configurable item option", error)}
     end
   end
 
+  def create_configurable_item_option(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
 
   def link_product_configurable_options(
         _root,
         %{product_id: product_id, configurable_option_id: configurable_option_id},
-        _info
+        %{context: %{is_admin: true}}
       ) do
     case Products.link_product_configurable_options(product_id, configurable_option_id) do
       {:ok, product} ->
@@ -67,9 +79,14 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
       error ->
         {:error,
          changeset_error_to_graphql(
-           "could not link product #{product_id} with configurable option #{configurable_option_id}",
+           "could not link product #{product_id} with configurable option #{
+             configurable_option_id
+           }",
            error
          )}
     end
   end
+
+  def link_product_configurable_options(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
 end

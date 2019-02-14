@@ -1,11 +1,16 @@
 defmodule RuzenkitWeb.Graphql.AccountsResolver do
   alias Ruzenkit.Accounts
+  alias RuzenkitWeb.Graphql.ResponseUtils
   import Ruzenkit.Utils.Graphql, only: [changeset_error_to_graphql: 2]
 
-  def list_users(_root, _args, _info) do
+  # if admin return users list
+  def list_users(_root, _args, %{context: %{is_admin: true}}) do
     users = Accounts.list_users()
     {:ok, users}
   end
+
+  # if not admin return error message
+  def list_users(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
   def create_user(_root, %{user: user}, _info) do
     case Accounts.create_user(user) do
@@ -17,7 +22,7 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
     end
   end
 
-  def get_user(_root, %{id: id}, _info) do
+  def get_user(_root, %{id: id}, %{context: %{is_admin: true}}) do
     case Accounts.get_user(id) do
       nil ->
         {:error, "user with id #{id} not found"}
@@ -26,6 +31,8 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
         {:ok, user}
     end
   end
+
+  def get_user(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
   def login(_root, %{email: email, password: password}, _info) do
     with {:ok, user} <- Accounts.authenticate_user(email, password),

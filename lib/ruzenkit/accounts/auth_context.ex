@@ -18,11 +18,23 @@ defmodule Ruzenkit.Accounts.AuthContext do
   Return the current user context based on the authorization header
   """
   def build_context(conn) do
-    with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
-         {:ok, current_user} <- authorize(token) do
-      %{current_user: current_user, auth_token: token}
-    else
-      _ -> %{}
+    IO.puts("MIIIX #{Atom.to_string(Mix.env())}")
+    case Mix.env() do
+      :dev -> # in dev everyone is admin for simplicity
+        with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
+             {:ok, current_user} <- authorize(token) do
+          %{current_user: current_user, auth_token: token, is_admin: true}
+        else
+          _ -> %{is_admin: true}
+        end
+
+      :prod ->
+        with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
+             {:ok, current_user} <- authorize(token) do
+          %{current_user: current_user, auth_token: token, is_admin: current_user.is_admin}
+        else
+          _ -> %{}
+        end
     end
   end
 
