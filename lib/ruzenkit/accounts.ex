@@ -8,6 +8,7 @@ defmodule Ruzenkit.Accounts do
 
   alias Ruzenkit.Accounts.User
   alias Ruzenkit.Accounts.Credential
+  alias Ruzenkit.Accounts
 
   @doc """
   Returns the list of users.
@@ -220,4 +221,9 @@ defmodule Ruzenkit.Accounts do
         end
     end
   end
+
+  def revoke_auth_token(token) do
+    Accounts.Guardian.revoke(token)
+  end
+
 end

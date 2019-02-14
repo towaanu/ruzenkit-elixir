@@ -20,7 +20,7 @@ defmodule Ruzenkit.Accounts.AuthContext do
   def build_context(conn) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, current_user} <- authorize(token) do
-      %{current_user: current_user}
+      %{current_user: current_user, auth_token: token}
     else
       _ -> %{}
     end

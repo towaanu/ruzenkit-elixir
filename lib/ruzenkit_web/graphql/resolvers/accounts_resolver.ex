@@ -36,6 +36,16 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
     end
   end
 
+  def logout(_root, _args, %{context: %{auth_token: auth_token}}) do
+    case Accounts.revoke_auth_token(auth_token) do
+      {:ok, _claim} -> {:ok, true}
+      {:error, _error} -> {:error, "Unable to logout"}
+    end
+  end
+
+  # He is not logged in
+  def logout(_root, _args, _info), do: {:ok, true}
+
   def me(_root, _args, %{context: %{current_user: current_user}}) do
     {:ok, "Hello #{current_user.first_name} :D"}
   end

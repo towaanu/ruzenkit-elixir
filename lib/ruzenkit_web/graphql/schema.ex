@@ -95,6 +95,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AccountsResolver.login/3
     end
 
+    field :logout, :boolean do
+      resolve &AccountsResolver.logout/3
+    end
+
   end
 
 end
