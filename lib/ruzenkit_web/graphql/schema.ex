@@ -3,10 +3,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
   use Absinthe.Schema
 
   alias RuzenkitWeb.Graphql.ProductsResolver
+  alias RuzenkitWeb.Graphql.AccountsResolver
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
 
   import_types Types.Products
+  import_types Types.Accounts
 
   def context(ctx) do
     loader =
@@ -34,6 +36,16 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :configurable_options, list_of(:configurable_option) do
       resolve &ProductsResolver.list_configurable_options/3
+    end
+
+    field :users, list_of(:user) do
+      resolve &AccountsResolver.list_users/3
+    end
+
+    field :user, non_null(:user) do
+      arg :id, non_null(:id)
+
+      resolve &AccountsResolver.get_user/3
     end
 
   end
@@ -65,6 +77,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &ProductsResolver.link_product_configurable_options/3
 
     end
+
+    field :create_user, non_null(:user) do
+      arg :user, non_null(:user_input)
+
+      resolve &AccountsResolver.create_user/3
+    end
+
   end
 
 end
