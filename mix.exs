@@ -46,6 +46,7 @@ defmodule Ruzenkit.MixProject do
       {:absinthe_plug, "~> 1.4"},
       {:dataloader, "~> 1.0.0"},
       {:bcrypt_elixir, "~> 2.0"},
+      {:guardian, "~> 1.2.1"}
     ]
   end
 

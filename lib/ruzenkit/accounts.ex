@@ -9,7 +9,6 @@ defmodule Ruzenkit.Accounts do
   alias Ruzenkit.Accounts.User
   alias Ruzenkit.Accounts.Credential
 
-
   @doc """
   Returns the list of users.
 
@@ -106,7 +105,6 @@ defmodule Ruzenkit.Accounts do
     User.changeset(user, %{})
   end
 
-
   @doc """
   Returns the list of credentials.
 
@@ -199,5 +197,25 @@ defmodule Ruzenkit.Accounts do
   """
   def change_credential(%Credential{} = credential) do
     Credential.changeset(credential, %{})
+  end
+
+  def authenticate_user(email, password) do
+    query =
+      from u in User,
+        inner_join: c in assoc(u, :credential),
+        where: c.email == ^email,
+        preload: [:credential]
+
+    case Repo.one(query) do
+      nil ->
+        {:error, :invalid_credentials}
+
+      user ->
+        if Bcrypt.verify_pass(password, user.credential.password_hash) do
+          {:ok, user}
+        else
+          {:error, :invalid_credentials}
+        end
+    end
   end
 end

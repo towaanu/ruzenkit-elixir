@@ -25,6 +25,12 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :ruzenkit, Ruzenkit.Accounts.Guardian,
+  issuer: "ruzenkit",
+  secret_key: "hello",
+  ttl: {60, :seconds}
+  # secret_key: "VAx8SCRQM46MByemu6/xLePFefgS+3eJqv1N/g9dIy80WdhWSGkh8W086uycyPkq"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
