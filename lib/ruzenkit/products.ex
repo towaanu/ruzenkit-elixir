@@ -307,4 +307,100 @@ defmodule Ruzenkit.Products do
   def change_configurable_product(%ConfigurableProduct{} = configurable_product) do
     ConfigurableProduct.changeset(configurable_product, %{})
   end
+
+  alias Ruzenkit.Products.ConfigurableItemOption
+
+  @doc """
+  Returns the list of configurable_item_options.
+
+  ## Examples
+
+      iex> list_configurable_item_options()
+      [%ConfigurableItemOption{}, ...]
+
+  """
+  def list_configurable_item_options do
+    Repo.all(ConfigurableItemOption)
+  end
+
+  @doc """
+  Gets a single configurable_item_option.
+
+  Raises `Ecto.NoResultsError` if the Configurable item option does not exist.
+
+  ## Examples
+
+      iex> get_configurable_item_option!(123)
+      %ConfigurableItemOption{}
+
+      iex> get_configurable_item_option!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_configurable_item_option!(id), do: Repo.get!(ConfigurableItemOption, id)
+
+  @doc """
+  Creates a configurable_item_option.
+
+  ## Examples
+
+      iex> create_configurable_item_option(%{field: value})
+      {:ok, %ConfigurableItemOption{}}
+
+      iex> create_configurable_item_option(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_configurable_item_option(attrs \\ %{}) do
+    %ConfigurableItemOption{}
+    |> ConfigurableItemOption.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a configurable_item_option.
+
+  ## Examples
+
+      iex> update_configurable_item_option(configurable_item_option, %{field: new_value})
+      {:ok, %ConfigurableItemOption{}}
+
+      iex> update_configurable_item_option(configurable_item_option, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_configurable_item_option(%ConfigurableItemOption{} = configurable_item_option, attrs) do
+    configurable_item_option
+    |> ConfigurableItemOption.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a ConfigurableItemOption.
+
+  ## Examples
+
+      iex> delete_configurable_item_option(configurable_item_option)
+      {:ok, %ConfigurableItemOption{}}
+
+      iex> delete_configurable_item_option(configurable_item_option)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_configurable_item_option(%ConfigurableItemOption{} = configurable_item_option) do
+    Repo.delete(configurable_item_option)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking configurable_item_option changes.
+
+  ## Examples
+
+      iex> change_configurable_item_option(configurable_item_option)
+      %Ecto.Changeset{source: %ConfigurableItemOption{}}
+
+  """
+  def change_configurable_item_option(%ConfigurableItemOption{} = configurable_item_option) do
+    ConfigurableItemOption.changeset(configurable_item_option, %{})
+  end
 end

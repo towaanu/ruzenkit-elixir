@@ -17,6 +17,7 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     end
   end
 
+
   def get_product(_root, %{id: id}, _info) do
     case Products.get_product(id) do
       nil ->
@@ -42,6 +43,17 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
         # {:error, "could not create configurable option"}
     end
   end
+
+  def create_configurable_item_option(_root, %{configurable_item_option: configurable_item_option}, _info) do
+    case Products.create_configurable_item_option(configurable_item_option) do
+      {:ok, configurable_item_option} ->
+        {:ok, configurable_item_option}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to create new configurable item option", error)}
+    end
+  end
+
 
   def link_product_configurable_options(
         _root,

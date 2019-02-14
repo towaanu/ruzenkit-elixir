@@ -52,6 +52,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &ProductsResolver.create_configurable_option/3
     end
 
+    field :create_configurable_item_option, :configurable_item_option do
+      arg :configurable_item_option, :configurable_item_option_input
+
+      resolve &ProductsResolver.create_configurable_item_option/3
+    end
+
     field :link_product_configurable_options, :product do
       arg :product_id, non_null(:id)
       arg :configurable_option_id, non_null(:id)

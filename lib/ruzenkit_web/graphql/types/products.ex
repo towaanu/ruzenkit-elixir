@@ -16,7 +16,15 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
   object :configurable_option do
     field :id, non_null(:id)
     field :label, non_null(:string)
+    field :configurable_item_options, list_of(non_null(:configurable_item_option)), resolve: dataloader(:db)
     field :products, list_of(:product), resolve: dataloader(:db)
+  end
+
+  object :configurable_item_option do
+    field :id, non_null(:id)
+    field :label, :string
+    field :short_label, :string
+    field :configurable_option, non_null(:configurable_option), resolve: dataloader(:db)
   end
 
   input_object :product_input do
@@ -24,6 +32,12 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :name, non_null(:string)
     field :description, non_null(:string)
     field :parent_product_id, :id
+  end
+
+  input_object :configurable_item_option_input do
+    field :label, :string
+    field :short_label, :string
+    field :configurable_option_id, :id
   end
 
 end
