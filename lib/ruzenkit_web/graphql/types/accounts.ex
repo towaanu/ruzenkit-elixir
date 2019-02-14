@@ -11,7 +11,7 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
   object :credential do
     field :id, non_null(:id)
     field :email, non_null(:string)
-    field :password_hash, non_null(:string)
+    # field :password_hash, non_null(:string)
   end
 
 
