@@ -7,6 +7,8 @@ defmodule Ruzenkit.Accounts.User do
   schema "users" do
     field :first_name, :string
     field :last_name, :string
+    field :is_admin, :boolean, default: false
+    field :is_customer, :boolean, default: true
     has_one :credential, Credential
 
     timestamps()
