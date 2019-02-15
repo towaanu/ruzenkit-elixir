@@ -222,6 +222,26 @@ defmodule Ruzenkit.Accounts do
     end
   end
 
+  def authenticate_admin(email, password) do
+    query =
+      from u in User,
+        inner_join: c in assoc(u, :credential),
+        where: c.email == ^email and u.is_admin == true,
+        preload: [:credential]
+
+    case Repo.one(query) do
+      nil ->
+        {:error, :invalid_credentials}
+
+      user ->
+        if Bcrypt.verify_pass(password, user.credential.password_hash) do
+          {:ok, user}
+        else
+          {:error, :invalid_credentials}
+        end
+    end
+  end
+
   def revoke_auth_token(token) do
     Accounts.Guardian.revoke(token)
   end

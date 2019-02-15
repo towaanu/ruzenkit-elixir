@@ -34,6 +34,15 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
 
   def get_user(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
+  def admin_login(_root, %{email: email, password: password}, _info) do
+    with {:ok, user} <- Accounts.authenticate_admin(email, password),
+         {:ok, token, _claim} <- Accounts.Guardian.encode_and_sign(user) do
+      {:ok, token}
+    else
+      {:error, _} -> {:error, "Failed to login"}
+    end
+  end
+
   def login(_root, %{email: email, password: password}, _info) do
     with {:ok, user} <- Accounts.authenticate_user(email, password),
          {:ok, token, _claim} <- Accounts.Guardian.encode_and_sign(user) do

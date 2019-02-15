@@ -88,6 +88,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AccountsResolver.create_user/3
     end
 
+    field :admin_login, :string do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
+
+      resolve &AccountsResolver.admin_login/3
+    end
+
     field :login, :string do
       arg :email, non_null(:string)
       arg :password, non_null(:string)
