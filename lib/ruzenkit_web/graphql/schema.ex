@@ -4,11 +4,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
   alias RuzenkitWeb.Graphql.ProductsResolver
   alias RuzenkitWeb.Graphql.AccountsResolver
+  alias RuzenkitWeb.Graphql.CartsResolver
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
 
   import_types Types.Products
   import_types Types.Accounts
+  import_types Types.Carts
 
   def context(ctx) do
     loader =
@@ -104,6 +106,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :logout, :boolean do
       resolve &AccountsResolver.logout/3
+    end
+
+    field :create_cart, :cart do
+      arg :cart, :cart_input
+
+      resolve &CartsResolver.create_cart/3
     end
 
   end
