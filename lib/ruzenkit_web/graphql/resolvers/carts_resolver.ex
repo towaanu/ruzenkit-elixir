@@ -32,4 +32,25 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
         {:error, changeset_error_to_graphql("unable to create new cart", error)}
     end
   end
+
+  # TODO: Think if, it needs to be protected or not ( only connected user or admin can access it ?)
+  def get_cart(_root, %{id: id}, _info) do
+    case Carts.get_cart(id) do
+      nil ->
+        {:error, "cart with id #{id} not found"}
+
+      cart ->
+        {:ok, cart}
+    end
+  end
+
+  def add_to_cart(_root, %{cart_item: cart_item}, _info) do
+    case Carts.add_cart_item(cart_item) do
+      {:ok, cart_item} ->
+        {:ok, cart_item}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to create add new cart item", error)}
+    end
+  end
 end

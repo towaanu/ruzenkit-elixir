@@ -36,6 +36,7 @@ defmodule Ruzenkit.Carts do
 
   """
   def get_cart!(id), do: Repo.get!(Cart, id)
+  def get_cart(id), do: Repo.get(Cart, id)
 
   @doc """
   Creates a cart.
@@ -132,6 +133,7 @@ defmodule Ruzenkit.Carts do
 
   """
   def get_cart_item!(id), do: Repo.get!(CartItem, id)
+  def get_cart_item(id), do: Repo.get(CartItem, id)
 
   @doc """
   Creates a cart_item.
@@ -149,6 +151,23 @@ defmodule Ruzenkit.Carts do
     %CartItem{}
     |> CartItem.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id}) do
+    query =
+      from ci in CartItem,
+        where: ci.product_id == ^product_id and ci.cart_id == ^cart_id
+
+    case Repo.one(query) do
+      # new one
+      nil ->
+        create_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id})
+
+      # update_existing
+      cart_item ->
+        new_quantity = quantity + cart_item.quantity
+        update_cart_item(cart_item, %{quantity: new_quantity})
+    end
   end
 
   @doc """

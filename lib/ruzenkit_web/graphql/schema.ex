@@ -54,6 +54,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AccountsResolver.me/3
     end
 
+    field :cart, :cart do
+      arg :id, non_null(:id)
+
+      resolve &CartsResolver.get_cart/3
+    end
+
   end
 
   mutation do
@@ -112,6 +118,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :cart, :cart_input
 
       resolve &CartsResolver.create_cart/3
+    end
+
+    field :add_to_cart, :cart_item do
+      arg :cart_item, :cart_item_input
+
+      resolve &CartsResolver.add_to_cart/3
     end
 
   end
