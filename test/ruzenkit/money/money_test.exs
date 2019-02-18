@@ -1,0 +1,68 @@
+defmodule Ruzenkit.MoneyTest do
+  use Ruzenkit.DataCase
+
+  alias Ruzenkit.Money
+
+  describe "currencies" do
+    alias Ruzenkit.Money.Currency
+
+    @valid_attrs %{code: "some code", name: "some name", sign: "some sign"}
+    @update_attrs %{code: "some updated code", name: "some updated name", sign: "some updated sign"}
+    @invalid_attrs %{code: nil, name: nil, sign: nil}
+
+    def currency_fixture(attrs \\ %{}) do
+      {:ok, currency} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Money.create_currency()
+
+      currency
+    end
+
+    test "list_currencies/0 returns all currencies" do
+      currency = currency_fixture()
+      assert Money.list_currencies() == [currency]
+    end
+
+    test "get_currency!/1 returns the currency with given id" do
+      currency = currency_fixture()
+      assert Money.get_currency!(currency.id) == currency
+    end
+
+    test "create_currency/1 with valid data creates a currency" do
+      assert {:ok, %Currency{} = currency} = Money.create_currency(@valid_attrs)
+      assert currency.code == "some code"
+      assert currency.name == "some name"
+      assert currency.sign == "some sign"
+    end
+
+    test "create_currency/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Money.create_currency(@invalid_attrs)
+    end
+
+    test "update_currency/2 with valid data updates the currency" do
+      currency = currency_fixture()
+      assert {:ok, %Currency{} = currency} = Money.update_currency(currency, @update_attrs)
+      assert currency.code == "some updated code"
+      assert currency.name == "some updated name"
+      assert currency.sign == "some updated sign"
+    end
+
+    test "update_currency/2 with invalid data returns error changeset" do
+      currency = currency_fixture()
+      assert {:error, %Ecto.Changeset{}} = Money.update_currency(currency, @invalid_attrs)
+      assert currency == Money.get_currency!(currency.id)
+    end
+
+    test "delete_currency/1 deletes the currency" do
+      currency = currency_fixture()
+      assert {:ok, %Currency{}} = Money.delete_currency(currency)
+      assert_raise Ecto.NoResultsError, fn -> Money.get_currency!(currency.id) end
+    end
+
+    test "change_currency/1 returns a currency changeset" do
+      currency = currency_fixture()
+      assert %Ecto.Changeset{} = Money.change_currency(currency)
+    end
+  end
+end
