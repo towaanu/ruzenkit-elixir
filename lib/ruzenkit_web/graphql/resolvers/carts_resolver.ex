@@ -2,7 +2,6 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
   alias Ruzenkit.Carts
   import Ruzenkit.Utils.Graphql, only: [changeset_error_to_graphql: 2]
 
-
   def create_cart(_root, %{cart: cart}, %{context: %{current_user: current_user}}) do
     case Carts.create_cart(%{cart | user_id: current_user.id}) do
       {:ok, cart} ->
@@ -51,6 +50,21 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
 
       {:error, error} ->
         {:error, changeset_error_to_graphql("unable to create add new cart item", error)}
+    end
+  end
+
+  # TODO: Think if, it needs to be protected or not ( only connected user or admin can access it ?)
+  def delete_cart_item(_root, %{cart_item: cart_item}, _info) do
+    case Carts.delete_cart_item(cart_item) do
+      {:ok, cart_item} -> {:ok, cart_item}
+      {:error, error} -> {:error, changeset_error_to_graphql("unable to delete cart item", error)}
+    end
+  end
+
+  def remove_cart_item(_root, %{cart_item: cart_item}, _info) do
+    case Carts.remove_cart_item(cart_item) do
+      {:ok, cart_item} -> {:ok, cart_item}
+      {:error, error} -> {:error, changeset_error_to_graphql("unable to remove cart item", error)}
     end
   end
 end
