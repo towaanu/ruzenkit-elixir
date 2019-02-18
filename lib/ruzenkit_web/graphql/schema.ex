@@ -108,7 +108,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     end
 
-    field :create_user, non_null(:user) do
+    field :create_user, :user do
       arg :user, non_null(:user_input)
 
       resolve &AccountsResolver.create_user/3
