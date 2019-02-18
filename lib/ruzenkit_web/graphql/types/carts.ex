@@ -3,8 +3,6 @@ defmodule RuzenkitWeb.Graphql.Types.Carts do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
-  alias RuzenkitWeb.Graphql.Types
-
   object :cart do
     field :id, non_null(:id)
     field :user, :user, resolve: dataloader(:db)

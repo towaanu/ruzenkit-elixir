@@ -5,12 +5,14 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.ProductsResolver
   alias RuzenkitWeb.Graphql.AccountsResolver
   alias RuzenkitWeb.Graphql.CartsResolver
+  alias RuzenkitWeb.Graphql.OrdersResolver
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
 
   import_types Types.Products
   import_types Types.Accounts
   import_types Types.Carts
+  import_types Types.Orders
 
   def context(ctx) do
     loader =
@@ -58,6 +60,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :id, non_null(:id)
 
       resolve &CartsResolver.get_cart/3
+    end
+
+    field :order_statuses, list_of(:order_status) do
+      resolve &OrdersResolver.list_order_status/3
     end
 
   end
@@ -136,6 +142,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :cart_item, :cart_item_input
 
       resolve &CartsResolver.remove_cart_item/3
+    end
+
+    field :create_order_status, :order_status do
+      arg :order_status, :order_status_input
+
+      resolve &OrdersResolver.create_order_status/3
     end
 
   end
