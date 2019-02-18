@@ -42,6 +42,9 @@ defmodule Ruzenkit.Accounts do
   def get_user(id), do: Repo.get(User, id)
 
   def get_user_with_credential!(id), do: User |> Repo.get!(id) |> Repo.preload(:credential)
+  def get_user_with_credential_and_profile!(id) do
+    User |> Repo.get!(id) |> Repo.preload([:credential, :profile])
+  end
 
   @doc """
   Creates a user.
@@ -207,9 +210,9 @@ defmodule Ruzenkit.Accounts do
   def authenticate_user(email, password) do
     query =
       from u in User,
-        inner_join: c in assoc(u, :credential),
-        where: c.email == ^email,
-        preload: [:credential]
+        inner_join: p in assoc(u, :profile),
+        where: p.email == ^email,
+        preload: [:credential, :profile]
 
     case Repo.one(query) do
       nil ->
@@ -227,9 +230,9 @@ defmodule Ruzenkit.Accounts do
   def authenticate_admin(email, password) do
     query =
       from u in User,
-        inner_join: c in assoc(u, :credential),
-        where: c.email == ^email and u.is_admin == true,
-        preload: [:credential]
+        inner_join: p in assoc(u, :profile),
+        where: p.email == ^email and u.is_admin == true,
+        preload: [:credential, :profile]
 
     case Repo.one(query) do
       nil ->
@@ -247,7 +250,6 @@ defmodule Ruzenkit.Accounts do
   def revoke_auth_token(token) do
     Accounts.Guardian.revoke(token)
   end
-
 
   alias Ruzenkit.Accounts.Profile
 

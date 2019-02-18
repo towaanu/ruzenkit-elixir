@@ -4,7 +4,6 @@ defmodule Ruzenkit.Accounts.Credential do
   alias Ruzenkit.Accounts.User
 
   schema "credentials" do
-    field :email, :string
     field :password_hash, :string
     field :password, :string, virtual: true
     belongs_to :user, User
@@ -15,10 +14,8 @@ defmodule Ruzenkit.Accounts.Credential do
   @doc false
   def changeset(credential, attrs) do
     credential
-    |> cast(attrs, [:email, :password])
-    |> validate_required([:email])
+    |> cast(attrs, [:password])
     |> validate_length(:password, min: 5, max: 20)
-    |> unique_constraint(:email)
     |> put_password_hash()
   end
 
