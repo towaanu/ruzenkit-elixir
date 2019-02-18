@@ -6,7 +6,7 @@ defmodule Ruzenkit.Orders.Order do
   alias Ruzenkit.Orders.OrderStatus
 
   schema "orders" do
-    field :total, :decimal
+    field :total, :decimal, precision: 12, scale: 2
     belongs_to :user, User
     belongs_to :order_status, OrderStatus
     has_many :order_items, OrderItem
@@ -17,8 +17,9 @@ defmodule Ruzenkit.Orders.Order do
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:total])
+    |> cast(attrs, [:total, :order_status_id])
     |> validate_number(:total, greater_than_or_equal_to: 0)
-    |> validate_required([:total])
+    |> validate_required([:total, :order_status_id])
+    |> foreign_key_constraint(:order_status_id)
   end
 end

@@ -74,6 +74,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &MoneyResolver.list_currencies/3
     end
 
+    field :orders, list_of(:order) do
+      resolve &OrdersResolver.list_orders/3
+    end
+
   end
 
   mutation do
@@ -162,6 +166,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :currency, :currency_input
 
       resolve &MoneyResolver.create_currency/3
+    end
+
+    field :create_order_from_cart, :order do
+      arg :cart_id, non_null(:id)
+
+      resolve &OrdersResolver.create_order_from_cart/3
     end
 
   end

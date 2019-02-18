@@ -7,6 +7,9 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Orders.Order
+  alias Ruzenkit.Carts
+  alias Ruzenkit.Orders.OrderItem
+  alias Ecto.Multi
 
   @doc """
   Returns the list of orders.
@@ -53,6 +56,49 @@ defmodule Ruzenkit.Orders do
     %Order{}
     |> Order.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_order_from_cart(cart_id) do
+    status_id = 1
+
+    cart = Carts.get_cart_with_total(cart_id)
+    # %{total_price: total_price, cart_items: cart_items} = Carts.get_cart_with_total(cart_id)
+    order_items = Enum.map(cart.cart_items, &cart_item_to_order_item/1)
+
+    new_order = %Order{
+      total: cart.total_price,
+      order_status_id: status_id,
+      order_items: order_items
+    }
+
+    new_order_changeset =
+      new_order
+      |> Order.changeset(%{})
+      |> Ecto.Changeset.cast_assoc(:order_items)
+
+    # |> Repo.insert()
+
+    case Repo.insert(new_order_changeset) do
+      {:ok, order} ->
+        Carts.delete_cart(cart)
+        {:ok, order}
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  defp cart_item_to_order_item(%Carts.CartItem{
+         quantity: quantity,
+         product: %{id: product_id, price: %{amount: amount, currency: %{code: code, sign: sign}}}
+       }) do
+    %{
+      quantity: quantity,
+      price_amount: amount,
+      price_currency_code: code,
+      price_currency_sign: sign,
+      product_id: product_id
+    }
   end
 
   @doc """
@@ -102,7 +148,7 @@ defmodule Ruzenkit.Orders do
     Order.changeset(order, %{})
   end
 
-  alias Ruzenkit.Orders.OrderItem
+  # alias Ruzenkit.Orders.OrderItem
 
   @doc """
   Returns the list of order_items.

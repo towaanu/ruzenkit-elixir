@@ -38,6 +38,13 @@ defmodule Ruzenkit.Carts do
   def get_cart!(id), do: Repo.get!(Cart, id)
   def get_cart(id), do: Repo.get(Cart, id)
 
+  def get_cart_with_total(id) do
+    Cart
+    |> Repo.get!(id)
+    |> Repo.preload(cart_items: [product: [price: :currency]])
+    |> Cart.populate_total_price()
+  end
+
   @doc """
   Creates a cart.
 

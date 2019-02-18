@@ -13,7 +13,8 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
     end
   end
 
-  def create_order_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+  def create_order_status(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
 
   def list_order_status(_root, _args, %{context: %{is_admin: true}}) do
     order_status = Orders.list_order_status()
@@ -23,4 +24,14 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
   # if not admin return error message
   def list_order_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
- end
+  def list_orders(_root, _args, %{context: %{is_admin: true}}), do: {:ok, Orders.list_orders()}
+
+  def list_orders(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
+  def create_order_from_cart(_root, %{cart_id: cart_id}, _info) do
+    case Orders.create_order_from_cart(cart_id) do
+      {:ok, order} -> {:ok, order}
+      {:error, error} -> {:error, changeset_error_to_graphql("Unable to create order", error)}
+    end
+  end
+end

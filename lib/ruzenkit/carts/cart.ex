@@ -3,10 +3,13 @@ defmodule Ruzenkit.Carts.Cart do
   import Ecto.Changeset
   alias Ruzenkit.Accounts.User
   alias Ruzenkit.Carts.CartItem
+  alias Ruzenkit.Carts.Cart
 
   schema "carts" do
     belongs_to :user, User
     has_many :cart_items, CartItem
+
+    field :total_price, :decimal, virtual: true
 
     timestamps()
   end
@@ -16,5 +19,15 @@ defmodule Ruzenkit.Carts.Cart do
     cart
     |> cast(attrs, [])
     |> validate_required([])
+  end
+
+  def populate_total_price(%Cart{cart_items: cart_items} = cart) do
+    total_price =
+      cart_items
+      |> Enum.map(&%{price_amount: &1.product.price.amount, quantity: &1.quantity})
+      |> Enum.map(&Decimal.mult(&1.price_amount, &1.quantity))
+      |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+
+      %{cart | total_price: total_price}
   end
 end
