@@ -242,4 +242,63 @@ defmodule Ruzenkit.ProductsTest do
       assert %Ecto.Changeset{} = Products.change_configurable_item_option(configurable_item_option)
     end
   end
+
+  describe "product_prices" do
+    alias Ruzenkit.Products.ProductPrice
+
+    @valid_attrs %{amount: "120.5"}
+    @update_attrs %{amount: "456.7"}
+    @invalid_attrs %{amount: nil}
+
+    def product_price_fixture(attrs \\ %{}) do
+      {:ok, product_price} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Products.create_product_price()
+
+      product_price
+    end
+
+    test "list_product_prices/0 returns all product_prices" do
+      product_price = product_price_fixture()
+      assert Products.list_product_prices() == [product_price]
+    end
+
+    test "get_product_price!/1 returns the product_price with given id" do
+      product_price = product_price_fixture()
+      assert Products.get_product_price!(product_price.id) == product_price
+    end
+
+    test "create_product_price/1 with valid data creates a product_price" do
+      assert {:ok, %ProductPrice{} = product_price} = Products.create_product_price(@valid_attrs)
+      assert product_price.amount == Decimal.new("120.5")
+    end
+
+    test "create_product_price/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Products.create_product_price(@invalid_attrs)
+    end
+
+    test "update_product_price/2 with valid data updates the product_price" do
+      product_price = product_price_fixture()
+      assert {:ok, %ProductPrice{} = product_price} = Products.update_product_price(product_price, @update_attrs)
+      assert product_price.amount == Decimal.new("456.7")
+    end
+
+    test "update_product_price/2 with invalid data returns error changeset" do
+      product_price = product_price_fixture()
+      assert {:error, %Ecto.Changeset{}} = Products.update_product_price(product_price, @invalid_attrs)
+      assert product_price == Products.get_product_price!(product_price.id)
+    end
+
+    test "delete_product_price/1 deletes the product_price" do
+      product_price = product_price_fixture()
+      assert {:ok, %ProductPrice{}} = Products.delete_product_price(product_price)
+      assert_raise Ecto.NoResultsError, fn -> Products.get_product_price!(product_price.id) end
+    end
+
+    test "change_product_price/1 returns a product_price changeset" do
+      product_price = product_price_fixture()
+      assert %Ecto.Changeset{} = Products.change_product_price(product_price)
+    end
+  end
 end

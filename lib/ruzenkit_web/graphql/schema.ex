@@ -11,11 +11,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
 
+  import_types Absinthe.Type.Custom
+  import_types Types.Money
   import_types Types.Products
   import_types Types.Accounts
   import_types Types.Carts
   import_types Types.Orders
-  import_types Types.Money
 
   def context(ctx) do
     loader =

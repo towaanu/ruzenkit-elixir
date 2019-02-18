@@ -4,12 +4,14 @@ defmodule Ruzenkit.Products.Product do
 
   alias Ruzenkit.Products.ConfigurableOption
   alias Ruzenkit.Products.ConfigurableProduct
+  alias Ruzenkit.Products.ProductPrice
 
   schema "products" do
     field :description, :string
     field :name, :string
     field :sku, :string
 
+    belongs_to :price, ProductPrice, foreign_key: :product_price_id
     belongs_to :parent_product, Ruzenkit.Products.Product
 
     many_to_many :configurable_options, ConfigurableOption, join_through: "products_configurable_options"
