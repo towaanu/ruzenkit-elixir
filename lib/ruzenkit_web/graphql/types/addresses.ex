@@ -1,6 +1,6 @@
 defmodule RuzenkitWeb.Graphql.Types.Addresses do
   use Absinthe.Schema.Notation
-  # import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
   object :address do
     field :id, non_null(:id)
@@ -13,6 +13,7 @@ defmodule RuzenkitWeb.Graphql.Types.Addresses do
     field :floor, :string
     field :place, :string
     field :extra_info, :string
+    field :country, non_null(:country), resolve: dataloader(:db)
   end
 
   object :country do
@@ -29,6 +30,7 @@ defmodule RuzenkitWeb.Graphql.Types.Addresses do
     field :street, non_null(:string)
     field :city, non_null(:string)
     field :zip_code, non_null(:string)
+    field :country_id, non_null(:id)
     field :building, :string
     field :floor, :string
     field :place, :string
