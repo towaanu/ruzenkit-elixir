@@ -8,6 +8,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.OrdersResolver
   alias RuzenkitWeb.Graphql.MoneyResolver
   alias RuzenkitWeb.Graphql.AddressesResolver
+  alias RuzenkitWeb.Graphql.ShippingsResolver
 
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
@@ -19,6 +20,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   import_types Types.Carts
   import_types Types.Orders
   import_types Types.Addresses
+  import_types Types.Shippings
 
   def context(ctx) do
     loader =
@@ -86,6 +88,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :countries, list_of(:country) do
       resolve &AddressesResolver.list_countries/3
+    end
+
+    field :shipping_carriers, list_of(:shipping_carrier) do
+      resolve &ShippingsResolver.list_shipping_carriers/3
     end
 
   end
@@ -200,6 +206,18 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :profile_address, non_null(:profile_address_input)
 
       resolve &AccountsResolver.create_profile_address/3
+    end
+
+    field :create_shipping_carrier, :shipping_carrier do
+      arg :shipping_carrier, non_null(:shipping_carrier_input)
+
+      resolve &ShippingsResolver.create_shipping_carrier/3
+    end
+
+    field :create_shipping_option, :shipping_option do
+      arg :shipping_option, non_null(:shipping_option_input)
+
+      resolve &ShippingsResolver.create_shipping_option/3
     end
 
   end

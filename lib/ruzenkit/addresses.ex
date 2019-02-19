@@ -117,6 +117,13 @@ defmodule Ruzenkit.Addresses do
     Repo.all(Country)
   end
 
+  def list_countries_by_ids(ids) do
+    query = from c in Country,
+    where: c.id in ^ids
+
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single country.
 
