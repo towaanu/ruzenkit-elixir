@@ -2,7 +2,7 @@ defmodule Ruzenkit.Accounts.Profile do
   use Ecto.Schema
   import Ecto.Changeset
 
-  import Ruzenkit.Utils.String, only: [trim_and_downcase: 1]
+  import Ruzenkit.Utils.StringUtils, only: [trim_and_downcase: 1]
 
   alias Ruzenkit.Accounts.User
 

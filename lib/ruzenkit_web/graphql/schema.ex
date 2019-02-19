@@ -84,6 +84,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AddressesResolver.list_addresses/3
     end
 
+    field :countries, list_of(:country) do
+      resolve &AddressesResolver.list_countries/3
+    end
+
   end
 
   mutation do
@@ -184,6 +188,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :address, non_null(:address_input)
 
       resolve &AddressesResolver.create_address/3
+    end
+
+    field :create_country, :country do
+      arg :country, non_null(:country_input)
+
+      resolve &AddressesResolver.create_country/3
     end
 
   end

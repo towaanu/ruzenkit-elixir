@@ -3,7 +3,7 @@ defmodule Ruzenkit.Orders.OrderStatus do
   import Ecto.Changeset
   alias Ruzenkit.Orders.Order
 
-  import Ruzenkit.Utils.String, only: [trim_and_downcase: 1]
+  import Ruzenkit.Utils.StringUtils, only: [trim_and_downcase: 1]
 
   schema "order_status" do
     field :label, :string

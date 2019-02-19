@@ -15,6 +15,14 @@ defmodule RuzenkitWeb.Graphql.Types.Addresses do
     field :extra_info, :string
   end
 
+  object :country do
+    field :id, non_null(:id)
+    field :local_name, non_null(:string)
+    field :english_name, non_null(:string)
+    field :short_iso_code, non_null(:string)
+    field :long_iso_code, non_null(:string)
+  end
+
   input_object :address_input do
     field :last_name, non_null(:string)
     field :first_name, non_null(:string)
@@ -25,6 +33,13 @@ defmodule RuzenkitWeb.Graphql.Types.Addresses do
     field :floor, :string
     field :place, :string
     field :extra_info, :string
+  end
+
+  input_object :country_input do
+    field :local_name, non_null(:string)
+    field :english_name, non_null(:string)
+    field :short_iso_code, non_null(:string)
+    field :long_iso_code, non_null(:string)
   end
 
 

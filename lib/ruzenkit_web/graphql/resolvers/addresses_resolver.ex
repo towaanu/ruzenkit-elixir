@@ -21,4 +21,21 @@ defmodule RuzenkitWeb.Graphql.AddressesResolver do
         {:error, changeset_error_to_graphql("unable to create new address", error)}
     end
   end
+
+  def create_country(_root, %{country: country}, %{context: %{is_admin: true}}) do
+    case Addresses.create_country(country) do
+      {:ok, country} ->
+        {:ok, country}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to create new country", error)}
+    end
+  end
+
+  def create_country(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
+  def list_countries(_root, _args, _info) do
+    {:ok, Addresses.list_countries()}
+  end
+
 end

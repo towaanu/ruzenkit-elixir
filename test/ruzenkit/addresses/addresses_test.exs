@@ -75,4 +75,69 @@ defmodule Ruzenkit.AddressesTest do
       assert %Ecto.Changeset{} = Addresses.change_address(address)
     end
   end
+
+  describe "countries" do
+    alias Ruzenkit.Addresses.Country
+
+    @valid_attrs %{english_name: "some english_name", local_name: "some local_name", long_iso_code: "some long_iso_code", short_iso_code: "some short_iso_code"}
+    @update_attrs %{english_name: "some updated english_name", local_name: "some updated local_name", long_iso_code: "some updated long_iso_code", short_iso_code: "some updated short_iso_code"}
+    @invalid_attrs %{english_name: nil, local_name: nil, long_iso_code: nil, short_iso_code: nil}
+
+    def country_fixture(attrs \\ %{}) do
+      {:ok, country} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Addresses.create_country()
+
+      country
+    end
+
+    test "list_countries/0 returns all countries" do
+      country = country_fixture()
+      assert Addresses.list_countries() == [country]
+    end
+
+    test "get_country!/1 returns the country with given id" do
+      country = country_fixture()
+      assert Addresses.get_country!(country.id) == country
+    end
+
+    test "create_country/1 with valid data creates a country" do
+      assert {:ok, %Country{} = country} = Addresses.create_country(@valid_attrs)
+      assert country.english_name == "some english_name"
+      assert country.local_name == "some local_name"
+      assert country.long_iso_code == "some long_iso_code"
+      assert country.short_iso_code == "some short_iso_code"
+    end
+
+    test "create_country/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Addresses.create_country(@invalid_attrs)
+    end
+
+    test "update_country/2 with valid data updates the country" do
+      country = country_fixture()
+      assert {:ok, %Country{} = country} = Addresses.update_country(country, @update_attrs)
+      assert country.english_name == "some updated english_name"
+      assert country.local_name == "some updated local_name"
+      assert country.long_iso_code == "some updated long_iso_code"
+      assert country.short_iso_code == "some updated short_iso_code"
+    end
+
+    test "update_country/2 with invalid data returns error changeset" do
+      country = country_fixture()
+      assert {:error, %Ecto.Changeset{}} = Addresses.update_country(country, @invalid_attrs)
+      assert country == Addresses.get_country!(country.id)
+    end
+
+    test "delete_country/1 deletes the country" do
+      country = country_fixture()
+      assert {:ok, %Country{}} = Addresses.delete_country(country)
+      assert_raise Ecto.NoResultsError, fn -> Addresses.get_country!(country.id) end
+    end
+
+    test "change_country/1 returns a country changeset" do
+      country = country_fixture()
+      assert %Ecto.Changeset{} = Addresses.change_country(country)
+    end
+  end
 end
