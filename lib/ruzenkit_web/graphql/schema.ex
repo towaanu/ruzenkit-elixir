@@ -196,6 +196,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AddressesResolver.create_country/3
     end
 
+    field :add_profile_address, :profile_address do
+      arg :profile_address, non_null(:profile_address_input)
+
+      resolve &AccountsResolver.create_profile_address/3
+    end
+
   end
 
 end

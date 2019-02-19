@@ -185,4 +185,63 @@ defmodule Ruzenkit.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_profile(profile)
     end
   end
+
+  describe "profile_addresses" do
+    alias Ruzenkit.Accounts.ProfileAddress
+
+    @valid_attrs %{is_default: true}
+    @update_attrs %{is_default: false}
+    @invalid_attrs %{is_default: nil}
+
+    def profile_address_fixture(attrs \\ %{}) do
+      {:ok, profile_address} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_profile_address()
+
+      profile_address
+    end
+
+    test "list_profile_addresses/0 returns all profile_addresses" do
+      profile_address = profile_address_fixture()
+      assert Accounts.list_profile_addresses() == [profile_address]
+    end
+
+    test "get_profile_address!/1 returns the profile_address with given id" do
+      profile_address = profile_address_fixture()
+      assert Accounts.get_profile_address!(profile_address.id) == profile_address
+    end
+
+    test "create_profile_address/1 with valid data creates a profile_address" do
+      assert {:ok, %ProfileAddress{} = profile_address} = Accounts.create_profile_address(@valid_attrs)
+      assert profile_address.is_default == true
+    end
+
+    test "create_profile_address/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_profile_address(@invalid_attrs)
+    end
+
+    test "update_profile_address/2 with valid data updates the profile_address" do
+      profile_address = profile_address_fixture()
+      assert {:ok, %ProfileAddress{} = profile_address} = Accounts.update_profile_address(profile_address, @update_attrs)
+      assert profile_address.is_default == false
+    end
+
+    test "update_profile_address/2 with invalid data returns error changeset" do
+      profile_address = profile_address_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_profile_address(profile_address, @invalid_attrs)
+      assert profile_address == Accounts.get_profile_address!(profile_address.id)
+    end
+
+    test "delete_profile_address/1 deletes the profile_address" do
+      profile_address = profile_address_fixture()
+      assert {:ok, %ProfileAddress{}} = Accounts.delete_profile_address(profile_address)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_profile_address!(profile_address.id) end
+    end
+
+    test "change_profile_address/1 returns a profile_address changeset" do
+      profile_address = profile_address_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_profile_address(profile_address)
+    end
+  end
 end

@@ -346,4 +346,100 @@ defmodule Ruzenkit.Accounts do
   def change_profile(%Profile{} = profile) do
     Profile.changeset(profile, %{})
   end
+
+  alias Ruzenkit.Accounts.ProfileAddress
+
+  @doc """
+  Returns the list of profile_addresses.
+
+  ## Examples
+
+      iex> list_profile_addresses()
+      [%ProfileAddress{}, ...]
+
+  """
+  def list_profile_addresses do
+    Repo.all(ProfileAddress)
+  end
+
+  @doc """
+  Gets a single profile_address.
+
+  Raises `Ecto.NoResultsError` if the Profile address does not exist.
+
+  ## Examples
+
+      iex> get_profile_address!(123)
+      %ProfileAddress{}
+
+      iex> get_profile_address!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_profile_address!(id), do: Repo.get!(ProfileAddress, id)
+
+  @doc """
+  Creates a profile_address.
+
+  ## Examples
+
+      iex> create_profile_address(%{field: value})
+      {:ok, %ProfileAddress{}}
+
+      iex> create_profile_address(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_profile_address(attrs \\ %{}) do
+    %ProfileAddress{}
+    |> ProfileAddress.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a profile_address.
+
+  ## Examples
+
+      iex> update_profile_address(profile_address, %{field: new_value})
+      {:ok, %ProfileAddress{}}
+
+      iex> update_profile_address(profile_address, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_profile_address(%ProfileAddress{} = profile_address, attrs) do
+    profile_address
+    |> ProfileAddress.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a ProfileAddress.
+
+  ## Examples
+
+      iex> delete_profile_address(profile_address)
+      {:ok, %ProfileAddress{}}
+
+      iex> delete_profile_address(profile_address)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_profile_address(%ProfileAddress{} = profile_address) do
+    Repo.delete(profile_address)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking profile_address changes.
+
+  ## Examples
+
+      iex> change_profile_address(profile_address)
+      %Ecto.Changeset{source: %ProfileAddress{}}
+
+  """
+  def change_profile_address(%ProfileAddress{} = profile_address) do
+    ProfileAddress.changeset(profile_address, %{})
+  end
 end

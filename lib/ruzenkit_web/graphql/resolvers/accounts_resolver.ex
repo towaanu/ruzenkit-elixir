@@ -22,6 +22,16 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
     end
   end
 
+  def create_profile_address(_root, %{profile_address: profile_address }, _info) do
+    case Accounts.create_profile_address(profile_address) do
+      {:ok, profile_address} ->
+        {:ok, profile_address}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to create new profile_address", error)}
+    end
+  end
+
   def get_user(_root, %{id: id}, %{context: %{is_admin: true}}) do
     case Accounts.get_user(id) do
       nil ->

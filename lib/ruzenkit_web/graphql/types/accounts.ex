@@ -13,11 +13,18 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
     field :first_name, :string
     field :last_name, :string
     field :email, non_null(:string)
+    field :profile_addresses, list_of(:profile_address), resolve: dataloader(:db)
   end
 
   object :credential do
     field :id, non_null(:id)
     # field :password_hash, non_null(:string)
+  end
+
+  object :profile_address do
+    field :id, non_null(:id)
+    field :is_default, :boolean
+    field :address, non_null(:address), resolve: dataloader(:db)
   end
 
   input_object :user_input do
@@ -29,10 +36,17 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
     field :first_name, :string
     field :last_name, :string
     field :email, non_null(:string)
+    field :profile_addresses, list_of(:profile_address_input)
   end
 
   input_object :credential_input do
     field :password, non_null(:string)
+  end
+
+  input_object :profile_address_input do
+    field :is_default, :boolean
+    field :address, non_null(:address_input)
+    field :profile_id, non_null(:id)
   end
 
 end
