@@ -9,6 +9,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.MoneyResolver
   alias RuzenkitWeb.Graphql.AddressesResolver
   alias RuzenkitWeb.Graphql.ShippingsResolver
+  alias RuzenkitWeb.Graphql.VatResolver
 
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
@@ -22,6 +23,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   import_types Types.Addresses
   import_types Types.Shippings
   import_types Types.Stocks
+  import_types Types.Vat
 
   def context(ctx) do
     loader =
@@ -93,6 +95,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :shipping_carriers, list_of(:shipping_carrier) do
       resolve &ShippingsResolver.list_shipping_carriers/3
+    end
+
+    field :vat_groups, list_of(:vat_group) do
+      resolve &VatResolver.list_vat_groups/3
     end
 
   end
@@ -219,6 +225,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :shipping_option, non_null(:shipping_option_input)
 
       resolve &ShippingsResolver.create_shipping_option/3
+    end
+
+    field :create_vat_group, :vat_group do
+      arg :vat_group, non_null(:vat_group_input)
+
+      resolve &VatResolver.create_vat_group/3
     end
 
   end
