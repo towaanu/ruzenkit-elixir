@@ -21,6 +21,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   import_types Types.Orders
   import_types Types.Addresses
   import_types Types.Shippings
+  import_types Types.Stocks
 
   def context(ctx) do
     loader =

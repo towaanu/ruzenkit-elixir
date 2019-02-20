@@ -18,6 +18,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :parent_product, :product, resolve: dataloader(:db)
     field :child_products, list_of(:product), resolve: dataloader(:db)
     field :configurable_options, list_of(:configurable_option), resolve: dataloader(:db)
+    field :stock, :stock, resolve: dataloader(:db)
   end
 
   object :configurable_option do
