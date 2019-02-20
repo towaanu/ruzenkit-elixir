@@ -55,6 +55,8 @@ defmodule Ruzenkit.Products do
     %Product{}
     |> Product.changeset(attrs)
     |> Ecto.Changeset.cast_assoc(:price)
+    |> Ecto.Changeset.cast_assoc(:parent_product)
+    |> Ecto.Changeset.cast_assoc(:child_product)
     |> Repo.insert()
   end
 
@@ -499,5 +501,197 @@ defmodule Ruzenkit.Products do
   """
   def change_product_price(%ProductPrice{} = product_price) do
     ProductPrice.changeset(product_price, %{})
+  end
+
+  alias Ruzenkit.Products.ParentProduct
+
+  @doc """
+  Returns the list of parent_products.
+
+  ## Examples
+
+      iex> list_parent_products()
+      [%ParentProduct{}, ...]
+
+  """
+  def list_parent_products do
+    Repo.all(ParentProduct)
+  end
+
+  @doc """
+  Gets a single parent_product.
+
+  Raises `Ecto.NoResultsError` if the Parent product does not exist.
+
+  ## Examples
+
+      iex> get_parent_product!(123)
+      %ParentProduct{}
+
+      iex> get_parent_product!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_parent_product!(id), do: Repo.get!(ParentProduct, id)
+
+  @doc """
+  Creates a parent_product.
+
+  ## Examples
+
+      iex> create_parent_product(%{field: value})
+      {:ok, %ParentProduct{}}
+
+      iex> create_parent_product(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_parent_product(attrs \\ %{}) do
+    %ParentProduct{}
+    |> ParentProduct.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a parent_product.
+
+  ## Examples
+
+      iex> update_parent_product(parent_product, %{field: new_value})
+      {:ok, %ParentProduct{}}
+
+      iex> update_parent_product(parent_product, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_parent_product(%ParentProduct{} = parent_product, attrs) do
+    parent_product
+    |> ParentProduct.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a ParentProduct.
+
+  ## Examples
+
+      iex> delete_parent_product(parent_product)
+      {:ok, %ParentProduct{}}
+
+      iex> delete_parent_product(parent_product)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_parent_product(%ParentProduct{} = parent_product) do
+    Repo.delete(parent_product)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking parent_product changes.
+
+  ## Examples
+
+      iex> change_parent_product(parent_product)
+      %Ecto.Changeset{source: %ParentProduct{}}
+
+  """
+  def change_parent_product(%ParentProduct{} = parent_product) do
+    ParentProduct.changeset(parent_product, %{})
+  end
+
+  alias Ruzenkit.Products.ChildProduct
+
+  @doc """
+  Returns the list of child_products.
+
+  ## Examples
+
+      iex> list_child_products()
+      [%ChildProduct{}, ...]
+
+  """
+  def list_child_products do
+    Repo.all(ChildProduct)
+  end
+
+  @doc """
+  Gets a single child_product.
+
+  Raises `Ecto.NoResultsError` if the Child product does not exist.
+
+  ## Examples
+
+      iex> get_child_product!(123)
+      %ChildProduct{}
+
+      iex> get_child_product!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_child_product!(id), do: Repo.get!(ChildProduct, id)
+
+  @doc """
+  Creates a child_product.
+
+  ## Examples
+
+      iex> create_child_product(%{field: value})
+      {:ok, %ChildProduct{}}
+
+      iex> create_child_product(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_child_product(attrs \\ %{}) do
+    %ChildProduct{}
+    |> ChildProduct.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a child_product.
+
+  ## Examples
+
+      iex> update_child_product(child_product, %{field: new_value})
+      {:ok, %ChildProduct{}}
+
+      iex> update_child_product(child_product, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_child_product(%ChildProduct{} = child_product, attrs) do
+    child_product
+    |> ChildProduct.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a ChildProduct.
+
+  ## Examples
+
+      iex> delete_child_product(child_product)
+      {:ok, %ChildProduct{}}
+
+      iex> delete_child_product(child_product)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_child_product(%ChildProduct{} = child_product) do
+    Repo.delete(child_product)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking child_product changes.
+
+  ## Examples
+
+      iex> change_child_product(child_product)
+      %Ecto.Changeset{source: %ChildProduct{}}
+
+  """
+  def change_child_product(%ChildProduct{} = child_product) do
+    ChildProduct.changeset(child_product, %{})
   end
 end

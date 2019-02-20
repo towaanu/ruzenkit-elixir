@@ -9,15 +9,29 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :currency, :currency, resolve: dataloader(:db)
   end
 
+  object :parent_product do
+    field :product, non_null(:product), resolve: dataloader(:db)
+    field :configurable_options, list_of(:configurable_option), resolve: dataloader(:db)
+    field :child_products, list_of(:child_product), resolve: dataloader(:db)
+  end
+
+  object :child_product do
+    field :product, non_null(:product), resolve: dataloader(:db)
+    field :parent_product, non_null(:parent_product), resolve: dataloader(:db)
+    field :configurable_item_options, list_of(:configurable_item_option), resolve: dataloader(:db)
+  end
+
   object :product do
     field :id, non_null(:id)
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
     field :price, :product_price, resolve: dataloader(:db)
-    field :parent_product, :product, resolve: dataloader(:db)
-    field :child_products, list_of(:product), resolve: dataloader(:db)
-    field :configurable_options, list_of(:configurable_option), resolve: dataloader(:db)
+    field :parent_product, :parent_product, resolve: dataloader(:db)
+    field :child_product, :child_product, resolve: dataloader(:db)
+
+    # field :child_products, list_of(:product), resolve: dataloader(:db)
+    # field :configurable_options, list_of(:configurable_option), resolve: dataloader(:db)
     field :stock, :stock, resolve: dataloader(:db)
     field :vat_group, :vat_group, resolve: dataloader(:db)
   end
@@ -36,6 +50,18 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :configurable_option, non_null(:configurable_option), resolve: dataloader(:db)
   end
 
+  input_object :parent_product_input do
+    # field :product, non_null(:product), resolve: dataloader(:db)
+    field :configurable_option_ids, list_of(:id)
+    field :child_products, list_of(:child_product_input)
+  end
+
+  input_object :child_product_input do
+    # field :product, non_null(:product), resolve: dataloader(:db)
+    # field :parent_product, non_null(:parent_product), resolve: dataloader(:db)
+    field :configurable_item_option_ids, list_of(:id)
+  end
+
   input_object :product_price_input do
     field :amount, :decimal
     field :currency_id, :id
@@ -45,8 +71,9 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
+    field :parent_product, :parent_product_input
+    field :child_product, :child_product_input
     field :price, :product_price_input
-    field :parent_product_id, :id
     field :vat_group_id, :id
   end
 
