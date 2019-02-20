@@ -5,6 +5,7 @@ defmodule Ruzenkit.Products.Product do
   alias Ruzenkit.Products.ConfigurableOption
   alias Ruzenkit.Products.ConfigurableProduct
   alias Ruzenkit.Products.ProductPrice
+  alias Ruzenkit.Stocks.Stock
 
   schema "products" do
     field :description, :string
@@ -17,6 +18,7 @@ defmodule Ruzenkit.Products.Product do
     many_to_many :configurable_options, ConfigurableOption, join_through: "products_configurable_options"
     has_many :child_products, Ruzenkit.Products.Product
     has_one :configurable_Product, ConfigurableProduct
+    has_one :stock, Stock
 
     timestamps()
   end
