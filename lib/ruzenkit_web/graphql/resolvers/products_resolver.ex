@@ -35,6 +35,27 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, configurable_options}
   end
 
+  def get_configurable_option(_root, %{id: id}, _info) do
+    case Products.get_configurable_option(id) do
+      nil ->
+        {:error, "configurable option with id #{id} not found"}
+
+      configurable_option ->
+        {:ok, configurable_option}
+    end
+  end
+
+  def get_configurable_item_options(
+        _root,
+        %{configurable_option_id: configurable_option_id},
+        _info
+      ) do
+    configurable_item_options =
+      Products.get_configurable_item_options_by_co(configurable_option_id)
+
+    {:ok, configurable_item_options}
+  end
+
   def create_configurable_option(_root, args, %{context: %{is_admin: true}}) do
     case Products.create_configurable_option(args) do
       {:ok, configurable_option} ->
@@ -47,6 +68,24 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
   end
 
   def create_configurable_option(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
+
+  def update_configurable_option(_root, %{id: id, configurable_option: configurable_option}, %{
+        context: %{is_admin: true}
+      }) do
+    db_configurable_option = Products.get_configurable_option!(id)
+
+    case Products.update_configurable_option(db_configurable_option, configurable_option) do
+      {:ok, configurable_option} ->
+        {:ok, configurable_option}
+
+      error ->
+        {:error, changeset_error_to_graphql("could not update configurable option", error)}
+        # {:error, "could not create configurable option"}
+    end
+  end
+
+  def update_configurable_option(_root, _args, _info),
     do: {:error, ResponseUtils.unauthorized_response()}
 
   def create_configurable_item_option(

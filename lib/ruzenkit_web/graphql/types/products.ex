@@ -77,6 +77,12 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :vat_group_id, :id
   end
 
+  input_object :configurable_option_input do
+    field :label, non_null(:string)
+    # field :configurable_item_options, list_of(non_null(:configurable_item_option)), resolve: dataloader(:db)
+    # field :products, list_of(:product), resolve: dataloader(:db)
+  end
+
   input_object :configurable_item_option_input do
     field :label, :string
     field :short_label, :string

@@ -95,24 +95,24 @@ Products.create_configurable_item_option(%{
 {:ok, euro_currency} = Money.create_currency(%{name: "Euro", code: "EUR", sign: "€"})
 Money.create_currency(%{name: "US Dollar", code: "USD", sign: "$"})
 
-Products.create_product(%{
-  name: "Foo",
-  sku: "foo",
-  description: "The foo product",
-  vat_group_id: vat_group.id,
-  price: %{
-    amount: 25.5,
-    currency_id: euro_currency.id
-  }
-})
+# Products.create_product(%{
+#   name: "Foo",
+#   sku: "foo",
+#   description: "The foo product",
+#   vat_group_id: vat_group.id,
+#   price: %{
+#     amount: 25.5,
+#     currency_id: euro_currency.id
+#   }
+# })
 
-{:ok, le_slip_product} Products.create_product(%{
-  name: "Le slip",
-  sku: "le_slip",
-  description: "Un slip",
-  vat_group_id: vat_group.id,
-  price: %{
-    amount: 20,
-    currency_id: euro_currency.id
-  }
-})
+# {:ok, le_slip_product} Products.create_product(%{
+#   name: "Le slip",
+#   sku: "le_slip",
+#   description: "Un slip",
+#   vat_group_id: vat_group.id,
+#   price: %{
+#     amount: 20,
+#     currency_id: euro_currency.id
+#   }
+# })

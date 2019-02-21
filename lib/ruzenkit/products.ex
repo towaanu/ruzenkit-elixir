@@ -137,6 +137,7 @@ defmodule Ruzenkit.Products do
 
   """
   def get_configurable_option!(id), do: Repo.get!(ConfigurableOption, id)
+  def get_configurable_option(id), do: Repo.get(ConfigurableOption, id)
 
   @doc """
   Creates a configurable_option.
@@ -213,7 +214,6 @@ defmodule Ruzenkit.Products do
     |> Ecto.Changeset.put_assoc(:configurable_options, [configurable_option])
     |> Repo.update()
   end
-
 
   alias Ruzenkit.Products.ConfigurableProduct
 
@@ -341,6 +341,14 @@ defmodule Ruzenkit.Products do
 
   """
   def get_configurable_item_option!(id), do: Repo.get!(ConfigurableItemOption, id)
+
+  def get_configurable_item_options_by_co(id) do
+    query =
+      from cio in ConfigurableItemOption,
+        where: cio.configurable_option_id == ^id
+
+      Repo.all(query)
+  end
 
   @doc """
   Creates a configurable_item_option.
