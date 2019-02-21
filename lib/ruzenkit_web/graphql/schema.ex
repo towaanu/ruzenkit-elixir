@@ -105,6 +105,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&AddressesResolver.list_countries/3)
     end
 
+    field :country, :country do
+      arg(:id, non_null(:id))
+
+      resolve(&AddressesResolver.get_country/3)
+    end
+
     field :shipping_carriers, list_of(:shipping_carrier) do
       resolve(&ShippingsResolver.list_shipping_carriers/3)
     end
@@ -112,6 +118,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
     field :vat_groups, list_of(:vat_group) do
       resolve(&VatResolver.list_vat_groups/3)
     end
+
   end
 
   mutation do
@@ -248,5 +255,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
       resolve(&VatResolver.create_vat_group/3)
     end
+
+    field :update_country, :country do
+      arg :id, non_null(:id)
+      arg :country, non_null(:country_input)
+
+      resolve &AddressesResolver.update_country/3
+    end
+
   end
 end
