@@ -56,8 +56,8 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, configurable_item_options}
   end
 
-  def create_configurable_option(_root, args, %{context: %{is_admin: true}}) do
-    case Products.create_configurable_option(args) do
+  def create_configurable_option(_root, %{configurable_option: configurable_option}, %{context: %{is_admin: true}}) do
+    case Products.create_configurable_option(configurable_option) do
       {:ok, configurable_option} ->
         {:ok, configurable_option}
 

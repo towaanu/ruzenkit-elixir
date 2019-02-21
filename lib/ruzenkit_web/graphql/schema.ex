@@ -122,7 +122,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
     end
 
     field :create_configurable_option, :configurable_option do
-      arg :label, non_null(:string)
+      arg :configurable_option, non_null(:configurable_option_input)
 
       resolve &ProductsResolver.create_configurable_option/3
     end
