@@ -42,7 +42,7 @@ defmodule RuzenkitWeb.Graphql.AddressesResolver do
       {:ok, country} ->
         {:ok, country}
 
-      error ->
+      {:error, error} ->
         {:error, changeset_error_to_graphql("could not update country", error)}
     end
   end

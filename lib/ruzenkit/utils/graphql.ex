@@ -8,7 +8,11 @@ defmodule Ruzenkit.Utils.Graphql do
       end)
     end)
 
-    %{message: message, details: details}
+    messages = details
+    |> Map.to_list()
+    |> Enum.map(fn {key, value} -> "#{key} #{value}" end)
+
+    %{message: message, details: details, messages: messages}
   end
 
 
