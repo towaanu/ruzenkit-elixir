@@ -119,6 +119,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&VatResolver.list_vat_groups/3)
     end
 
+    field :vat_group, :vat_group do
+      arg :id, non_null(:id)
+
+      resolve(&VatResolver.get_vat_group/3)
+    end
+
   end
 
   mutation do
@@ -254,6 +260,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg(:vat_group, non_null(:vat_group_input))
 
       resolve(&VatResolver.create_vat_group/3)
+    end
+
+    field :update_vat_group, :vat_group do
+      arg(:id, non_null(:id))
+      arg(:vat_group, non_null(:vat_group_input))
+
+      resolve(&VatResolver.update_vat_group/3)
     end
 
     field :update_country, :country do

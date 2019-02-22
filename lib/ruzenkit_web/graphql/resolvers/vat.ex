@@ -22,4 +22,30 @@ defmodule RuzenkitWeb.Graphql.VatResolver do
   end
 
   def create_vat_group(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
+  def update_vat_group(_root, %{id: id, vat_group: vat_group_params}, %{context: %{is_admin: true}}) do
+
+    db_vat_group = Vat.get_vat_group!(id)
+
+    case Vat.update_vat_group(db_vat_group, vat_group_params) do
+      {:ok, vat_group} ->
+        {:ok, vat_group}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("could not update vat_group", error)}
+    end
+  end
+
+  def update_vat_group(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
+  def get_vat_group(_root, %{id: id}, _info) do
+    case Vat.get_vat_group(id) do
+      nil ->
+        {:error, "vat_group with id #{id} not found"}
+
+        vat_group ->
+        {:ok, vat_group}
+    end
+  end
+
 end

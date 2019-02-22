@@ -36,6 +36,7 @@ defmodule Ruzenkit.Vat do
 
   """
   def get_vat_group!(id), do: Repo.get!(VatGroup, id)
+  def get_vat_group(id), do: Repo.get(VatGroup, id)
 
   @doc """
   Creates a vat_group.
@@ -68,6 +69,7 @@ defmodule Ruzenkit.Vat do
 
   """
   def update_vat_group(%VatGroup{} = vat_group, attrs) do
+    IO.inspect(attrs)
     vat_group
     |> VatGroup.changeset(attrs)
     |> Repo.update()
