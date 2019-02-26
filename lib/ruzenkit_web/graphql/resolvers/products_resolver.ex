@@ -8,6 +8,13 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, products}
   end
 
+  def list_parent_products(_root, _args, %{context: %{is_admin: true}}) do
+    parent_products = Products.list_parent_products()
+    {:ok, parent_products}
+  end
+
+  def list_parent_products(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
   def create_product(_root, %{product: product}, %{context: %{is_admin: true}}) do
     case Products.create_product(product) do
       {:ok, product} ->
@@ -27,6 +34,16 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
 
       product ->
         {:ok, product}
+    end
+  end
+
+  def get_parent_product(_root, %{id: id}, _info) do
+    case Products.get_parent_product(id) do
+      nil ->
+        {:error, "parent product with id #{id} not found"}
+
+      parent_product ->
+        {:ok, parent_product}
     end
   end
 

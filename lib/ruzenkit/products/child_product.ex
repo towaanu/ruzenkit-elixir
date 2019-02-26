@@ -20,18 +20,18 @@ defmodule Ruzenkit.Products.ChildProduct do
   def changeset(child_product, attrs) do
     child_product
     |> cast(attrs, [:parent_product_id])
-    |> cast_assoc(:product)
-    |> put_assoc(:configurable_options, get_configurable_item_options(attrs))
+    # |> cast_assoc(:product)
+    |> put_assoc(:configurable_item_options, get_configurable_item_options(attrs))
     |> validate_required([])
     |> foreign_key_constraint(:parent_product_id)
   end
 
   defp get_configurable_item_options(%{configurable_item_option_ids: configurable_item_option_ids}) do
     configurable_item_option_ids
+    |> Enum.filter(& &1) # remove nil
     |> Enum.map(fn id ->
       Repo.get(ConfigurableItemOption, id)
     end)
-    |> Enum.filter(& &1) # remove nil
   end
 
   defp get_configurable_item_options(_params), do: []

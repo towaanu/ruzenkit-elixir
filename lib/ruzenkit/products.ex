@@ -7,6 +7,7 @@ defmodule Ruzenkit.Products do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Products.Product
+  alias Ruzenkit.Products.ParentProduct
 
   @doc """
   Returns the list of products.
@@ -20,6 +21,20 @@ defmodule Ruzenkit.Products do
   def list_products do
     Repo.all(Product)
   end
+
+  # def list_parent_products do
+  #   parent_product_query =
+  #     from parent_product in ParentProduct,
+  #       select: parent_product.product_id
+
+  #   parent_product_ids = Repo.all(parent_product_query)
+
+  #   query =
+  #     from product in Product,
+  #       where: product.id in ^parent_product_ids
+
+  #   Repo.all(query)
+  # end
 
   @doc """
   Gets a single product.
@@ -347,7 +362,7 @@ defmodule Ruzenkit.Products do
       from cio in ConfigurableItemOption,
         where: cio.configurable_option_id == ^id
 
-      Repo.all(query)
+    Repo.all(query)
   end
 
   @doc """
@@ -541,6 +556,7 @@ defmodule Ruzenkit.Products do
 
   """
   def get_parent_product!(id), do: Repo.get!(ParentProduct, id)
+  def get_parent_product(id), do: Repo.get(ParentProduct, id)
 
   @doc """
   Creates a parent_product.

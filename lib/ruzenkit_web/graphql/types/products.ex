@@ -10,14 +10,16 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
   end
 
   object :parent_product do
+    field :id, non_null(:id)
     field :product, non_null(:product), resolve: dataloader(:db)
     field :configurable_options, list_of(:configurable_option), resolve: dataloader(:db)
     field :child_products, list_of(:child_product), resolve: dataloader(:db)
   end
 
   object :child_product do
+    field :id, non_null(:id)
     field :product, non_null(:product), resolve: dataloader(:db)
-    field :parent_product, non_null(:parent_product), resolve: dataloader(:db)
+    field :parent_product, :parent_product, resolve: dataloader(:db)
     field :configurable_item_options, list_of(:configurable_item_option), resolve: dataloader(:db)
   end
 
@@ -53,12 +55,13 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
   input_object :parent_product_input do
     # field :product, non_null(:product), resolve: dataloader(:db)
     field :configurable_option_ids, list_of(:id)
-    field :child_products, list_of(:child_product_input)
+    # field :child_products, list_of(:child_product_input)
   end
 
   input_object :child_product_input do
     # field :product, non_null(:product), resolve: dataloader(:db)
     # field :parent_product, non_null(:parent_product), resolve: dataloader(:db)
+    field :parent_product_id, non_null(:id)
     field :configurable_item_option_ids, list_of(:id)
   end
 

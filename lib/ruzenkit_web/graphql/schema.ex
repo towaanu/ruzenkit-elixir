@@ -43,6 +43,16 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&ProductsResolver.list_products/3)
     end
 
+    field :parent_products, list_of(:parent_product) do
+      resolve(&ProductsResolver.list_parent_products/3)
+    end
+
+    field :parent_product, :parent_product do
+      arg(:id, non_null(:id))
+
+      resolve(&ProductsResolver.get_parent_product/3)
+    end
+
     field :product, :product do
       arg(:id, non_null(:id))
 
