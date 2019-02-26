@@ -27,6 +27,21 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
 
   def create_product(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
+  def update_product(_root, %{product: product_params, id: id}, %{context: %{is_admin: true}}) do
+
+    db_product = Products.get_product!(id)
+
+    case Products.update_product(db_product, product_params) do
+      {:ok, product} ->
+        {:ok, product}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to update product #{id}", error)}
+    end
+  end
+
+  def update_product(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
   def get_product(_root, %{id: id}, _info) do
     case Products.get_product(id) do
       nil ->

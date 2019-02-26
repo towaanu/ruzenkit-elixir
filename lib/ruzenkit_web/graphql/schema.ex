@@ -144,6 +144,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&ProductsResolver.create_product/3)
     end
 
+    field :update_product, :product do
+      arg :id, non_null(:id)
+      arg :product, non_null(:product_input)
+
+      resolve(&ProductsResolver.update_product/3)
+    end
+
     field :create_configurable_option, :configurable_option do
       arg :configurable_option, non_null(:configurable_option_input)
 
