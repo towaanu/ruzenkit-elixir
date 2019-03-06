@@ -14,7 +14,7 @@ defmodule Ruzenkit.Products.Product do
     field :name, :string
     field :sku, :string
 
-    belongs_to :price, ProductPrice, foreign_key: :product_price_id
+    belongs_to :price, ProductPrice, foreign_key: :product_price_id, on_replace: :update
     belongs_to :vat_group, VatGroup
 
     has_one :configurable_Product, ConfigurableProduct
@@ -30,6 +30,7 @@ defmodule Ruzenkit.Products.Product do
   def changeset(product, attrs) do
     product
     |> cast(attrs, [:sku, :name, :description, :vat_group_id])
+    |> cast_assoc(:price)
     |> validate_required([:sku, :name, :description])
     |> unique_constraint(:sku)
     |> foreign_key_constraint(:parent_product_id)

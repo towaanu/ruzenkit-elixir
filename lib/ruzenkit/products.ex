@@ -50,7 +50,11 @@ defmodule Ruzenkit.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_product!(id), do: Repo.get!(Product, id)
+  def get_product!(id) do
+    Repo.get!(Product, id)
+    |> Repo.preload(:price)
+  end
+
 
   def get_product(id), do: Repo.get(Product, id)
 
