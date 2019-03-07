@@ -5,7 +5,7 @@ defmodule Ruzenkit.Vat.VatGroup do
 
   schema "vat_groups" do
     field :label, :string
-    field :rate, :float, default: 0
+    field :rate, :float, default: 0.0
     belongs_to :country, Country
 
     timestamps()
@@ -17,4 +17,5 @@ defmodule Ruzenkit.Vat.VatGroup do
     |> cast(attrs, [:rate, :label, :country_id])
     |> foreign_key_constraint(:country_id)
   end
+
 end
