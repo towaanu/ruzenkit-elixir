@@ -7,6 +7,7 @@ defmodule Ruzenkit.Carts do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Carts.Cart
+  alias Ruzenkit.Products
 
   alias Ecto.Multi
 
@@ -170,7 +171,13 @@ defmodule Ruzenkit.Carts do
     case Repo.one(query) do
       # new one
       nil ->
-        create_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id})
+        case Products.is_parent_product(product_id) do
+          true ->
+            {:parent_product_error, "Can't add parent product"}
+
+          false ->
+            create_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id})
+        end
 
       # update_existing
       cart_item ->
@@ -181,28 +188,31 @@ defmodule Ruzenkit.Carts do
 
   # When there is no cart yet
   def add_cart_item(%{product_id: product_id, quantity: quantity}) do
-    result =
-      Multi.new()
-      |> Multi.insert(:cart, %Cart{})
-      |> Multi.insert(:cart_item, fn %{cart: %{id: cart_id}} ->
-        CartItem.changeset(%CartItem{}, %{
-          product_id: product_id,
-          quantity: quantity,
-          cart_id: cart_id
-        })
-      end)
-      |> Repo.transaction()
+    case Products.is_parent_product(product_id) do
+      true ->
+        {:parent_product_error, "Can't add parent product"}
 
-    case result do
-      {:ok, %{cart: _cart, cart_item: cart_item}} -> {:ok, cart_item}
-      {:error, _failed_operation, failed_value, _changes_so_far} -> {:error, failed_value}
+      false ->
+        result =
+          Multi.new()
+          |> Multi.insert(:cart, %Cart{})
+          |> Multi.insert(:cart_item, fn %{cart: %{id: cart_id}} ->
+            CartItem.changeset(%CartItem{}, %{
+              product_id: product_id,
+              quantity: quantity,
+              cart_id: cart_id
+            })
+          end)
+          |> Repo.transaction()
+
+        case result do
+          {:ok, %{cart: _cart, cart_item: cart_item}} -> {:ok, cart_item}
+          {:error, _failed_operation, failed_value, _changes_so_far} -> {:error, failed_value}
+        end
     end
   end
 
-  alias Ruzenkit.Products
-
   def add_configurable_item(%{product_id: product_id} = cart_item, option_item_ids) do
-    IO.puts("FOOOO")
     case Products.get_child_product_by_options(product_id, option_item_ids) do
       nil ->
         {:no_product_found_error, "child product not found"}

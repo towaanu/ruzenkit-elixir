@@ -561,6 +561,18 @@ defmodule Ruzenkit.Products do
   def get_parent_product!(id), do: Repo.get!(ParentProduct, id)
   def get_parent_product(id), do: Repo.get(ParentProduct, id)
 
+  def is_parent_product(product_id) do
+    query =
+      from pp in ParentProduct,
+      where: pp.product_id == ^product_id
+
+    case Repo.one(query) do
+      nil -> false
+      _parent_product -> true
+    end
+
+  end
+
   @doc """
   Creates a parent_product.
 
@@ -657,10 +669,12 @@ defmodule Ruzenkit.Products do
   """
   def get_child_product!(id), do: Repo.get!(ChildProduct, id)
 
-  defp strings_to_integer(str_value) when is_bitstring(str_value), do: String.to_integer(str_value)
-  defp strings_to_integer(int_value) when is_integer(int_value), do: int_value
-  def get_child_product_by_options(parent_id, option_item_ids) do
+  defp strings_to_integer(str_value) when is_bitstring(str_value),
+    do: String.to_integer(str_value)
 
+  defp strings_to_integer(int_value) when is_integer(int_value), do: int_value
+
+  def get_child_product_by_options(parent_id, option_item_ids) do
     integer_option_item_ids = Enum.map(option_item_ids, &strings_to_integer/1)
 
     product =
@@ -678,7 +692,7 @@ defmodule Ruzenkit.Products do
         Enum.sort(integer_option_item_ids) == Enum.sort(cp_item_option_ids)
       end)
 
-      res
+    res
   end
 
   @doc """

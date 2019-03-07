@@ -53,6 +53,9 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
 
       {:no_product_found_error, error_msg} ->
         {:error, error_msg}
+
+      {:parent_product_error, error_msg} ->
+        {:error, error_msg}
     end
   end
 
@@ -60,6 +63,9 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
     case Carts.add_cart_item(cart_item) do
       {:ok, cart_item} ->
         {:ok, cart_item}
+
+      {:parent_product_error, error_msg} ->
+        {:error, error_msg}
 
       {:error, error} ->
         {:error, changeset_error_to_graphql("unable to create add new cart item", error)}
