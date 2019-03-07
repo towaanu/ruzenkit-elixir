@@ -103,6 +103,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&MoneyResolver.list_currencies/3)
     end
 
+    field :currency, :currency do
+      arg(:id, non_null(:id))
+
+      resolve &MoneyResolver.get_currency/3
+    end
+
     field :orders, list_of(:order) do
       resolve(&OrdersResolver.list_orders/3)
     end
@@ -292,6 +298,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :country, non_null(:country_input)
 
       resolve &AddressesResolver.update_country/3
+    end
+
+    field :update_currency, :currency do
+      arg :id, non_null(:id)
+      arg :currency, non_null(:currency_input)
+
+      resolve &MoneyResolver.update_currency/3
     end
 
   end

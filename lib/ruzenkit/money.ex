@@ -36,6 +36,7 @@ defmodule Ruzenkit.Money do
 
   """
   def get_currency!(id), do: Repo.get!(Currency, id)
+  def get_currency(id), do: Repo.get(Currency, id)
 
   @doc """
   Creates a currency.
