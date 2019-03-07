@@ -55,7 +55,6 @@ defmodule Ruzenkit.Products do
     |> Repo.preload(:price)
   end
 
-
   def get_product(id), do: Repo.get(Product, id)
 
   @doc """
@@ -657,6 +656,30 @@ defmodule Ruzenkit.Products do
 
   """
   def get_child_product!(id), do: Repo.get!(ChildProduct, id)
+
+  defp strings_to_integer(str_value) when is_bitstring(str_value), do: String.to_integer(str_value)
+  defp strings_to_integer(int_value) when is_integer(int_value), do: int_value
+  def get_child_product_by_options(parent_id, option_item_ids) do
+
+    integer_option_item_ids = Enum.map(option_item_ids, &strings_to_integer/1)
+
+    product =
+      Repo.get(Product, parent_id)
+      |> Repo.preload(parent_product: [child_products: [:product, :configurable_item_options]])
+
+    child_products = product.parent_product.child_products
+
+    res =
+      Enum.find(child_products, fn %{configurable_item_options: configurable_item_options} ->
+        cp_item_option_ids =
+          configurable_item_options
+          |> Enum.map(& &1.id)
+
+        Enum.sort(integer_option_item_ids) == Enum.sort(cp_item_option_ids)
+      end)
+
+      res
+  end
 
   @doc """
   Creates a child_product.

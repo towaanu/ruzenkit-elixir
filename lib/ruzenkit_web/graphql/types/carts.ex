@@ -25,4 +25,9 @@ defmodule RuzenkitWeb.Graphql.Types.Carts do
     field :cart_id, :id
     field :product_id, :id
   end
+
+  input_object :product_option_input do
+    field :option_id, non_null(:id)
+    field :option_item_id, non_null(:id)
+  end
 end

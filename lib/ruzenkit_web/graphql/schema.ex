@@ -209,6 +209,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :add_to_cart, :cart_item do
       arg(:cart_item, :cart_item_input)
+      arg(:option_item_ids, list_of(:id))
 
       resolve(&CartsResolver.add_to_cart/3)
     end
