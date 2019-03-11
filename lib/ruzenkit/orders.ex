@@ -64,22 +64,23 @@ defmodule Ruzenkit.Orders do
     Ruzenkit.Email.order_email(email: email) |> Ruzenkit.Mailer.deliver_now()
   end
 
-  def create_order_from_cart(cart_id) do
+  def create_order_from_cart(cart_id, order_address) do
     status_id = 1
 
     cart = Carts.get_cart_with_total(cart_id)
     order_items = Enum.map(cart.cart_items, &cart_item_to_order_item/1)
 
-    new_order = %Order{
+    new_order_attrs = %{
       total: cart.total_price,
       user_id: cart.user_id,
       order_status_id: status_id,
-      order_items: order_items
+      order_items: order_items,
+      order_address: order_address
     }
 
     new_order_changeset =
-      new_order
-      |> Order.changeset(%{})
+      %Order{}
+      |> Order.changeset(new_order_attrs)
       |> Ecto.Changeset.cast_assoc(:order_items)
 
     res =
@@ -92,6 +93,7 @@ defmodule Ruzenkit.Orders do
 
     case res do
       {:ok, %{order: order}} ->
+        IO.inspect(order)
         send_order_mail(order)
         {:ok, order}
 

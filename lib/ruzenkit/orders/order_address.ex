@@ -5,6 +5,7 @@ defmodule Ruzenkit.Orders.OrderAddress do
 
 
   schema "order_addresses" do
+
     field :building, :string
     field :city, :string
     field :extra_info, :string
@@ -14,11 +15,9 @@ defmodule Ruzenkit.Orders.OrderAddress do
     field :place, :string
     field :zip_code, :string
     field :street, :string
-
     field :country, :string
 
-    has_one :order, Order
-
+    belongs_to :order, Order
     timestamps()
   end
 

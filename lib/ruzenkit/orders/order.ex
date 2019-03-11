@@ -11,7 +11,7 @@ defmodule Ruzenkit.Orders.Order do
     belongs_to :user, User
     belongs_to :order_status, OrderStatus
     has_many :order_items, OrderItem
-    belongs_to :order_address, OrderAddress
+    has_one :order_address, OrderAddress
 
     timestamps()
   end
@@ -19,9 +19,11 @@ defmodule Ruzenkit.Orders.Order do
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:total, :order_status_id])
+    |> cast(attrs, [:total, :order_status_id, :user_id])
+    |> cast_assoc(:order_address, with: &Ruzenkit.Orders.OrderAddress.changeset/2)
     |> validate_number(:total, greater_than_or_equal_to: 0)
     |> validate_required([:total, :order_status_id])
     |> foreign_key_constraint(:order_status_id)
+    |> foreign_key_constraint(:user_id)
   end
 end

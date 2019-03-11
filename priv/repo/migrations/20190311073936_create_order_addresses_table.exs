@@ -14,14 +14,16 @@ defmodule Ruzenkit.Repo.Migrations.CreateOrderAddressesTable do
       add :extra_info, :string
       add :country, :string
 
+      add :order_id, references(:orders, on_delete: :delete_all)
+
       timestamps()
     end
 
-    alter table(:orders) do
-      add :order_address_id, references(:order_addresses, on_delete: :delete_all)
-    end
+    # alter table(:orders) do
+    #   add :order_address_id, references(:order_addresses, on_delete: :delete_all)
+    # end
 
-    create index(:orders, [:order_address_id])
+    create index(:order_addresses, [:order_id])
 
   end
 end
