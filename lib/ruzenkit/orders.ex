@@ -9,7 +9,6 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Orders.Order
   alias Ruzenkit.Carts
   alias Ruzenkit.Orders.OrderItem
-  alias Ecto.Multi
 
   @doc """
   Returns the list of orders.

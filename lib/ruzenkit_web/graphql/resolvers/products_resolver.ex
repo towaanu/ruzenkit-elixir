@@ -13,7 +13,8 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, parent_products}
   end
 
-  def list_parent_products(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+  def list_parent_products(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
 
   def create_product(_root, %{product: product}, %{context: %{is_admin: true}}) do
     case Products.create_product(product) do
@@ -28,7 +29,6 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
   def create_product(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
   def update_product(_root, %{product: product_params, id: id}, %{context: %{is_admin: true}}) do
-
     db_product = Products.get_product!(id)
 
     case Products.update_product(db_product, product_params) do
@@ -88,7 +88,19 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, configurable_item_options}
   end
 
-  def create_configurable_option(_root, %{configurable_option: configurable_option}, %{context: %{is_admin: true}}) do
+  def get_configurable_item_option(_root, %{id: id}, _info) do
+    case Products.get_configurable_item_option(id) do
+      nil ->
+        {:error, "configurable item option with id #{id} not found"}
+
+      configurable_item_option ->
+        {:ok, configurable_item_option}
+    end
+  end
+
+  def create_configurable_option(_root, %{configurable_option: configurable_option}, %{
+        context: %{is_admin: true}
+      }) do
     case Products.create_configurable_option(configurable_option) do
       {:ok, configurable_option} ->
         {:ok, configurable_option}

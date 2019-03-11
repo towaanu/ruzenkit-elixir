@@ -75,6 +75,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&ProductsResolver.get_configurable_item_options/3)
     end
 
+    field :configurable_item_option, :configurable_item_option do
+      arg(:id, non_null(:id))
+
+      resolve(&ProductsResolver.get_configurable_item_option/3)
+    end
+
     field :users, list_of(:user) do
       resolve(&AccountsResolver.list_users/3)
     end

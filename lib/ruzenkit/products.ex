@@ -359,6 +359,7 @@ defmodule Ruzenkit.Products do
 
   """
   def get_configurable_item_option!(id), do: Repo.get!(ConfigurableItemOption, id)
+  def get_configurable_item_option(id), do: Repo.get!(ConfigurableItemOption, id)
 
   def get_configurable_item_options_by_co(id) do
     query =

@@ -12,7 +12,7 @@ defmodule Ruzenkit.Repo.Migrations.CreateChildProducts do
     create index(:child_products, [:product_id])
 
     create table(:child_products_configurable_item_options) do
-      add :child_product_id, references(:parent_products), null: false, primary_key: true
+      add :child_product_id, references(:child_products), null: false, primary_key: true
       add :configurable_item_option_id, references(:configurable_item_options), null: false, primary_key: true
 
     end

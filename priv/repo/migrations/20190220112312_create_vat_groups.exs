@@ -13,7 +13,7 @@ defmodule Ruzenkit.Repo.Migrations.CreateVatGroups do
     create index(:vat_groups, [:country_id])
 
     alter table(:products) do
-      add :vat_group_id, references(:countries, on_delete: :nothing)
+      add :vat_group_id, references(:vat_groups, on_delete: :nothing)
     end
     create index(:products, [:vat_group_id])
 
