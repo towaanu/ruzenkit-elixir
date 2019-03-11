@@ -4,12 +4,14 @@ defmodule Ruzenkit.Orders.Order do
   alias Ruzenkit.Accounts.User
   alias Ruzenkit.Orders.OrderItem
   alias Ruzenkit.Orders.OrderStatus
+  alias Ruzenkit.Orders.OrderAddress
 
   schema "orders" do
     field :total, :decimal, precision: 12, scale: 2
     belongs_to :user, User
     belongs_to :order_status, OrderStatus
     has_many :order_items, OrderItem
+    belongs_to :order_address, OrderAddress
 
     timestamps()
   end
