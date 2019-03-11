@@ -9,6 +9,7 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Orders.Order
   alias Ruzenkit.Carts
   alias Ruzenkit.Orders.OrderItem
+  alias Ecto.Multi
 
   @doc """
   Returns the list of orders.
@@ -57,15 +58,21 @@ defmodule Ruzenkit.Orders do
     |> Repo.insert()
   end
 
+  defp send_order_mail(order = %Order{}) do
+    %{user: %{profile: %{email: email}}} = Repo.preload(order, user: :profile)
+
+    Ruzenkit.Email.order_email(email: email) |> Ruzenkit.Mailer.deliver_now()
+  end
+
   def create_order_from_cart(cart_id) do
     status_id = 1
 
     cart = Carts.get_cart_with_total(cart_id)
-    # %{total_price: total_price, cart_items: cart_items} = Carts.get_cart_with_total(cart_id)
     order_items = Enum.map(cart.cart_items, &cart_item_to_order_item/1)
 
     new_order = %Order{
       total: cart.total_price,
+      user_id: cart.user_id,
       order_status_id: status_id,
       order_items: order_items
     }
@@ -75,15 +82,21 @@ defmodule Ruzenkit.Orders do
       |> Order.changeset(%{})
       |> Ecto.Changeset.cast_assoc(:order_items)
 
-    # |> Repo.insert()
-
-    case Repo.insert(new_order_changeset) do
-      {:ok, order} ->
+    res =
+      Multi.new()
+      |> Multi.insert(:order, new_order_changeset)
+      |> Multi.run(:delete_cart, fn _repo, _changes ->
         Carts.delete_cart(cart)
+      end)
+      |> Repo.transaction()
+
+    case res do
+      {:ok, %{order: order}} ->
+        send_order_mail(order)
         {:ok, order}
 
-      {:error, error} ->
-        {:error, error}
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
     end
   end
 

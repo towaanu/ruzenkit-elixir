@@ -20,7 +20,7 @@ defmodule Ruzenkit.MixProject do
   def application do
     [
       mod: {Ruzenkit.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :bamboo, :bamboo_smtp]
     ]
   end
 
@@ -47,7 +47,9 @@ defmodule Ruzenkit.MixProject do
       {:dataloader, "~> 1.0.0"},
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.2.1"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+      {:bamboo, "~> 1.2"},
+      {:bamboo_smtp, "~> 1.6.0"}
     ]
   end
 
