@@ -17,8 +17,9 @@ defmodule Ruzenkit.Carts.Cart do
   @doc false
   def changeset(cart, attrs) do
     cart
-    |> cast(attrs, [])
+    |> cast(attrs, [:user_id])
     |> validate_required([])
+    |> foreign_key_constraint(:user_id)
   end
 
   def populate_total_price(%Cart{cart_items: cart_items} = cart) do

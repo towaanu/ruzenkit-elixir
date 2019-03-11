@@ -4,7 +4,7 @@ defmodule Ruzenkit.Repo.Migrations.CreateOrderItems do
   def change do
     create table(:order_items) do
       add :quantity, :integer
-      add :order_id, references(:orders, on_delete: :nothing)
+      add :order_id, references(:orders, on_delete: :delete_all)
       add :product_id, references(:products, on_delete: :nothing)
 
       timestamps()

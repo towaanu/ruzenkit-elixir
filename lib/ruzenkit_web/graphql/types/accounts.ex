@@ -46,7 +46,7 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
   input_object :profile_address_input do
     field :is_default, :boolean
     field :address, non_null(:address_input)
-    field :profile_id, non_null(:id)
+    # field :profile_id, non_null(:id)
   end
 
 end

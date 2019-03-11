@@ -214,7 +214,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
     end
 
     field :create_cart, :cart do
-      arg(:cart, :cart_input)
+      # arg(:cart, :cart_input)
 
       resolve(&CartsResolver.create_cart/3)
     end
