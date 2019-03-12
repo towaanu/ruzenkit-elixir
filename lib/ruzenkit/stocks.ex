@@ -100,6 +100,11 @@ defmodule Ruzenkit.Stocks do
   #   |> Repo.update()
   # end
 
+  def remove_product_stock(product_id, quantity) do
+    %{id: stock_id} = Repo.get_by!(Stock, product_id: product_id)
+    update_stock(%{stock_id: stock_id, operation: -quantity, label: "SOLD"})
+  end
+
   def update_stock(%{stock_id: stock_id, operation: operation, label: label}) do
     stock = Stock |> Repo.get!(stock_id)
 

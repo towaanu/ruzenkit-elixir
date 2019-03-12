@@ -9,6 +9,7 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Orders.Order
   alias Ruzenkit.Carts
   alias Ruzenkit.Orders.OrderItem
+  alias Ruzenkit.Stocks
   alias Ecto.Multi
 
   @doc """
@@ -64,6 +65,24 @@ defmodule Ruzenkit.Orders do
     Ruzenkit.Email.order_email(email: email) |> Ruzenkit.Mailer.deliver_now()
   end
 
+  defp remove_products_stock(%{cart_items: cart_items}) do
+    cart_items
+    |> Enum.map(fn %{quantity: quantity, product_id: product_id} ->
+      Stocks.remove_product_stock(product_id, quantity)
+    end)
+    |> Enum.all?(fn res ->
+      case res do
+        {:ok, _value} -> true
+        {:error, _error} -> false
+      end
+    end)
+    |> case  do
+     true  -> {:ok, true}
+     false -> {:error, "error while removing stock"}
+
+    end
+  end
+
   def create_order_from_cart(cart_id, order_address) do
     status_id = 1
 
@@ -86,6 +105,7 @@ defmodule Ruzenkit.Orders do
     res =
       Multi.new()
       |> Multi.insert(:order, new_order_changeset)
+      |> Multi.run(:remove_stock, fn _repo, _changes -> remove_products_stock(cart) end)
       |> Multi.run(:delete_cart, fn _repo, _changes ->
         Carts.delete_cart(cart)
       end)
@@ -93,7 +113,6 @@ defmodule Ruzenkit.Orders do
 
     case res do
       {:ok, %{order: order}} ->
-        IO.inspect(order)
         send_order_mail(order)
         {:ok, order}
 
