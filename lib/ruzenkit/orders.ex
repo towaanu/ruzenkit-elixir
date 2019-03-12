@@ -70,15 +70,15 @@ defmodule Ruzenkit.Orders do
     |> Enum.map(fn %{quantity: quantity, product_id: product_id} ->
       Stocks.remove_product_stock(product_id, quantity)
     end)
-    |> Enum.all?(fn res ->
+    |> Enum.find(fn res ->
       case res do
-        {:ok, _value} -> true
-        {:error, _error} -> false
+        {:ok, _value} -> false
+        {:error, _error} -> true
       end
     end)
     |> case  do
-     true  -> {:ok, true}
-     false -> {:error, "error while removing stock"}
+     nil  -> {:ok, true}
+     {:error, error} -> {:error, error}
 
     end
   end

@@ -16,6 +16,7 @@ defmodule Ruzenkit.Stocks.Stock do
   def changeset(stock, attrs) do
     stock
     |> cast(attrs, [:quantity, :product_id])
+    |> validate_number(:quantity, greater_than_or_equal_to: 0)
     |> validate_required([:quantity, :product_id])
   end
 end
