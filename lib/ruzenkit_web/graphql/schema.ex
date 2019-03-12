@@ -152,6 +152,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&StocksResolver.list_stocks/3)
     end
 
+    field :stock, :stock do
+      arg :id, non_null(:id)
+
+      resolve(&StocksResolver.get_stock/3)
+    end
+
   end
 
   mutation do

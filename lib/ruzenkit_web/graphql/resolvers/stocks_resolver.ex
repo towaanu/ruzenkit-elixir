@@ -24,4 +24,16 @@ defmodule RuzenkitWeb.Graphql.StocksResolver do
   # if not admin return error message
   def list_stocks(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
+  def get_stock(_root, %{id: id}, %{context: %{is_admin: true}}) do
+    case Stocks.get_stock(id) do
+      nil ->
+        {:error, "stock with id #{id} not found"}
+
+      stock ->
+        {:ok, stock}
+    end
+  end
+
+  def get_stock(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
 end

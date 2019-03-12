@@ -38,6 +38,7 @@ defmodule Ruzenkit.Stocks do
 
   """
   def get_stock!(id), do: Repo.get!(Stock, id)
+  def get_stock(id), do: Repo.get(Stock, id)
 
   @doc """
   Creates a stock.
