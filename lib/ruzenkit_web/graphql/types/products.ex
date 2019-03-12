@@ -78,6 +78,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :child_product, :child_product_input
     field :price, :product_price_input
     field :vat_group_id, :id
+    field :stock, :stock_input
   end
 
   input_object :configurable_option_input do

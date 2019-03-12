@@ -9,6 +9,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.AddressesResolver
   alias RuzenkitWeb.Graphql.ShippingsResolver
   alias RuzenkitWeb.Graphql.VatResolver
+  alias RuzenkitWeb.Graphql.StocksResolver
 
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
@@ -145,6 +146,10 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :id, non_null(:id)
 
       resolve(&VatResolver.get_vat_group/3)
+    end
+
+    field :stocks, list_of(:stock) do
+      resolve(&StocksResolver.list_stocks/3)
     end
 
   end
@@ -312,6 +317,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :currency, non_null(:currency_input)
 
       resolve &MoneyResolver.update_currency/3
+    end
+
+    field :update_stock, :stock do
+      arg :id, non_null(:id)
+      arg :new_stock, non_null(:update_stock_input)
+
+      resolve &StocksResolver.update_stock/3
     end
 
   end

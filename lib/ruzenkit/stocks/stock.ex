@@ -2,10 +2,12 @@ defmodule Ruzenkit.Stocks.Stock do
   use Ecto.Schema
   import Ecto.Changeset
   alias Ruzenkit.Products.Product
+  alias Ruzenkit.Stocks.StockChange
 
   schema "stocks" do
     field :quantity, :integer, default: 0
     belongs_to :product, Product
+    has_many :stock_changes, StockChange
 
     timestamps()
   end
@@ -13,7 +15,7 @@ defmodule Ruzenkit.Stocks.Stock do
   @doc false
   def changeset(stock, attrs) do
     stock
-    |> cast(attrs, [:quantity])
-    |> validate_required([:quantity])
+    |> cast(attrs, [:quantity, :product_id])
+    |> validate_required([:quantity, :product_id])
   end
 end
