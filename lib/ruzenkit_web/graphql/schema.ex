@@ -102,6 +102,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&CartsResolver.get_cart/3)
     end
 
+    field :order_status, :order_status do
+      arg(:id, non_null(:id))
+
+      resolve(&OrdersResolver.get_order_status/3)
+    end
+
     field :order_statuses, list_of(:order_status) do
       resolve(&OrdersResolver.list_order_status/3)
     end
@@ -330,6 +336,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :new_stock, non_null(:update_stock_input)
 
       resolve &StocksResolver.update_stock/3
+    end
+
+    field :update_order_status, :order_status do
+      arg :id, non_null(:id)
+      arg :order_status, non_null(:order_status_input)
+
+      resolve &OrdersResolver.update_order_status/3
     end
 
   end

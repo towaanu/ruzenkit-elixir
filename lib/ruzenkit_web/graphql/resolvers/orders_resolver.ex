@@ -34,4 +34,30 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
       {:error, error} -> {:error, changeset_error_to_graphql("Unable to create order", error)}
     end
   end
+
+  def get_order_status(_root, %{id: id}, _info) do
+    case Orders.get_order_status(id) do
+      nil ->
+        {:error, "order_status with id #{id} not found"}
+
+      order_status ->
+        {:ok, order_status}
+    end
+  end
+
+  def update_order_status(_root, %{id: id, order_status: order_status_params}, %{context: %{is_admin: true}}) do
+
+    db_order_status = Orders.get_order_status!(id)
+
+    case Orders.update_order_status(db_order_status, order_status_params) do
+      {:ok, order_status} ->
+        {:ok, order_status}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("could not update order status", error)}
+    end
+  end
+
+  def update_order_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
 end

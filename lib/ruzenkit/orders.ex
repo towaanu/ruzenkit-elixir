@@ -307,6 +307,7 @@ defmodule Ruzenkit.Orders do
 
   """
   def get_order_status!(id), do: Repo.get!(OrderStatus, id)
+  def get_order_status(id), do: Repo.get(OrderStatus, id)
 
   @doc """
   Creates a order_status.
