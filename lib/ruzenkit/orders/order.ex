@@ -26,4 +26,10 @@ defmodule Ruzenkit.Orders.Order do
     |> foreign_key_constraint(:order_status_id)
     |> foreign_key_constraint(:user_id)
   end
+
+  def change_status_changeset(order, attrs) do
+    order
+    |> cast(attrs, [:order_status_id])
+    |> foreign_key_constraint(:order_status_id)
+  end
 end

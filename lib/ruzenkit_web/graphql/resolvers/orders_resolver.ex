@@ -45,8 +45,9 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
     end
   end
 
-  def update_order_status(_root, %{id: id, order_status: order_status_params}, %{context: %{is_admin: true}}) do
-
+  def update_order_status(_root, %{id: id, order_status: order_status_params}, %{
+        context: %{is_admin: true}
+      }) do
     db_order_status = Orders.get_order_status!(id)
 
     case Orders.update_order_status(db_order_status, order_status_params) do
@@ -58,6 +59,30 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
     end
   end
 
-  def update_order_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+  def update_order_status(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
+
+  def change_order_status(_root, %{order_id: order_id, order_status_id: order_status_id}, %{context: %{is_admin: true}}) do
+    case Orders.change_status_for_order(order_id, order_status_id) do
+      {:ok, order} ->
+        {:ok, order}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("could not change order status for order #{order_id}", error)}
+    end
+  end
+
+  def change_order_status(_root, _args, _info),do: {:error, ResponseUtils.unauthorized_response()}
+
+  # TODO: protect or not ?
+  def get_order(_root, %{id: id}, _info) do
+    case Orders.get_order(id) do
+      nil ->
+        {:error, "order with id #{id} not found"}
+
+      order ->
+        {:ok, order}
+    end
+  end
 
 end

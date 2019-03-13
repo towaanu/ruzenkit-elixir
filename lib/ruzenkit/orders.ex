@@ -40,6 +40,7 @@ defmodule Ruzenkit.Orders do
 
   """
   def get_order!(id), do: Repo.get!(Order, id)
+  def get_order(id), do: Repo.get(Order, id)
 
   @doc """
   Creates a order.
@@ -373,4 +374,14 @@ defmodule Ruzenkit.Orders do
   def change_order_status(%OrderStatus{} = order_status) do
     OrderStatus.changeset(order_status, %{})
   end
+
+  def change_status_for_order(order_id, new_order_status_id) do
+    order = Repo.get!(Order, order_id)
+
+    order
+    |> Order.change_status_changeset(%{order_status_id: new_order_status_id})
+    |> Repo.update()
+
+  end
+
 end
