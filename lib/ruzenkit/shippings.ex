@@ -38,6 +38,7 @@ defmodule Ruzenkit.Shippings do
 
   """
   def get_shipping_carrier!(id), do: Repo.get!(ShippingCarrier, id)
+  def get_shipping_carrier(id), do: Repo.get(ShippingCarrier, id)
 
   @doc """
   Creates a shipping_carrier.

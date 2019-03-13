@@ -146,6 +146,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&AddressesResolver.get_country/3)
     end
 
+    field :shipping_carrier, :shipping_carrier do
+      arg(:id, non_null(:id))
+
+      resolve(&ShippingsResolver.get_shipping_carrier/3)
+    end
+
     field :shipping_carriers, list_of(:shipping_carrier) do
       resolve(&ShippingsResolver.list_shipping_carriers/3)
     end
@@ -302,6 +308,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg(:shipping_carrier, non_null(:shipping_carrier_input))
 
       resolve(&ShippingsResolver.create_shipping_carrier/3)
+    end
+
+    field :update_shipping_carrier, :shipping_carrier do
+      arg :id, non_null(:id)
+      arg :shipping_carrier, non_null(:shipping_carrier_input)
+
+      resolve &ShippingsResolver.update_shipping_carrier/3
     end
 
     field :create_shipping_option, :shipping_option do
