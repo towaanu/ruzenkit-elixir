@@ -135,6 +135,7 @@ defmodule Ruzenkit.Shippings do
 
   """
   def get_shipping_option!(id), do: Repo.get!(ShippingOption, id)
+  def get_shipping_option(id), do: Repo.get(ShippingOption, id)
 
   @doc """
   Creates a shipping_option.
@@ -170,8 +171,8 @@ defmodule Ruzenkit.Shippings do
       {:ok, %{shipping_option: shipping_option}} ->
         {:ok, shipping_option}
 
-      {:error, failed_operation, _failed_value, _changes_so_far} ->
-        {:error, failed_operation}
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
         # One of the operations failed. We can access the operation's failure
         # value (like changeset for operations on changesets) to prepare a
         # proper response. We also get access to the results of any operations

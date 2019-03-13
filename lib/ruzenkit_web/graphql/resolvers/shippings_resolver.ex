@@ -57,6 +57,15 @@ defmodule RuzenkitWeb.Graphql.ShippingsResolver do
     end
   end
 
+  def get_shipping_option(_root, %{id: id}, _info) do
+    case Shippings.get_shipping_option(id) do
+      nil ->
+        {:error, "shipping option with id #{id} not found"}
+
+        shipping_option ->
+        {:ok, shipping_option}
+    end
+  end
   def update_shipping_carrier(_root, %{id: id, shipping_carrier: shipping_carrier_params}, %{context: %{is_admin: true}}) do
 
     db_shipping_carrier = Shippings.get_shipping_carrier!(id)
@@ -71,5 +80,20 @@ defmodule RuzenkitWeb.Graphql.ShippingsResolver do
   end
 
   def update_shipping_carrier(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
+  def update_shipping_option(_root, %{id: id, shipping_option: shipping_option_params}, %{context: %{is_admin: true}}) do
+
+    db_shipping_option = Shippings.get_shipping_option!(id)
+
+    case Shippings.update_shipping_option(db_shipping_option, shipping_option_params) do
+      {:ok, shipping_option} ->
+        {:ok, shipping_option}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("could not update shipping option", error)}
+    end
+  end
+
+  def update_shipping_option(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
 end

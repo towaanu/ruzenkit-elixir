@@ -176,6 +176,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&StocksResolver.get_stock/3)
     end
 
+    field :shipping_option, :shipping_option do
+      arg :id, non_null(:id)
+
+      resolve &ShippingsResolver.get_shipping_option/3
+    end
+
   end
 
   mutation do
@@ -321,6 +327,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg(:shipping_option, non_null(:shipping_option_input))
 
       resolve(&ShippingsResolver.create_shipping_option/3)
+    end
+
+    field :update_shipping_option, :shipping_option do
+      arg :id, non_null(:id)
+      arg :shipping_option, non_null(:shipping_option_input)
+
+      resolve &ShippingsResolver.update_shipping_option/3
     end
 
     field :create_vat_group, :vat_group do
