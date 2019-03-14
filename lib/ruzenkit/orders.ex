@@ -7,6 +7,7 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Orders.Order
+  alias Ruzenkit.Orders.OrderStatus
   alias Ruzenkit.Carts
   alias Ruzenkit.Orders.OrderItem
   alias Ruzenkit.Stocks
@@ -84,7 +85,7 @@ defmodule Ruzenkit.Orders do
   end
 
   def create_order_from_cart(cart_id, order_address) do
-    status_id = 1
+    %{id: status_id} = Repo.get_by!(OrderStatus, is_default: true)
 
     cart = Carts.get_cart_with_total(cart_id)
     order_items = Enum.map(cart.cart_items, &cart_item_to_order_item/1)
@@ -277,7 +278,6 @@ defmodule Ruzenkit.Orders do
     OrderItem.changeset(order_item, %{})
   end
 
-  alias Ruzenkit.Orders.OrderStatus
 
   @doc """
   Returns the list of order_status.
@@ -375,7 +375,10 @@ defmodule Ruzenkit.Orders do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_order_status(%OrderStatus{is_default: false} = order_status, %{is_default: true} = attrs) do
+  def update_order_status(
+        %OrderStatus{is_default: false} = order_status,
+        %{is_default: true} = attrs
+      ) do
     Multi.new()
     |> Multi.update(
       :update_default,
@@ -393,7 +396,6 @@ defmodule Ruzenkit.Orders do
       {:error, _failed_operation, failed_value, _changes_so_far} ->
         {:error, failed_value}
     end
-
   end
 
   def update_order_status(%OrderStatus{} = order_status, attrs) do

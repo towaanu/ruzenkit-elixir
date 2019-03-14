@@ -35,6 +35,7 @@ defmodule Ruzenkit.Products.ParentProduct do
   defp get_configurable_options(%{configurable_option_ids: configurable_option_ids}) do
     configurable_option_ids
     |> Enum.filter(& &1) # remove nil
+    |> Enum.filter(& &1 != "") # remove nil
     |> Enum.map(fn id ->
       Repo.get(ConfigurableOption, id)
     end)
