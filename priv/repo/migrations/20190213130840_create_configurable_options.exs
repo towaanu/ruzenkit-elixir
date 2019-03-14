@@ -5,7 +5,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateConfigurableOptions do
     create table(:configurable_options) do
       add :label, :string
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
   end

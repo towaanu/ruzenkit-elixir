@@ -11,7 +11,8 @@ defmodule Ruzenkit.Products.ParentProduct do
     many_to_many :configurable_options, ConfigurableOption, join_through: "parent_products_configurable_options"
     has_many :child_products, ChildProduct
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

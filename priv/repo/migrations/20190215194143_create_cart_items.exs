@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateCartItems do
       add :cart_id, references(:carts, on_delete: :delete_all), null: false
       add :product_id, references(:products, on_delete: :nothing), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:cart_items, [:cart_id])

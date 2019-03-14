@@ -5,7 +5,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateParentProducts do
     create table(:parent_products) do
       add :product_id, references(:products, on_delete: :delete_all), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:parent_products, [:product_id])

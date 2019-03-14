@@ -13,7 +13,8 @@ defmodule Ruzenkit.Orders.OrderItem do
     belongs_to :order, Order
     belongs_to :product, Product
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

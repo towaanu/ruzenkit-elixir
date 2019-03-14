@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateConfigurableItemOptions do
       add :short_label, :string
       add :configurable_option_id, references(:configurable_options), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
   end

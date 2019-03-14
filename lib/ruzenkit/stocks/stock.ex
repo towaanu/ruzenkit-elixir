@@ -9,7 +9,8 @@ defmodule Ruzenkit.Stocks.Stock do
     belongs_to :product, Product
     has_many :stock_changes, StockChange
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

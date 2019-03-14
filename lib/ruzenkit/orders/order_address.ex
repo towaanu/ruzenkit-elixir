@@ -18,7 +18,8 @@ defmodule Ruzenkit.Orders.OrderAddress do
     field :country, :string
 
     belongs_to :order, Order
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

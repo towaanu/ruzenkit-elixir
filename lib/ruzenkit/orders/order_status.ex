@@ -9,7 +9,8 @@ defmodule Ruzenkit.Orders.OrderStatus do
     field :label, :string
     has_many :orders, Order
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

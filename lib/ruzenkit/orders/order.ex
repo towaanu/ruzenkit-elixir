@@ -13,7 +13,7 @@ defmodule Ruzenkit.Orders.Order do
     has_many :order_items, OrderItem
     has_one :order_address, OrderAddress
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

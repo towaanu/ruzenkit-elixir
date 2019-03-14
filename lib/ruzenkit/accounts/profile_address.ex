@@ -10,7 +10,8 @@ defmodule Ruzenkit.Accounts.ProfileAddress do
     belongs_to :profile, Profile
     belongs_to :address, Address
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

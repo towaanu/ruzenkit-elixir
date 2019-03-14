@@ -11,7 +11,8 @@ defmodule Ruzenkit.Products.ConfigurableOption do
     many_to_many :products, Product, join_through: "products_configurable_options"
     has_many :configurable_item_options, ConfigurableItemOption
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

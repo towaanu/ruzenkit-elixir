@@ -8,7 +8,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateShippingOptions do
       add :shipping_hour_time, :float
       add :shipping_carrier_id, references(:shipping_carriers, on_delete: :delete_all), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:shipping_options, [:shipping_carrier_id])

@@ -13,7 +13,8 @@ defmodule Ruzenkit.Accounts.User do
     has_one :credential, Credential
     has_one :profile, Profile
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

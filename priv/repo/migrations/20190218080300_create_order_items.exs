@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateOrderItems do
       add :order_id, references(:orders, on_delete: :delete_all)
       add :product_id, references(:products, on_delete: :nothing)
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:order_items, [:order_id])

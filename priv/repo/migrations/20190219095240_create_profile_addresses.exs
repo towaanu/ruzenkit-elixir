@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateProfileAddresses do
       add :profile_id, references(:profiles, on_delete: :delete_all), null: false
       add :address_id, references(:addresses, on_delete: :delete_all), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:profile_addresses, [:profile_id])

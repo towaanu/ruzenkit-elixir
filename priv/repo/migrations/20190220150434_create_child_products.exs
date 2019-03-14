@@ -6,7 +6,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateChildProducts do
       add :product_id, references(:products, on_delete: :delete_all), null: false
       add :parent_product_id, references(:products, on_delete: :delete_all), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:child_products, [:product_id])

@@ -13,7 +13,8 @@ defmodule Ruzenkit.Products.ChildProduct do
     many_to_many :configurable_item_options, ConfigurableItemOption,
       join_through: "child_products_configurable_item_options"
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

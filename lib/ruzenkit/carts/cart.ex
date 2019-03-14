@@ -11,7 +11,8 @@ defmodule Ruzenkit.Carts.Cart do
 
     field :total_price, :decimal, virtual: true
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

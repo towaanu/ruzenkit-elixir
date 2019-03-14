@@ -8,7 +8,8 @@ defmodule Ruzenkit.Vat.VatGroup do
     field :rate, :float, default: 0.0
     belongs_to :country, Country
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

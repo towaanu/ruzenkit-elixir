@@ -16,7 +16,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateOrderAddressesTable do
 
       add :order_id, references(:orders, on_delete: :delete_all)
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     # alter table(:orders) do

@@ -5,7 +5,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateShippingCarriers do
     create table(:shipping_carriers) do
       add :name, :string, null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
   end

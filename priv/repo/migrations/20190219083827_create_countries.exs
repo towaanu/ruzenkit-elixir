@@ -8,7 +8,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateCountries do
       add :short_iso_code, :string, null: false
       add :long_iso_code, :string, null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create unique_index(:countries, [:short_iso_code])

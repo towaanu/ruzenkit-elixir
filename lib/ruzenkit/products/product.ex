@@ -23,7 +23,8 @@ defmodule Ruzenkit.Products.Product do
     has_one :parent_product, ParentProduct
 
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

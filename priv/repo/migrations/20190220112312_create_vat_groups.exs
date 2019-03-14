@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateVatGroups do
       add :label, :string
       add :country_id, references(:countries, on_delete: :delete_all)
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:vat_groups, [:country_id])

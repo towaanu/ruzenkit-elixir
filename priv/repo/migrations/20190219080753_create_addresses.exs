@@ -13,7 +13,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateAddresses do
       add :place, :string
       add :extra_info, :string
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
   end

@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateCurrencies do
       add :sign, :string, size: 10, null: false
       add :code, :string, size: 10, null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create unique_index(:currencies, [:code])

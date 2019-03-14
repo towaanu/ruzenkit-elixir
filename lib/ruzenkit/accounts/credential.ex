@@ -8,7 +8,8 @@ defmodule Ruzenkit.Accounts.Credential do
     field :password, :string, virtual: true
     belongs_to :user, User
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false
