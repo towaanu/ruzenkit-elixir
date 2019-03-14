@@ -77,10 +77,9 @@ defmodule Ruzenkit.Orders do
         {:error, _error} -> true
       end
     end)
-    |> case  do
-     nil  -> {:ok, true}
-     {:error, error} -> {:error, error}
-
+    |> case do
+      nil -> {:ok, true}
+      {:error, error} -> {:error, error}
     end
   end
 
@@ -322,10 +321,46 @@ defmodule Ruzenkit.Orders do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_order_status(attrs \\ %{}) do
+
+  # remove old status from being default and add the new one
+  defp insert_and_remove_default_order_status(default_order_status, %{is_default: true} = attrs) do
+    Multi.new()
+    |> Multi.update(
+      :update_default,
+      Ecto.Changeset.change(default_order_status, is_default: false)
+    )
+    |> Multi.insert(
+      :insert_order_status,
+      OrderStatus.changeset(%OrderStatus{}, attrs)
+    )
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{insert_order_status: order_status}} ->
+        {:ok, order_status}
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
+    end
+  end
+
+  defp insert_and_remove_default_order_status(_default_order_status, attrs) do
     %OrderStatus{}
     |> OrderStatus.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_order_status(attrs \\ %{}) do
+    case Repo.get_by(OrderStatus, is_default: true) do
+      # if no default, it's default
+      nil ->
+        %OrderStatus{}
+        |> OrderStatus.changeset(Map.put(attrs, :is_default, true))
+        # |> OrderStatus.changeset(%{attrs | is_default: true})
+        |> Repo.insert()
+
+      default_order_status ->
+        insert_and_remove_default_order_status(default_order_status, attrs)
+    end
   end
 
   @doc """
@@ -340,6 +375,27 @@ defmodule Ruzenkit.Orders do
       {:error, %Ecto.Changeset{}}
 
   """
+  def update_order_status(%OrderStatus{is_default: false} = order_status, %{is_default: true} = attrs) do
+    Multi.new()
+    |> Multi.update(
+      :update_default,
+      OrderStatus |> Repo.get_by!(is_default: true) |> Ecto.Changeset.change(is_default: false)
+    )
+    |> Multi.update(
+      :update_order_status,
+      OrderStatus.changeset(order_status, attrs)
+    )
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{update_order_status: order_status}} ->
+        {:ok, order_status}
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
+    end
+
+  end
+
   def update_order_status(%OrderStatus{} = order_status, attrs) do
     order_status
     |> OrderStatus.changeset(attrs)
@@ -381,7 +437,5 @@ defmodule Ruzenkit.Orders do
     order
     |> Order.change_status_changeset(%{order_status_id: new_order_status_id})
     |> Repo.update()
-
   end
-
 end

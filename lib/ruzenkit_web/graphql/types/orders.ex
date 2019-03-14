@@ -6,6 +6,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
   object :order_status do
     field :id, non_null(:id)
     field :label, non_null(:string)
+    field :is_default, non_null(:boolean)
   end
 
   object :order_item do
@@ -47,6 +48,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
 
   input_object :order_status_input do
     field :label, non_null(:string)
+    field :is_default, :boolean
   end
 
   input_object :order_address_input do
