@@ -87,8 +87,6 @@ defmodule Ruzenkit.Products do
     Multi.new()
     |> Multi.insert(:product, new_product(attrs))
     |> Multi.run(:stock, fn _repo, %{product: %{id: product_id}} ->
-      IO.puts "HELLO #{product_id}"
-      IO.inspect(product_id)
       Stocks.create_stock(Map.put(attrs_stock, :product_id, product_id))
       # Stocks.create_stock(%{attrs_stock | product_id: product_id})
     end)
@@ -117,7 +115,11 @@ defmodule Ruzenkit.Products do
   """
   def update_product(%Product{} = product, attrs) do
     product
+    |> Repo.preload([:price, :parent_product, :child_product])
     |> Product.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:price)
+    |> Ecto.Changeset.cast_assoc(:parent_product)
+    |> Ecto.Changeset.cast_assoc(:child_product)
     |> Repo.update()
   end
 

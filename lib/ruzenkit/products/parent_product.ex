@@ -20,7 +20,16 @@ defmodule Ruzenkit.Products.ParentProduct do
     parent_product
     |> cast(attrs, [])
     |> put_assoc(:configurable_options, get_configurable_options(attrs))
+    |> validate_length(:configurable_options, min: 1)
     |> validate_required([])
+    |> case do
+      %{valid?: false, changes: _changes} = changeset ->
+        # If the changeset is invalid we don't want to insert it in parent_product
+        # because all required fields are missing, so we ignore it.
+        %{changeset | action: :ignore}
+      changeset ->
+        changeset
+    end
   end
 
   defp get_configurable_options(%{configurable_option_ids: configurable_option_ids}) do

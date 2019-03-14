@@ -54,6 +54,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
 
   input_object :parent_product_input do
     # field :product, non_null(:product), resolve: dataloader(:db)
+    field :id, :id
     field :configurable_option_ids, list_of(:id)
     # field :child_products, list_of(:child_product_input)
   end
