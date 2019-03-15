@@ -10,7 +10,8 @@ defmodule Ruzenkit.Addresses.Country do
     field :long_iso_code, :string
     field :short_iso_code, :string
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

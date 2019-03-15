@@ -139,6 +139,7 @@ defmodule Ruzenkit.Addresses do
 
   """
   def get_country!(id), do: Repo.get!(Country, id)
+  def get_country(id), do: Repo.get(Country, id)
 
   @doc """
   Creates a country.

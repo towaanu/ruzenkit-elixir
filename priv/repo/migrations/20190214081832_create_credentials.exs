@@ -7,7 +7,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateCredentials do
       add :user_id, references(:users, on_delete: :nothing)
       add :password_hash, :string
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create unique_index(:credentials, [:email])

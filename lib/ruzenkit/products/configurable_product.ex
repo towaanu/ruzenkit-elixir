@@ -7,7 +7,8 @@ defmodule Ruzenkit.Products.ConfigurableProduct do
 
     belongs_to :product, Product, primary_key: true
 
-    # timestamps()
+    # timestamps(type: :utc_datetime)
+
   end
 
   @doc false

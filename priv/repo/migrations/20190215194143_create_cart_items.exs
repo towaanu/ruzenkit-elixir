@@ -4,10 +4,11 @@ defmodule Ruzenkit.Repo.Migrations.CreateCartItems do
   def change do
     create table(:cart_items) do
       add :quantity, :integer
-      add :cart_id, references(:carts, on_delete: :nothing), null: false
+      add :cart_id, references(:carts, on_delete: :delete_all), null: false
       add :product_id, references(:products, on_delete: :nothing), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
     create index(:cart_items, [:cart_id])

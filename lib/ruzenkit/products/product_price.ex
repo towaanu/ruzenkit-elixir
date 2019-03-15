@@ -8,7 +8,8 @@ defmodule Ruzenkit.Products.ProductPrice do
     field :amount, :decimal, precision: 12, scale: 2
     belongs_to :currency, Currency
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

@@ -13,6 +13,7 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
   def list_users(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
   def create_user(_root, %{user: user}, _info) do
+    IO.inspect(user)
     case Accounts.create_user(user) do
       {:ok, user} ->
         {:ok, user}
@@ -73,7 +74,7 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
   def logout(_root, _args, _info), do: {:ok, true}
 
   def me(_root, _args, %{context: %{current_user: current_user}}) do
-    {:ok, "Hello #{current_user.first_name} :D"}
+    {:ok, "Hello #{current_user.profile.first_name} :D"}
   end
 
   def me(_root, _args, _info), do: {:ok, "I don't know you :("}

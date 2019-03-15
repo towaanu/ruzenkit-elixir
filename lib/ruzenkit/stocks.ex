@@ -7,6 +7,8 @@ defmodule Ruzenkit.Stocks do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Stocks.Stock
+  alias Ruzenkit.Stocks.StockChange
+  alias Ecto.Multi
 
   @doc """
   Returns the list of stocks.
@@ -36,6 +38,7 @@ defmodule Ruzenkit.Stocks do
 
   """
   def get_stock!(id), do: Repo.get!(Stock, id)
+  def get_stock(id), do: Repo.get(Stock, id)
 
   @doc """
   Creates a stock.
@@ -49,10 +52,34 @@ defmodule Ruzenkit.Stocks do
       {:error, %Ecto.Changeset{}}
 
   """
+  # def create_stock(attrs \\ %{}) do
+  #   %Stock{}
+  #   |> Stock.changeset(attrs)
+  #   |> Repo.insert()
+  # end
+
+  defp new_stock_change(%{id: id, quantity: quantity}) do
+    %StockChange{}
+    |> StockChange.changeset(%{
+      stock_id: id,
+      new_quantity: quantity,
+      operation: quantity,
+      label: "INITIAL"
+    })
+  end
+
   def create_stock(attrs \\ %{}) do
-    %Stock{}
-    |> Stock.changeset(attrs)
-    |> Repo.insert()
+    Multi.new()
+    |> Multi.insert(:stock, %Stock{} |> Stock.changeset(attrs))
+    |> Multi.insert(:stock_change, fn %{stock: stock} -> new_stock_change(stock) end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{stock: stock, stock_change: _stock_change}} ->
+        {:ok, stock}
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
+    end
   end
 
   @doc """
@@ -67,10 +94,41 @@ defmodule Ruzenkit.Stocks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_stock(%Stock{} = stock, attrs) do
-    stock
-    |> Stock.changeset(attrs)
-    |> Repo.update()
+  # def update_stock(%Stock{} = stock, attrs) do
+  #   stock
+  #   |> Stock.changeset(attrs)
+  #   |> Repo.update()
+  # end
+
+  def remove_product_stock(product_id, quantity) do
+    %{id: stock_id} = Repo.get_by!(Stock, product_id: product_id)
+    update_stock(%{stock_id: stock_id, operation: -quantity, label: "SOLD"})
+  end
+
+  def update_stock(%{stock_id: stock_id, operation: operation, label: label}) do
+    stock = Stock |> Repo.get!(stock_id)
+
+    new_quantity = stock.quantity + operation
+
+    Multi.new()
+    |> Multi.update(:stock, Stock.changeset(stock, %{quantity: new_quantity}))
+    |> Multi.insert(
+      :stock_change,
+      StockChange.changeset(%StockChange{}, %{
+        stock_id: stock_id,
+        operation: operation,
+        label: label,
+        new_quantity: new_quantity
+      })
+    )
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{stock: stock, stock_change: _stock_change}} ->
+        {:ok, stock}
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
+    end
   end
 
   @doc """

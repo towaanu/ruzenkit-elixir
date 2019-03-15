@@ -10,14 +10,16 @@ defmodule Ruzenkit.Accounts.ProfileAddress do
     belongs_to :profile, Profile
     belongs_to :address, Address
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false
   def changeset(profile_address, attrs) do
     profile_address
-    |> cast(attrs, [:is_default, :profile_id])
+    |> cast(attrs, [:is_default])
     |> cast_assoc(:address, with: &Address.changeset/2)
-    |> validate_required([:is_default, :address, :profile_id])
+    |> validate_required([:is_default, :address])
   end
+
 end

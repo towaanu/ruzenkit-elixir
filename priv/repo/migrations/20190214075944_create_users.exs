@@ -6,7 +6,8 @@ defmodule Ruzenkit.Repo.Migrations.CreateUsers do
       add :first_name, :string
       add :last_name, :string
 
-      timestamps()
+      timestamps(type: :utc_datetime)
+
     end
 
   end

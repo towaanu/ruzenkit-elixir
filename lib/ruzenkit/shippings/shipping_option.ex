@@ -11,7 +11,8 @@ defmodule Ruzenkit.Shippings.ShippingOption do
     belongs_to :shipping_carrier, ShippingCarrier
     many_to_many :countries, Country, join_through: "shipping_options_countries"
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

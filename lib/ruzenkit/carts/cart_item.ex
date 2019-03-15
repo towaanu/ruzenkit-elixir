@@ -10,7 +10,8 @@ defmodule Ruzenkit.Carts.CartItem do
     belongs_to :cart, Cart
     belongs_to :product, Product
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

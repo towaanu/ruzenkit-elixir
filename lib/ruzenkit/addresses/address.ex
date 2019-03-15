@@ -17,7 +17,8 @@ defmodule Ruzenkit.Addresses.Address do
 
     belongs_to :country, Country
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

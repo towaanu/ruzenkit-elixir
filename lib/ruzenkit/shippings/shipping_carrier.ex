@@ -8,7 +8,8 @@ defmodule Ruzenkit.Shippings.ShippingCarrier do
     field :name, :string
     has_many :shipping_options, ShippingOption
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

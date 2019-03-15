@@ -17,12 +17,17 @@ defmodule RuzenkitWeb.Graphql.Types.Carts do
   end
 
   input_object :cart_input do
-    field :user_id, :id
+    # field :user_id, :id
   end
 
   input_object :cart_item_input do
     field :quantity, non_null(:integer)
     field :cart_id, :id
     field :product_id, :id
+  end
+
+  input_object :product_option_input do
+    field :option_id, non_null(:id)
+    field :option_item_id, non_null(:id)
   end
 end

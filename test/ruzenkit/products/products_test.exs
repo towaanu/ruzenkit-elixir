@@ -301,4 +301,118 @@ defmodule Ruzenkit.ProductsTest do
       assert %Ecto.Changeset{} = Products.change_product_price(product_price)
     end
   end
+
+  describe "parent_products" do
+    alias Ruzenkit.Products.ParentProduct
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def parent_product_fixture(attrs \\ %{}) do
+      {:ok, parent_product} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Products.create_parent_product()
+
+      parent_product
+    end
+
+    test "list_parent_products/0 returns all parent_products" do
+      parent_product = parent_product_fixture()
+      assert Products.list_parent_products() == [parent_product]
+    end
+
+    test "get_parent_product!/1 returns the parent_product with given id" do
+      parent_product = parent_product_fixture()
+      assert Products.get_parent_product!(parent_product.id) == parent_product
+    end
+
+    test "create_parent_product/1 with valid data creates a parent_product" do
+      assert {:ok, %ParentProduct{} = parent_product} = Products.create_parent_product(@valid_attrs)
+    end
+
+    test "create_parent_product/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Products.create_parent_product(@invalid_attrs)
+    end
+
+    test "update_parent_product/2 with valid data updates the parent_product" do
+      parent_product = parent_product_fixture()
+      assert {:ok, %ParentProduct{} = parent_product} = Products.update_parent_product(parent_product, @update_attrs)
+    end
+
+    test "update_parent_product/2 with invalid data returns error changeset" do
+      parent_product = parent_product_fixture()
+      assert {:error, %Ecto.Changeset{}} = Products.update_parent_product(parent_product, @invalid_attrs)
+      assert parent_product == Products.get_parent_product!(parent_product.id)
+    end
+
+    test "delete_parent_product/1 deletes the parent_product" do
+      parent_product = parent_product_fixture()
+      assert {:ok, %ParentProduct{}} = Products.delete_parent_product(parent_product)
+      assert_raise Ecto.NoResultsError, fn -> Products.get_parent_product!(parent_product.id) end
+    end
+
+    test "change_parent_product/1 returns a parent_product changeset" do
+      parent_product = parent_product_fixture()
+      assert %Ecto.Changeset{} = Products.change_parent_product(parent_product)
+    end
+  end
+
+  describe "child_products" do
+    alias Ruzenkit.Products.ChildProduct
+
+    @valid_attrs %{}
+    @update_attrs %{}
+    @invalid_attrs %{}
+
+    def child_product_fixture(attrs \\ %{}) do
+      {:ok, child_product} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Products.create_child_product()
+
+      child_product
+    end
+
+    test "list_child_products/0 returns all child_products" do
+      child_product = child_product_fixture()
+      assert Products.list_child_products() == [child_product]
+    end
+
+    test "get_child_product!/1 returns the child_product with given id" do
+      child_product = child_product_fixture()
+      assert Products.get_child_product!(child_product.id) == child_product
+    end
+
+    test "create_child_product/1 with valid data creates a child_product" do
+      assert {:ok, %ChildProduct{} = child_product} = Products.create_child_product(@valid_attrs)
+    end
+
+    test "create_child_product/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Products.create_child_product(@invalid_attrs)
+    end
+
+    test "update_child_product/2 with valid data updates the child_product" do
+      child_product = child_product_fixture()
+      assert {:ok, %ChildProduct{} = child_product} = Products.update_child_product(child_product, @update_attrs)
+    end
+
+    test "update_child_product/2 with invalid data returns error changeset" do
+      child_product = child_product_fixture()
+      assert {:error, %Ecto.Changeset{}} = Products.update_child_product(child_product, @invalid_attrs)
+      assert child_product == Products.get_child_product!(child_product.id)
+    end
+
+    test "delete_child_product/1 deletes the child_product" do
+      child_product = child_product_fixture()
+      assert {:ok, %ChildProduct{}} = Products.delete_child_product(child_product)
+      assert_raise Ecto.NoResultsError, fn -> Products.get_child_product!(child_product.id) end
+    end
+
+    test "change_child_product/1 returns a child_product changeset" do
+      child_product = child_product_fixture()
+      assert %Ecto.Changeset{} = Products.change_child_product(child_product)
+    end
+  end
 end

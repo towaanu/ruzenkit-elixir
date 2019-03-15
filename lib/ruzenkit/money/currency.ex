@@ -8,7 +8,8 @@ defmodule Ruzenkit.Money.Currency do
     field :name, :string
     field :sign, :string
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false

@@ -22,8 +22,8 @@ defmodule RuzenkitWeb.Graphql.AddressesResolver do
     end
   end
 
-  def create_country(_root, %{country: country}, %{context: %{is_admin: true}}) do
-    case Addresses.create_country(country) do
+  def create_country(_root, %{country: country_params}, %{context: %{is_admin: true}}) do
+    case Addresses.create_country(country_params) do
       {:ok, country} ->
         {:ok, country}
 
@@ -34,8 +34,32 @@ defmodule RuzenkitWeb.Graphql.AddressesResolver do
 
   def create_country(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
+  def update_country(_root, %{id: id, country: country_params}, %{context: %{is_admin: true}}) do
+
+    db_country = Addresses.get_country!(id)
+
+    case Addresses.update_country(db_country, country_params) do
+      {:ok, country} ->
+        {:ok, country}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("could not update country", error)}
+    end
+  end
+
+  def update_country(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
+  def get_country(_root, %{id: id}, _info) do
+    case Addresses.get_country(id) do
+      nil ->
+        {:error, "country with id #{id} not found"}
+
+      country ->
+        {:ok, country}
+    end
+  end
+
   def list_countries(_root, _args, _info) do
     {:ok, Addresses.list_countries()}
   end
-
 end

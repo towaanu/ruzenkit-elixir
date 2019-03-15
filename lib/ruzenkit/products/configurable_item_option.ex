@@ -10,7 +10,8 @@ defmodule Ruzenkit.Products.ConfigurableItemOption do
 
     belongs_to :configurable_option, ConfigurableOption
 
-    timestamps()
+    timestamps(type: :utc_datetime)
+
   end
 
   @doc false
