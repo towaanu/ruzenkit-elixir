@@ -40,6 +40,16 @@ defmodule Ruzenkit.Stocks do
   def get_stock!(id), do: Repo.get!(Stock, id)
   def get_stock(id), do: Repo.get(Stock, id)
 
+  defp new_stock_change(%{id: id, quantity: quantity}) do
+    %StockChange{}
+    |> StockChange.changeset(%{
+      stock_id: id,
+      new_quantity: quantity,
+      operation: quantity,
+      label: "INITIAL"
+    })
+  end
+
   @doc """
   Creates a stock.
 
@@ -52,22 +62,6 @@ defmodule Ruzenkit.Stocks do
       {:error, %Ecto.Changeset{}}
 
   """
-  # def create_stock(attrs \\ %{}) do
-  #   %Stock{}
-  #   |> Stock.changeset(attrs)
-  #   |> Repo.insert()
-  # end
-
-  defp new_stock_change(%{id: id, quantity: quantity}) do
-    %StockChange{}
-    |> StockChange.changeset(%{
-      stock_id: id,
-      new_quantity: quantity,
-      operation: quantity,
-      label: "INITIAL"
-    })
-  end
-
   def create_stock(attrs \\ %{}) do
     Multi.new()
     |> Multi.insert(:stock, %Stock{} |> Stock.changeset(attrs))

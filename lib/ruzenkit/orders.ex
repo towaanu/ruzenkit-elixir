@@ -278,7 +278,6 @@ defmodule Ruzenkit.Orders do
     OrderItem.changeset(order_item, %{})
   end
 
-
   @doc """
   Returns the list of order_status.
 
@@ -309,19 +308,6 @@ defmodule Ruzenkit.Orders do
   def get_order_status!(id), do: Repo.get!(OrderStatus, id)
   def get_order_status(id), do: Repo.get(OrderStatus, id)
 
-  @doc """
-  Creates a order_status.
-
-  ## Examples
-
-      iex> create_order_status(%{field: value})
-      {:ok, %OrderStatus{}}
-
-      iex> create_order_status(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-
   # remove old status from being default and add the new one
   defp insert_and_remove_default_order_status(default_order_status, %{is_default: true} = attrs) do
     Multi.new()
@@ -349,6 +335,18 @@ defmodule Ruzenkit.Orders do
     |> Repo.insert()
   end
 
+  @doc """
+  Creates a order_status.
+
+  ## Examples
+
+      iex> create_order_status(%{field: value})
+      {:ok, %OrderStatus{}}
+
+      iex> create_order_status(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
   def create_order_status(attrs \\ %{}) do
     case Repo.get_by(OrderStatus, is_default: true) do
       # if no default, it's default
