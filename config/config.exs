@@ -28,7 +28,8 @@ config :phoenix, :json_library, Jason
 config :ruzenkit, Ruzenkit.Accounts.Guardian,
   issuer: "ruzenkit",
   secret_key: "hello",
-  ttl: {600, :seconds}
+  ttl: {30, :days}
+  # ttl: {600, :seconds}
   # secret_key: "VAx8SCRQM46MByemu6/xLePFefgS+3eJqv1N/g9dIy80WdhWSGkh8W086uycyPkq"
 
 config :ruzenkit, Ruzenkit.Mailer,
