@@ -11,6 +11,7 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Carts
   alias Ruzenkit.Orders.OrderItem
   alias Ruzenkit.Stocks
+  alias Ruzenkit.Products
   alias Ecto.Multi
 
   @doc """
@@ -126,12 +127,23 @@ defmodule Ruzenkit.Orders do
          quantity: quantity,
          product: %{id: product_id, price: %{amount: amount, currency: %{code: code, sign: sign}}}
        }) do
+
+    %{vat_group: vat_group} =
+      Products.Product
+      |> Repo.get!(product_id)
+      |> Repo.preload(vat_group: :country)
+
     %{
       quantity: quantity,
       price_amount: amount,
       price_currency_code: code,
       price_currency_sign: sign,
-      product_id: product_id
+      product_id: product_id,
+      vat_rate: vat_group.rate,
+      vat_label: vat_group.label,
+      vat_country_short_iso_code: vat_group.country.short_iso_code,
+      vat_country_long_iso_code: vat_group.country.long_iso_code,
+      vat_country_english_name: vat_group.country.english_name
     }
   end
 

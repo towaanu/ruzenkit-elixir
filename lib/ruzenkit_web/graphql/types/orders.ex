@@ -15,6 +15,11 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :price_amount, :decimal
     field :price_currency_code, :string
     field :price_currency_sign, :string
+    field :vat_rate, :float
+    field :vat_label, :string
+    field :vat_country_short_iso_code, :string
+    field :vat_country_long_iso_code, :string
+    field :vat_country_english_name, :string
     field :order, :order, resolve: dataloader(:db)
     field :product, :product, resolve: dataloader(:db)
   end
