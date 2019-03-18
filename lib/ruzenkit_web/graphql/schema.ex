@@ -10,6 +10,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.ShippingsResolver
   alias RuzenkitWeb.Graphql.VatResolver
   alias RuzenkitWeb.Graphql.StocksResolver
+  alias RuzenkitWeb.Graphql.StatsResolver
 
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
@@ -24,6 +25,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   import_types(Types.Shippings)
   import_types(Types.Stocks)
   import_types(Types.Vat)
+  import_types(Types.Stats)
 
   def context(ctx) do
     loader =
@@ -180,6 +182,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       arg :id, non_null(:id)
 
       resolve &ShippingsResolver.get_shipping_option/3
+    end
+
+    field :stats_orders, list_of(:stats_order) do
+      arg :start_iso_date, :string
+      arg :end_iso_date, :string
+
+      resolve &StatsResolver.list_stats_orders/3
     end
 
   end
