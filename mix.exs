@@ -49,7 +49,8 @@ defmodule Ruzenkit.MixProject do
       {:guardian, "~> 1.2.1"},
       {:cors_plug, "~> 2.0"},
       {:bamboo, "~> 1.2"},
-      {:bamboo_smtp, "~> 1.6.0"}
+      {:bamboo_smtp, "~> 1.6.0"},
+      {:nimble_csv, "~> 0.5"}
     ]
   end
 

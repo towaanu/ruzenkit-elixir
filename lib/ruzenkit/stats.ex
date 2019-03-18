@@ -1,3 +1,5 @@
+NimbleCSV.define(CSVParser, separator: "\t", escape: "\"")
+
 defmodule Ruzenkit.Stats do
   @moduledoc """
   The Stats context.
@@ -61,5 +63,36 @@ defmodule Ruzenkit.Stats do
       |> Enum.map(&add_vat_amount_to_order_items/1)
       |> Enum.map(&populate_vat_total_amount/1)
     end
+  end
+
+  defp find_key_by_tuple(tuple), do: tuple |> Tuple.to_list() |> Enum.at(0)
+
+  defp sort_by_keys(keys_list, a, b) do
+    a_order = Enum.find_index(keys_list, &(find_key_by_tuple(a) == &1))
+    b_order = Enum.find_index(keys_list, &(find_key_by_tuple(b) == &1))
+    a_order <= b_order
+  end
+
+  @csvs_dir "csvs"
+  def orders_for_date_range_to_csv(start_iso_date, end_iso_date) do
+    keys_list = [:id, :total, :vat_total_amount]
+
+    content =
+      [["id", "total", "tva"]]
+      |> Enum.concat(
+        get_orders_for_date_range(start_iso_date, end_iso_date)
+        |> Enum.map(fn order ->
+          order
+          |> Map.take(keys_list)
+          |> Map.to_list()
+          |> Enum.sort(&sort_by_keys(keys_list, &1, &2))
+          |> Enum.map(fn tuple -> tuple |> Tuple.to_list() |> Enum.at(1) end)
+        end)
+      )
+      |> CSVParser.dump_to_iodata()
+
+      Path.join([:code.priv_dir(:ruzenkit), @csvs_dir, "orders.csv"])
+      |> File.write!(content)
+
   end
 end
