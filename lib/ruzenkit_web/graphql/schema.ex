@@ -248,6 +248,14 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&AccountsResolver.logout/3)
     end
 
+    field :change_password, :boolean do
+      arg(:email, non_null(:string))
+      arg(:new_password, non_null(:string))
+      arg(:old_password, non_null(:string))
+
+      resolve &AccountsResolver.change_password/3
+    end
+
     field :create_cart, :cart do
       # arg(:cart, :cart_input)
 

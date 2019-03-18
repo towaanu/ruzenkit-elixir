@@ -73,6 +73,13 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
   # He is not logged in
   def logout(_root, _args, _info), do: {:ok, true}
 
+  def change_password(_root, %{email: email, old_password: old_password, new_password: new_password}, _info) do
+    case Accounts.change_password(email, old_password, new_password) do
+      {:ok, _credential} -> {:ok, true}
+      {:error, :invalid_credentials} -> {:error, false}
+    end
+  end
+
   def me(_root, _args, %{context: %{current_user: current_user}}) do
     {:ok, "Hello #{current_user.profile.first_name} :D"}
   end

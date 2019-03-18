@@ -207,6 +207,16 @@ defmodule Ruzenkit.Accounts do
     Credential.changeset(credential, %{})
   end
 
+  def change_password(email, old_password, new_password) do
+    case authenticate_user(email, old_password) do
+      {:ok, user} ->
+        user.credential
+        |> update_credential(%{password: new_password})
+
+        {:error, :invalid_credentials} -> {:error, :invalid_credentials}
+    end
+  end
+
   def authenticate_user(email, password) do
     query =
       from u in User,
