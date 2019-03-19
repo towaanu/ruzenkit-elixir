@@ -14,6 +14,7 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
 
   def create_user(_root, %{user: user}, _info) do
     IO.inspect(user)
+
     case Accounts.create_user(user) do
       {:ok, user} ->
         {:ok, user}
@@ -23,7 +24,7 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
     end
   end
 
-  def create_profile_address(_root, %{profile_address: profile_address }, _info) do
+  def create_profile_address(_root, %{profile_address: profile_address}, _info) do
     case Accounts.create_profile_address(profile_address) do
       {:ok, profile_address} ->
         {:ok, profile_address}
@@ -73,7 +74,11 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
   # He is not logged in
   def logout(_root, _args, _info), do: {:ok, true}
 
-  def change_password(_root, %{email: email, old_password: old_password, new_password: new_password}, _info) do
+  def change_password(
+        _root,
+        %{email: email, old_password: old_password, new_password: new_password},
+        _info
+      ) do
     case Accounts.change_password(email, old_password, new_password) do
       {:ok, _credential} -> {:ok, true}
       {:error, :invalid_credentials} -> {:error, false}
@@ -85,4 +90,16 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
   end
 
   def me(_root, _args, _info), do: {:ok, "I don't know you :("}
+
+  def forgot_password(_root, %{email: email}, _info) do
+    Accounts.forgot_password(email)
+    {:ok, true}
+  end
+
+  def reset_password(_root, %{token: token, new_password: new_password}, _info) do
+    case Accounts.reset_password(token, new_password) do
+      {:ok, _credential} -> {:ok, true}
+      {:error, error} -> {:error, error}
+    end
+  end
 end

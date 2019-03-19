@@ -27,4 +27,5 @@ defmodule Ruzenkit.Accounts.Credential do
   end
 
   defp put_password_hash(changeset), do: changeset
+
 end

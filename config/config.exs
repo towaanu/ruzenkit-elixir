@@ -32,6 +32,13 @@ config :ruzenkit, Ruzenkit.Accounts.Guardian,
   # ttl: {600, :seconds}
   # secret_key: "VAx8SCRQM46MByemu6/xLePFefgS+3eJqv1N/g9dIy80WdhWSGkh8W086uycyPkq"
 
+config :ruzenkit, Ruzenkit.Accounts.ForgotPasswordGuardian,
+  issuer: "ruzenkit",
+  secret_key: "hello",
+  ttl: {1, :day}
+  # ttl: {600, :seconds}
+  # secret_key: "VAx8SCRQM46MByemu6/xLePFefgS+3eJqv1N/g9dIy80WdhWSGkh8W086uycyPkq"
+
 config :ruzenkit, Ruzenkit.Mailer,
   adapter: Bamboo.SMTPAdapter,
   server: "localhost",

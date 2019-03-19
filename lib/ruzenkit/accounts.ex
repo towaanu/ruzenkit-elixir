@@ -10,6 +10,8 @@ defmodule Ruzenkit.Accounts do
   alias Ruzenkit.Accounts.Credential
   alias Ruzenkit.Accounts.Profile
   alias Ruzenkit.Accounts
+  alias Ruzenkit.Email
+  alias Ruzenkit.Accounts.ForgotPasswordGuardian
 
   @doc """
   Returns the list of users.
@@ -42,8 +44,20 @@ defmodule Ruzenkit.Accounts do
   def get_user(id), do: Repo.get(User, id)
 
   def get_user_with_credential!(id), do: User |> Repo.get!(id) |> Repo.preload(:credential)
+
   def get_user_with_credential_and_profile!(id) do
     User |> Repo.get!(id) |> Repo.preload([:credential, :profile])
+  end
+
+  def get_user_by_email(email) do
+    user_query =
+      from u in User,
+        inner_join: p in assoc(u, :profile),
+        where: p.email == ^email,
+        preload: [:credential, :profile]
+
+    user_query
+    |> Repo.one()
   end
 
   @doc """
@@ -213,7 +227,30 @@ defmodule Ruzenkit.Accounts do
         user.credential
         |> update_credential(%{password: new_password})
 
-        {:error, :invalid_credentials} -> {:error, :invalid_credentials}
+      {:error, :invalid_credentials} ->
+        {:error, :invalid_credentials}
+    end
+  end
+
+  def send_forgot_password_email(email, token) do
+    Email.forgot_password_email(email: email, token: token)
+    |> Email.send_mail()
+  end
+
+  def forgot_password(email) do
+    case ForgotPasswordGuardian.encode_and_sign(email) do
+      {:ok, token, _claims} -> send_forgot_password_email(email, token)
+      {:error, error} -> {:error, error}
+    end
+  end
+
+  def reset_password(token, new_password) do
+    case ForgotPasswordGuardian.resource_from_token(token) do
+      {:ok, %{credential: credential}, _claims} ->
+        update_credential(credential, %{password: new_password})
+
+      {:error, error} ->
+        {:error, error}
     end
   end
 

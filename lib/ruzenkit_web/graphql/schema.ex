@@ -401,5 +401,18 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &OrdersResolver.change_order_status/3
     end
 
+    field :forgot_password, :boolean do
+      arg :email, non_null(:string)
+
+      resolve &AccountsResolver.forgot_password/3
+    end
+
+    field :reset_password, :boolean do
+      arg :token, non_null(:string)
+      arg :new_password, non_null(:string)
+
+      resolve &AccountsResolver.reset_password/3
+    end
+
   end
 end
