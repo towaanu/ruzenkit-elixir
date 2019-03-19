@@ -1,0 +1,7 @@
+<html>
+  <head></head>
+  <body>
+  <h1> Hey I'm a mail ! </h1>
+    <%= render @view_module, @view_template, assigns %>
+  </body>
+</html>

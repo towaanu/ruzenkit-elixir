@@ -1,5 +1,8 @@
 defmodule Ruzenkit.Email do
   import Bamboo.Email
+
+  use Bamboo.Phoenix, view: RuzenkitWeb.EmailView
+
   alias Ruzenkit.Mailer
 
   def welcome_email do
@@ -15,6 +18,8 @@ defmodule Ruzenkit.Email do
   defp base_email do
     new_email()
     |> from("store@ruzenkit.com")
+    |> put_html_layout({RuzenkitWeb.LayoutView, "email.html"})
+    |> put_text_layout({RuzenkitWeb.LayoutView, "email.text"})
   end
 
   def order_email(params \\ []) do
@@ -22,18 +27,14 @@ defmodule Ruzenkit.Email do
     |> to(params[:email])
     |> subject("Your order !!!")
     |> html_body("<strong>Hey it's your order</strong>")
-
-    # |> text_body("welcome")
   end
 
   def forgot_password_email(email: email, token: token) do
     base_email()
     |> to(email)
     |> subject("[Ruzenkit] Forgotten password")
-    |> html_body("
-    <strong>You forgot your passsword :(</strong>
-    Here is your <a href=\"http://localhost:3000/resetpassword/#{token}\">reset link</a>
-    ")
+    |> assign(:token, token)
+    |> render(:forgot_password)
   end
 
   def send_mail(mail), do: mail |> Mailer.deliver_now()
