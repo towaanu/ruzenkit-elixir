@@ -18,9 +18,12 @@ config :ruzenkit, RuzenkitWeb.Endpoint,
   pubsub: [name: Ruzenkit.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
-config :logger, :console,
+config :logger, backends: [:console],
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+# config :logger, backends: [:console, {LoggerFileBackend, :all_log}],
+#   format: "$time $metadata[$level] $message\n",
+#   metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

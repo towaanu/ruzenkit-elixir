@@ -50,7 +50,8 @@ defmodule Ruzenkit.MixProject do
       {:cors_plug, "~> 2.0"},
       {:bamboo, "~> 1.2"},
       {:bamboo_smtp, "~> 1.6.0"},
-      {:nimble_csv, "~> 0.5"}
+      {:nimble_csv, "~> 0.5"},
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 
