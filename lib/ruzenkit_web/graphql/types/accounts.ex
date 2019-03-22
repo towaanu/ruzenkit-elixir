@@ -6,6 +6,7 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
     field :id, non_null(:id)
     field :credential, non_null(:credential), resolve: dataloader(:db)
     field :profile, non_null(:profile), resolve: dataloader(:db)
+    field :orders, list_of(:order), resolve: dataloader(:db)
   end
 
   object :profile do
