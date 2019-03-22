@@ -8,6 +8,7 @@ defmodule Ruzenkit.Products do
 
   alias Ruzenkit.Products.Product
   alias Ruzenkit.Products.ParentProduct
+  alias Ruzenkit.Products.ChildProduct
   alias Ecto.Multi
   alias Ruzenkit.Stocks
 
@@ -22,6 +23,19 @@ defmodule Ruzenkit.Products do
   """
   def list_products do
     Repo.all(Product)
+  end
+
+  def list_root_products do
+
+    child_product_product_ids_query = from cp in ChildProduct, select: cp.product_id
+    child_product_product_ids = Repo.all(child_product_product_ids_query)
+
+    root_products_query =
+      from product in Product,
+      where: product.id not in ^child_product_product_ids
+
+      root_products_query
+      |> Repo.all()
   end
 
   # def list_parent_products do

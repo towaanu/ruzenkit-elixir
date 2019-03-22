@@ -8,6 +8,11 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     {:ok, products}
   end
 
+  def list_root_products(_root, _args, _info) do
+    root_products = Products.list_root_products()
+    {:ok, root_products}
+  end
+
   def list_parent_products(_root, _args, %{context: %{is_admin: true}}) do
     parent_products = Products.list_parent_products()
     {:ok, parent_products}
