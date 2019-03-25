@@ -51,7 +51,9 @@ defmodule Ruzenkit.MixProject do
       {:bamboo, "~> 1.2"},
       {:bamboo_smtp, "~> 1.6.0"},
       {:nimble_csv, "~> 0.5"},
-      {:logger_file_backend, "~> 0.0.10"}
+      {:logger_file_backend, "~> 0.0.10"},
+      {:arc, "~> 0.11.0"},
+      {:arc_ecto, "~> 0.11.1"}
     ]
   end
 

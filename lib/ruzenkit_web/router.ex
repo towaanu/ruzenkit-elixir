@@ -23,9 +23,9 @@ defmodule RuzenkitWeb.Router do
 
     get "/", PageController, :index
     # , except: [:new, :edit]
-    resources "/products", ProductController
-    resources "/configurable_options", ConfigurableOptionController
-    resources "/configurable_products", ConfigurableProductController
+    # resources "/products", ProductController
+    # resources "/configurable_options", ConfigurableOptionController
+    # resources "/configurable_products", ConfigurableProductController
   end
 
   scope "/graphql" do

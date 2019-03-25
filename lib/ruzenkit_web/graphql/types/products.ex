@@ -3,6 +3,8 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
 
+  alias Ruzenkit.Products
+
   object :product_price do
     field :id, non_null(:id)
     field :amount, :decimal
@@ -28,6 +30,12 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
+
+    field :picture_url, :string,
+      resolve: fn product, _info, _ ->
+        {:ok, Products.get_product_picture_url(product)}
+      end
+
     field :price, :product_price, resolve: dataloader(:db)
     field :parent_product, :parent_product, resolve: dataloader(:db)
     field :child_product, :child_product, resolve: dataloader(:db)
@@ -41,7 +49,10 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
   object :configurable_option do
     field :id, non_null(:id)
     field :label, non_null(:string)
-    field :configurable_item_options, list_of(non_null(:configurable_item_option)), resolve: dataloader(:db)
+
+    field :configurable_item_options, list_of(non_null(:configurable_item_option)),
+      resolve: dataloader(:db)
+
     field :products, list_of(:product), resolve: dataloader(:db)
   end
 
@@ -75,6 +86,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
+    field :picture, :upload
     field :parent_product, :parent_product_input
     field :child_product, :child_product_input
     field :price, :product_price_input
@@ -84,6 +96,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
 
   input_object :configurable_option_input do
     field :label, non_null(:string)
+
     # field :configurable_item_options, list_of(non_null(:configurable_item_option)), resolve: dataloader(:db)
     # field :products, list_of(:product), resolve: dataloader(:db)
   end
@@ -93,5 +106,4 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :short_label, :string
     field :configurable_option_id, :id
   end
-
 end

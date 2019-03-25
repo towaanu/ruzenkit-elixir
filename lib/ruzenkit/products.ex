@@ -9,6 +9,7 @@ defmodule Ruzenkit.Products do
   alias Ruzenkit.Products.Product
   alias Ruzenkit.Products.ParentProduct
   alias Ruzenkit.Products.ChildProduct
+  alias Ruzenkit.ProductPicture
   alias Ecto.Multi
   alias Ruzenkit.Stocks
 
@@ -26,16 +27,15 @@ defmodule Ruzenkit.Products do
   end
 
   def list_root_products do
-
     child_product_product_ids_query = from cp in ChildProduct, select: cp.product_id
     child_product_product_ids = Repo.all(child_product_product_ids_query)
 
     root_products_query =
       from product in Product,
-      where: product.id not in ^child_product_product_ids
+        where: product.id not in ^child_product_product_ids
 
-      root_products_query
-      |> Repo.all()
+    root_products_query
+    |> Repo.all()
   end
 
   # def list_parent_products do
@@ -73,6 +73,12 @@ defmodule Ruzenkit.Products do
 
   def get_product(id), do: Repo.get(Product, id)
 
+  def get_product_picture_url(product, options \\ []) do
+    path_url = ProductPicture.url({product.picture, product}, options)
+    |> String.replace_prefix("/priv", "")
+
+    URI.merge(RuzenkitWeb.Endpoint.url, path_url)
+  end
 
   # def create_product(attrs \\ %{}) do
   #   %Product{}
@@ -95,7 +101,6 @@ defmodule Ruzenkit.Products do
   end
 
   def create_product(attrs \\ %{}) do
-
     attrs_stock = get_attrs_stock(attrs)
 
     Multi.new()
@@ -112,7 +117,6 @@ defmodule Ruzenkit.Products do
       {:error, _failed_operation, failed_value, _changes_so_far} ->
         {:error, failed_value}
     end
-
   end
 
   @doc """
@@ -606,13 +610,12 @@ defmodule Ruzenkit.Products do
   def is_parent_product(product_id) do
     query =
       from pp in ParentProduct,
-      where: pp.product_id == ^product_id
+        where: pp.product_id == ^product_id
 
     case Repo.one(query) do
       nil -> false
       _parent_product -> true
     end
-
   end
 
   @doc """

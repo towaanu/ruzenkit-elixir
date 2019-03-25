@@ -15,6 +15,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
   alias RuzenkitWeb.Graphql.Types
   alias Ruzenkit.EctoDataloader
 
+  import_types Absinthe.Plug.Types
   import_types(Absinthe.Type.Custom)
   import_types(Types.Money)
   import_types(Types.Products)
