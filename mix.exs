@@ -53,7 +53,8 @@ defmodule Ruzenkit.MixProject do
       {:nimble_csv, "~> 0.5"},
       {:logger_file_backend, "~> 0.0.10"},
       {:arc, "~> 0.11.0"},
-      {:arc_ecto, "~> 0.11.1"}
+      {:arc_ecto, "~> 0.11.1"},
+      {:distillery, "~> 2.0"}
     ]
   end
 
