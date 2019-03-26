@@ -44,7 +44,8 @@ defmodule Ruzenkit.ProductPicture do
 
   # Provide a default URL if there hasn't been a file uploaded
   def default_url(version, _scope) do
-    "/images/avatars/default_#{version}.png"
+    # "/images/avatars/default_#{version}.png"
+    "priv/uploads/products/default/pictures/#{version}.png"
   end
 
   # Specify custom headers for s3 objects
