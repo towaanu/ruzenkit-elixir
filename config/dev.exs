@@ -8,6 +8,7 @@ use Mix.Config
 # with webpack to recompile .js and .css sources.
 config :ruzenkit, RuzenkitWeb.Endpoint,
   http: [port: 4000],
+  # url: [host: "dedevapi.nemak.me", port: 80, scheme: "https"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,

@@ -15,7 +15,7 @@ defmodule RuzenkitWeb.Router do
 
   pipeline :graphql do
     plug Ruzenkit.Accounts.AuthContext
-    plug CORSPlug, origin: "*"
+    # plug CORSPlug, origin: "*"
   end
 
   scope "/", RuzenkitWeb do

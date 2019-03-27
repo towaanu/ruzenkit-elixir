@@ -4,7 +4,7 @@ defmodule Ruzenkit.MixProject do
   def project do
     [
       app: :ruzenkit,
-      version: "0.1.0",
+      version: "0.1.4",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),

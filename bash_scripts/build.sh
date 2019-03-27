@@ -9,9 +9,9 @@ APP_VSN="$(grep 'version:' mix.exs | cut -d '"' -f2)"
 
 mkdir -p /opt/build/rel/artifacts
 
-rm -rf _build
-
 mix deps.clean --all
+
+rm -rf _build
 
 # Install updated versions of hex/rebar
 mix local.rebar --force

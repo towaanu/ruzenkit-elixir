@@ -74,11 +74,9 @@ defmodule Ruzenkit.Products do
   def get_product(id), do: Repo.get(Product, id)
 
   def get_product_picture_url(product, options \\ []) do
-    IO.inspect(ProductPicture.url({product.picture, product}, options))
-
     path_url =
       ProductPicture.url({product.picture, product}, options)
-      |> String.replace(~r/^\/?priv/, "")
+      |> String.replace_prefix(Application.app_dir(:ruzenkit, "priv"), "")
 
     URI.merge(RuzenkitWeb.Endpoint.url(), path_url)
   end

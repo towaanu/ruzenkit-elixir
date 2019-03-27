@@ -39,13 +39,17 @@ defmodule Ruzenkit.ProductPicture do
 
   # Override the storage directory:
   def storage_dir(_version, {_file, scope}) do
-    "priv/uploads/products/#{scope.sku}/pictures/"
+    Application.app_dir(:ruzenkit, "priv")
+    |> Path.join("uploads/products/#{scope.sku}/pictures/")
+    # "priv/uploads/products/#{scope.sku}/pictures/"
   end
 
   # Provide a default URL if there hasn't been a file uploaded
   def default_url(version, _scope) do
     # "/images/avatars/default_#{version}.png"
-    "priv/uploads/products/default/pictures/#{version}.png"
+    # Application.app_dir(:ruzenkit, "priv")
+    # |> Path.join("uploads/products/default/pictures/#{version}.png")
+    "/uploads/products/default/pictures/#{version}.png"
   end
 
   # Specify custom headers for s3 objects
