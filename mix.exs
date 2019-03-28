@@ -20,7 +20,7 @@ defmodule Ruzenkit.MixProject do
   def application do
     [
       mod: {Ruzenkit.Application, []},
-      extra_applications: [:logger, :runtime_tools, :bamboo, :bamboo_smtp]
+      extra_applications: [:logger, :runtime_tools, :bamboo, :bamboo_smtp, :timex]
     ]
   end
 
@@ -54,7 +54,8 @@ defmodule Ruzenkit.MixProject do
       {:logger_file_backend, "~> 0.0.10"},
       {:arc, "~> 0.11.0"},
       {:arc_ecto, "~> 0.11.1"},
-      {:distillery, "~> 2.0"}
+      {:distillery, "~> 2.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 

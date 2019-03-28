@@ -15,9 +15,20 @@ defmodule Ruzenkit.Email do
     )
   end
 
+  def test_email(to) do
+    base_email()
+  |> to(to)
+  |> subject("Welcome to the app. :D")
+  |> html_body("<strong>Thanks for joining!</strong>")
+  |> text_body("Thanks for joining!")
+  end
+
   defp base_email do
     new_email()
     |> from("store@ruzenkit.com")
+    |> put_header("Reply-To", "store@ruzenkit.com")
+    |> put_header("Date", Timex.now |> Timex.format!("{WDshort}, {D} {Mshort} {YYYY} {h24}:{m}:{s} {Z}"))
+    |> put_header("Message-Id", "<#{ DateTime.utc_now |> DateTime.to_unix }@ruzenkit.com>")
     |> put_html_layout({RuzenkitWeb.LayoutView, "email.html"})
     |> put_text_layout({RuzenkitWeb.LayoutView, "email.text"})
   end

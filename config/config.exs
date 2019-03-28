@@ -42,6 +42,21 @@ config :ruzenkit, Ruzenkit.Accounts.ForgotPasswordGuardian,
   # ttl: {600, :seconds}
   # secret_key: "VAx8SCRQM46MByemu6/xLePFefgS+3eJqv1N/g9dIy80WdhWSGkh8W086uycyPkq"
 
+# config :ruzenkit, Ruzenkit.Mailer,
+#   adapter: Bamboo.SMTPAdapter,
+#   server: "mailcow.ruzenkit.xyz",
+#   hostname: "mailcow.ruzenkit.xyz",
+#   port: 465,
+#   username: "store@ruzenkit.com", # or {:system, "SMTP_USERNAME"}
+#   password: "wkn7phlq", # or {:system, "SMTP_PASSWORD"}
+#   tls: :if_available, # can be `:always` or `:never`
+#   allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"], # or {:system, "ALLOWED_TLS_VERSIONS"} w/ comma seprated values (e.g. "tlsv1.1,tlsv1.2")
+#   ssl: true, # can be `true`
+#   retries: 1,
+#   no_mx_lookups: false, # can be `true`
+#   auth: :if_available # can be `always`. If your smtp relay requires authentication set it to `always`.
+
+
 config :ruzenkit, Ruzenkit.Mailer,
   adapter: Bamboo.SMTPAdapter,
   server: "localhost",
