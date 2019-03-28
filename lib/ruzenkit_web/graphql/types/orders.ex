@@ -43,6 +43,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :id, non_null(:id)
     field :total, :decimal
     field :comment, :string
+    field :shipping_number, :string
     field :inserted_at, :datetime
     field :updated_at, :datetime
 
@@ -54,6 +55,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
 
   input_object :order_update_input do
     field :comment, :string
+    field :shipping_number, :string
     field :order_status_id, :id
   end
 

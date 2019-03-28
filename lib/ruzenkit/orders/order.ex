@@ -9,6 +9,7 @@ defmodule Ruzenkit.Orders.Order do
   schema "orders" do
     field :total, :decimal, precision: 12, scale: 2
     field :comment, :string
+    field :shipping_number, :string
     belongs_to :user, User
     belongs_to :order_status, OrderStatus
     has_many :order_items, OrderItem
@@ -30,7 +31,7 @@ defmodule Ruzenkit.Orders.Order do
 
   def update_changeset(order, attrs) do
     order
-    |> cast(attrs, [:comment, :order_status_id])
+    |> cast(attrs, [:comment, :order_status_id, :shipping_number])
     |> foreign_key_constraint(:order_status_id)
   end
 
