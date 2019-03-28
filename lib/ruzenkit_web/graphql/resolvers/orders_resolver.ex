@@ -28,8 +28,8 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
 
   def list_orders(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
-  def create_order_from_cart(_root, %{cart_id: cart_id, order_address: order_address}, _info) do
-    case Orders.create_order_from_cart(cart_id, order_address) do
+  def create_order_from_cart(_root, %{cart_id: cart_id, order: order_params}, _info) do
+    case Orders.create_order_from_cart(cart_id, order_params) do
       {:ok, order} -> {:ok, order}
       {:error, error} -> {:error, changeset_error_to_graphql("Unable to create order", error)}
     end

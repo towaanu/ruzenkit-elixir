@@ -59,6 +59,11 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :order_status_id, :id
   end
 
+  input_object :order_create_input do
+    field :order_address, :order_address_input
+    field :email, :string
+  end
+
   input_object :order_status_input do
     field :label, non_null(:string)
     field :is_default, :boolean

@@ -63,9 +63,12 @@ defmodule Ruzenkit.Orders do
     |> Repo.insert()
   end
 
-  defp send_order_mail(order = %Order{}) do
+  def send_order_mail(order = %Order{user_id: user_id}) when user_id != nil  do
     %{user: %{profile: %{email: email}}} = Repo.preload(order, user: :profile)
+    Ruzenkit.Email.order_email(email: email) |> Ruzenkit.Mailer.deliver_now()
+  end
 
+  def send_order_mail(%Order{email: email}) when email != "" do
     Ruzenkit.Email.order_email(email: email) |> Ruzenkit.Mailer.deliver_now()
   end
 
@@ -95,7 +98,7 @@ defmodule Ruzenkit.Orders do
 
   # end
 
-  def create_order_from_cart(cart_id, order_address) do
+  def create_order_from_cart(cart_id, %{order_address: order_address, email: email}) do
     %{id: status_id} = Repo.get_by!(OrderStatus, is_default: true)
 
     cart = Carts.get_cart_with_total(cart_id)
@@ -106,7 +109,8 @@ defmodule Ruzenkit.Orders do
       user_id: cart.user_id,
       order_status_id: status_id,
       order_items: order_items,
-      order_address: order_address
+      order_address: order_address,
+      email: email
     }
 
     new_order_changeset =
@@ -137,7 +141,6 @@ defmodule Ruzenkit.Orders do
          quantity: quantity,
          product: %{id: product_id, price: %{amount: amount, currency: %{code: code, sign: sign}}}
        }) do
-
     %{vat_group: vat_group} =
       Products.Product
       |> Repo.get!(product_id)

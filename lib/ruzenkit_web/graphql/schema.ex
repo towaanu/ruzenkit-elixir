@@ -309,7 +309,8 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :create_order_from_cart, :order do
       arg(:cart_id, non_null(:id))
-      arg :order_address, :order_address_input
+      arg :order, :order_create_input
+      # arg :order_address, :order_address_input
 
       resolve(&OrdersResolver.create_order_from_cart/3)
     end
