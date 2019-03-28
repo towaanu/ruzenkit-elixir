@@ -12,6 +12,7 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Orders.OrderItem
   alias Ruzenkit.Stocks
   alias Ruzenkit.Products
+  # alias Ruzenkit.Shippings
   alias Ecto.Multi
 
   @doc """
@@ -84,6 +85,15 @@ defmodule Ruzenkit.Orders do
       {:error, error} -> {:error, error}
     end
   end
+
+  # defp shipping_option_to_order_shipping(%Shippings.ShippingOption{
+  #   name: name,
+  #   description: description,
+  #   shipping_hour_time: shipping_hour_time,
+  #   shipping_carrier: %{name: shipping_carrier_name}
+  # }) do
+
+  # end
 
   def create_order_from_cart(cart_id, order_address) do
     %{id: status_id} = Repo.get_by!(OrderStatus, is_default: true)
@@ -161,8 +171,14 @@ defmodule Ruzenkit.Orders do
   """
   def update_order(%Order{} = order, attrs) do
     order
-    |> Order.changeset(attrs)
+    |> Order.update_changeset(attrs)
     |> Repo.update()
+  end
+
+  def update_order_by_id(order_id, attrs) do
+    Order
+    |> Repo.get!(order_id)
+    |> update_order(attrs)
   end
 
   @doc """

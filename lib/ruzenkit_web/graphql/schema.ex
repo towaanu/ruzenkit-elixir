@@ -314,6 +314,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&OrdersResolver.create_order_from_cart/3)
     end
 
+    field :update_order, :order do
+      arg :id, non_null(:id)
+      arg :order, non_null(:order_update_input)
+
+      resolve(&OrdersResolver.update_order/3)
+    end
+
     field :create_address, :address do
       arg(:address, non_null(:address_input))
 

@@ -42,6 +42,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
   object :order do
     field :id, non_null(:id)
     field :total, :decimal
+    field :comment, :string
     field :inserted_at, :datetime
     field :updated_at, :datetime
 
@@ -49,6 +50,11 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :order_status, :order_status, resolve: dataloader(:db)
     field :order_items, list_of(:order_item), resolve: dataloader(:db)
     field :order_address, :order_address, resolve: dataloader(:db)
+  end
+
+  input_object :order_update_input do
+    field :comment, :string
+    field :order_status_id, :id
   end
 
   input_object :order_status_input do

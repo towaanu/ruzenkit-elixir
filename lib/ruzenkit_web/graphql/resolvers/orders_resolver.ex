@@ -85,4 +85,16 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
     end
   end
 
+  def update_order(_root, %{order: order_params, id: id}, %{context: %{is_admin: true}}) do
+    case Orders.update_order_by_id(id, order_params) do
+      {:ok, order} ->
+        {:ok, order}
+
+      {:error, error} ->
+        {:error, changeset_error_to_graphql("unable to update order #{id}", error)}
+    end
+  end
+
+  def update_order(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
 end
