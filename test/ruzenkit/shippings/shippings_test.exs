@@ -30,7 +30,9 @@ defmodule Ruzenkit.ShippingsTest do
     end
 
     test "create_shipping_carrier/1 with valid data creates a shipping_carrier" do
-      assert {:ok, %ShippingCarrier{} = shipping_carrier} = Shippings.create_shipping_carrier(@valid_attrs)
+      assert {:ok, %ShippingCarrier{} = shipping_carrier} =
+               Shippings.create_shipping_carrier(@valid_attrs)
+
       assert shipping_carrier.name == "some name"
     end
 
@@ -40,20 +42,29 @@ defmodule Ruzenkit.ShippingsTest do
 
     test "update_shipping_carrier/2 with valid data updates the shipping_carrier" do
       shipping_carrier = shipping_carrier_fixture()
-      assert {:ok, %ShippingCarrier{} = shipping_carrier} = Shippings.update_shipping_carrier(shipping_carrier, @update_attrs)
+
+      assert {:ok, %ShippingCarrier{} = shipping_carrier} =
+               Shippings.update_shipping_carrier(shipping_carrier, @update_attrs)
+
       assert shipping_carrier.name == "some updated name"
     end
 
     test "update_shipping_carrier/2 with invalid data returns error changeset" do
       shipping_carrier = shipping_carrier_fixture()
-      assert {:error, %Ecto.Changeset{}} = Shippings.update_shipping_carrier(shipping_carrier, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Shippings.update_shipping_carrier(shipping_carrier, @invalid_attrs)
+
       assert shipping_carrier == Shippings.get_shipping_carrier!(shipping_carrier.id)
     end
 
     test "delete_shipping_carrier/1 deletes the shipping_carrier" do
       shipping_carrier = shipping_carrier_fixture()
       assert {:ok, %ShippingCarrier{}} = Shippings.delete_shipping_carrier(shipping_carrier)
-      assert_raise Ecto.NoResultsError, fn -> Shippings.get_shipping_carrier!(shipping_carrier.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Shippings.get_shipping_carrier!(shipping_carrier.id)
+      end
     end
 
     test "change_shipping_carrier/1 returns a shipping_carrier changeset" do
@@ -65,14 +76,28 @@ defmodule Ruzenkit.ShippingsTest do
   describe "shipping_options" do
     alias Ruzenkit.Shippings.ShippingOption
 
-    @valid_attrs %{description: "some description", name: "some name", shipping_time: ~T[14:00:00]}
-    @update_attrs %{description: "some updated description", name: "some updated name", shipping_time: ~T[15:01:01]}
-    @invalid_attrs %{description: nil, name: nil, shipping_time: nil}
+    @valid_attrs %{
+      description: "some description",
+      name: "some name",
+      shipping_hour_time: 48
+    }
+    @update_attrs %{
+      description: "some updated description",
+      name: "some updated name",
+      shipping_hour_time: 48
+    }
+    @invalid_attrs %{description: nil, name: nil, shipping_hour_time: nil}
+
+    @shipping_carrier_attrs %{name: "some name"}
 
     def shipping_option_fixture(attrs \\ %{}) do
+      {:ok, %{id: shipping_carrier_id}} =
+        Shippings.create_shipping_carrier(@shipping_carrier_attrs)
+
       {:ok, shipping_option} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Map.put(:shipping_carrier_id, shipping_carrier_id)
         |> Shippings.create_shipping_option()
 
       shipping_option
@@ -89,10 +114,17 @@ defmodule Ruzenkit.ShippingsTest do
     end
 
     test "create_shipping_option/1 with valid data creates a shipping_option" do
-      assert {:ok, %ShippingOption{} = shipping_option} = Shippings.create_shipping_option(@valid_attrs)
+      {:ok, %{id: shipping_carrier_id}} =
+        Shippings.create_shipping_carrier(@shipping_carrier_attrs)
+
+      assert {:ok, %ShippingOption{} = shipping_option} =
+               @valid_attrs
+               |> Map.put(:shipping_carrier_id, shipping_carrier_id)
+               |> Shippings.create_shipping_option()
+
       assert shipping_option.description == "some description"
       assert shipping_option.name == "some name"
-      assert shipping_option.shipping_time == ~T[14:00:00]
+      assert shipping_option.shipping_hour_time == 48
     end
 
     test "create_shipping_option/1 with invalid data returns error changeset" do
@@ -101,22 +133,31 @@ defmodule Ruzenkit.ShippingsTest do
 
     test "update_shipping_option/2 with valid data updates the shipping_option" do
       shipping_option = shipping_option_fixture()
-      assert {:ok, %ShippingOption{} = shipping_option} = Shippings.update_shipping_option(shipping_option, @update_attrs)
+
+      assert {:ok, %ShippingOption{} = shipping_option} =
+               Shippings.update_shipping_option(shipping_option, @update_attrs)
+
       assert shipping_option.description == "some updated description"
       assert shipping_option.name == "some updated name"
-      assert shipping_option.shipping_time == ~T[15:01:01]
+      assert shipping_option.shipping_hour_time == 48
     end
 
     test "update_shipping_option/2 with invalid data returns error changeset" do
       shipping_option = shipping_option_fixture()
-      assert {:error, %Ecto.Changeset{}} = Shippings.update_shipping_option(shipping_option, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Shippings.update_shipping_option(shipping_option, @invalid_attrs)
+
       assert shipping_option == Shippings.get_shipping_option!(shipping_option.id)
     end
 
     test "delete_shipping_option/1 deletes the shipping_option" do
       shipping_option = shipping_option_fixture()
       assert {:ok, %ShippingOption{}} = Shippings.delete_shipping_option(shipping_option)
-      assert_raise Ecto.NoResultsError, fn -> Shippings.get_shipping_option!(shipping_option.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Shippings.get_shipping_option!(shipping_option.id)
+      end
     end
 
     test "change_shipping_option/1 returns a shipping_option changeset" do

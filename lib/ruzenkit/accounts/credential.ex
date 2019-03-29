@@ -16,6 +16,7 @@ defmodule Ruzenkit.Accounts.Credential do
   def changeset(credential, attrs) do
     credential
     |> cast(attrs, [:password])
+    |> validate_required([:password])
     |> validate_length(:password, min: 5, max: 20)
     |> put_password_hash()
   end

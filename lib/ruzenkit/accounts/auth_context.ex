@@ -19,7 +19,17 @@ defmodule Ruzenkit.Accounts.AuthContext do
   """
   def build_context(conn) do
     case Mix.env() do
-      :dev -> # in dev everyone is admin for simplicity
+      # in dev everyone is admin for simplicity
+      :dev ->
+        with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
+             {:ok, current_user} <- authorize(token) do
+          %{current_user: current_user, auth_token: token, is_admin: true}
+        else
+          _ -> %{is_admin: true}
+        end
+
+      # in dev everyone is admin for simplicity
+      :test ->
         with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
              {:ok, current_user} <- authorize(token) do
           %{current_user: current_user, auth_token: token, is_admin: true}

@@ -6,8 +6,8 @@ defmodule Ruzenkit.MoneyTest do
   describe "currencies" do
     alias Ruzenkit.Money.Currency
 
-    @valid_attrs %{code: "some code", name: "some name", sign: "some sign"}
-    @update_attrs %{code: "some updated code", name: "some updated name", sign: "some updated sign"}
+    @valid_attrs %{code: "EUR", name: "euro", sign: "€"}
+    @update_attrs %{code: "USD", name: "US dollar", sign: "$"}
     @invalid_attrs %{code: nil, name: nil, sign: nil}
 
     def currency_fixture(attrs \\ %{}) do
@@ -31,9 +31,9 @@ defmodule Ruzenkit.MoneyTest do
 
     test "create_currency/1 with valid data creates a currency" do
       assert {:ok, %Currency{} = currency} = Money.create_currency(@valid_attrs)
-      assert currency.code == "some code"
-      assert currency.name == "some name"
-      assert currency.sign == "some sign"
+      assert currency.code == "EUR"
+      assert currency.name == "euro"
+      assert currency.sign == "€"
     end
 
     test "create_currency/1 with invalid data returns error changeset" do
@@ -43,9 +43,9 @@ defmodule Ruzenkit.MoneyTest do
     test "update_currency/2 with valid data updates the currency" do
       currency = currency_fixture()
       assert {:ok, %Currency{} = currency} = Money.update_currency(currency, @update_attrs)
-      assert currency.code == "some updated code"
-      assert currency.name == "some updated name"
-      assert currency.sign == "some updated sign"
+      assert currency.code == "USD"
+      assert currency.name == "US dollar"
+      assert currency.sign == "$"
     end
 
     test "update_currency/2 with invalid data returns error changeset" do

@@ -16,6 +16,7 @@ defmodule Ruzenkit.Vat.VatGroup do
   def changeset(vat_group, attrs) do
     vat_group
     |> cast(attrs, [:rate, :label, :country_id])
+    |> validate_required([:rate])
     |> foreign_key_constraint(:country_id)
   end
 

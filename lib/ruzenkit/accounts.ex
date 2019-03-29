@@ -75,8 +75,8 @@ defmodule Ruzenkit.Accounts do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
-    |> Ecto.Changeset.cast_assoc(:profile, with: &Profile.changeset/2)
+    # |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
+    # |> Ecto.Changeset.cast_assoc(:profile, with: &Profile.changeset/2)
     |> Repo.insert()
   end
 
@@ -94,6 +94,8 @@ defmodule Ruzenkit.Accounts do
   """
   def update_user(%User{} = user, attrs) do
     user
+    |> Repo.preload(:credential)
+    |> Repo.preload(profile: [profile_addresses: :address])
     |> User.changeset(attrs)
     |> Repo.update()
   end

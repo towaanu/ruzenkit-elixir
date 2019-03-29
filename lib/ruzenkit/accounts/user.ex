@@ -12,7 +12,7 @@ defmodule Ruzenkit.Accounts.User do
     field :is_admin, :boolean, default: false
     field :is_customer, :boolean, default: true
     has_one :credential, Credential
-    has_one :profile, Profile
+    has_one :profile, Profile, on_replace: :update
     has_many :orders, Order
 
     timestamps(type: :utc_datetime)
@@ -23,6 +23,8 @@ defmodule Ruzenkit.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [])
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2, required: true)
+    |> Ecto.Changeset.cast_assoc(:profile, with: &Profile.changeset/2, required: true)
     |> validate_required([])
   end
 end
