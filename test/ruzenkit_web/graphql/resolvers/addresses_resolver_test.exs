@@ -1,6 +1,6 @@
 defmodule RuzenkitWeb.AddressesResolverTest do
   use RuzenkitWeb.ConnCase
-  alias Ruzenkit.Addresses
+  # alias Ruzenkit.Addresses
 
   @create_country_attrs %{
     local_name: "France",

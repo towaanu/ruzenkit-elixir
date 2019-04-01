@@ -69,7 +69,6 @@ defmodule Ruzenkit.Vat do
 
   """
   def update_vat_group(%VatGroup{} = vat_group, attrs) do
-    IO.inspect(attrs)
     vat_group
     |> VatGroup.changeset(attrs)
     |> Repo.update()
