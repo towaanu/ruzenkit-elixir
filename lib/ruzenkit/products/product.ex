@@ -29,15 +29,26 @@ defmodule Ruzenkit.Products.Product do
 
   end
 
+
   @doc false
   def changeset(product, attrs) do
+
     product
     |> cast(attrs, [:sku, :name, :description, :vat_group_id])
-    |> cast_attachments(attrs, [:picture])
+    |> no_warning_cast_attachments(attrs, [:picture])
+    # |> cast_attachments(attrs, [:picture])
     |> cast_assoc(:price)
     |> validate_required([:sku, :name, :description])
     |> unique_constraint(:sku)
     |> foreign_key_constraint(:parent_product_id)
     |> foreign_key_constraint(:vat_group_id)
   end
+
+  @dialyzer {:nowarn_function, no_warning_cast_attachments: 4}
+
+  # Suppressing warning
+  defp no_warning_cast_attachments(changeset_or_data, params, allowed, options \\ []) do
+    cast_attachments(changeset_or_data, params, allowed, options)
+  end
+
 end
