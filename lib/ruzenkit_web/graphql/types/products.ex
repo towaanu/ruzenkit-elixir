@@ -30,6 +30,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
+    field :ui_color, :string
 
     field :picture_url, :string,
       resolve: fn product, _info, _ ->
@@ -73,6 +74,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
   input_object :child_product_input do
     # field :product, non_null(:product), resolve: dataloader(:db)
     # field :parent_product, non_null(:parent_product), resolve: dataloader(:db)
+    field :id, :id
     field :parent_product_id, non_null(:id)
     field :configurable_item_option_ids, list_of(:id)
   end
@@ -86,6 +88,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :sku, non_null(:string)
     field :name, non_null(:string)
     field :description, non_null(:string)
+    field :ui_color, :string
     field :picture, :upload
     field :parent_product, :parent_product_input
     field :child_product, :child_product_input
