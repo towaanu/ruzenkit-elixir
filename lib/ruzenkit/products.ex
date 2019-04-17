@@ -73,6 +73,8 @@ defmodule Ruzenkit.Products do
 
   def get_product(id), do: Repo.get(Product, id)
 
+  def get_product_by_sku(sku), do: Repo.get_by(Product, sku: sku)
+
   def get_product_picture_url(product, options \\ []) do
     path_url =
       ProductPicture.url({product.picture, product}, options)

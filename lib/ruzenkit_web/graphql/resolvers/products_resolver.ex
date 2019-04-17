@@ -57,6 +57,16 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
     end
   end
 
+  def get_product(_root, %{sku: sku}, _info) do
+    case Products.get_product_by_sku(sku) do
+      nil ->
+        {:error, "product with sku #{sku} not found"}
+
+      product ->
+        {:ok, product}
+    end
+  end
+
   def get_parent_product(_root, %{id: id}, _info) do
     case Products.get_parent_product(id) do
       nil ->

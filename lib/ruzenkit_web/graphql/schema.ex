@@ -62,7 +62,8 @@ defmodule RuzenkitWeb.Graphql.Schema do
     end
 
     field :product, :product do
-      arg(:id, non_null(:id))
+      arg :id, :id
+      arg :sku, :string
 
       resolve(&ProductsResolver.get_product/3)
     end
