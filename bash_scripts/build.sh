@@ -23,6 +23,12 @@ export MIX_ENV=prod
 mix deps.get
 # Run an explicit clean to remove any build artifacts from the host
 mix do clean, compile --force
+
+# cd ./deps/comeonin && make clean && make
+# cd ..
+echo "HERE WE GO"
+cd ./deps/bcrypt_elixir && make clean && make && mix deps.compile
+cd ../..
 # Build the release
 mix release
 # Copy tarball to output
