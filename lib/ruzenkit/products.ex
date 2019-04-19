@@ -136,7 +136,11 @@ defmodule Ruzenkit.Products do
   """
   def update_product(%Product{} = product, attrs) do
     product
-    |> Repo.preload([:price, [parent_product: :configurable_options], child_product: :configurable_item_options])
+    |> Repo.preload([
+      :price,
+      [parent_product: :configurable_options],
+      child_product: :configurable_item_options
+    ])
     |> Product.changeset(attrs)
     |> Ecto.Changeset.cast_assoc(:price)
     |> Ecto.Changeset.cast_assoc(:parent_product)
@@ -730,6 +734,7 @@ defmodule Ruzenkit.Products do
       |> Repo.preload(parent_product: [child_products: [:product, :configurable_item_options]])
 
     child_products = product.parent_product.child_products
+    IO.inspect(child_products)
 
     res =
       Enum.find(child_products, fn %{configurable_item_options: configurable_item_options} ->

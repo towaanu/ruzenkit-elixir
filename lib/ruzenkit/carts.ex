@@ -212,19 +212,23 @@ defmodule Ruzenkit.Carts do
     end
   end
 
-  def add_configurable_item(%{product_id: product_id} = cart_item, option_item_ids) do
+  def add_configurable_item(
+        cart_id,
+        %{product_id: product_id, quantity: quantity},
+        option_item_ids
+      ) do
     case Products.get_child_product_by_options(product_id, option_item_ids) do
       nil ->
         {:no_product_found_error, "child product not found"}
 
       %{product: product} ->
-        case cart_item do
-          %{quantity: quantity, cart_id: cart_id} ->
-            add_cart_item(%{product_id: product.id, quantity: quantity, cart_id: cart_id})
-
-          %{quantity: quantity} ->
+        case cart_id do
+          nil ->
             add_cart_item(%{product_id: product.id, quantity: quantity})
+          _ ->
+            add_cart_item(%{product_id: product.id, quantity: quantity, cart_id: cart_id})
         end
+
     end
   end
 
