@@ -4,7 +4,7 @@ defmodule Ruzenkit.Repo.Migrations.CreateChildProducts do
   def change do
     create table(:child_products) do
       add :product_id, references(:products, on_delete: :delete_all), null: false
-      add :parent_product_id, references(:products, on_delete: :delete_all), null: false
+      add :parent_product_id, references(:parent_products, on_delete: :delete_all), null: false
 
       timestamps(type: :utc_datetime)
 
