@@ -35,6 +35,7 @@ defmodule RuzenkitWeb.Graphql.Types.Carts do
   end
 
   input_object :cart_item_input do
+    field :id, :id
     field :quantity, non_null(:integer)
     field :cart_id, :id
     field :product_id, :id

@@ -291,6 +291,13 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&CartsResolver.delete_cart_item/3)
     end
 
+    field :update_cart_item, :cart_item do
+      arg :id, non_null(:id)
+      arg :cart_item, :cart_item_input
+
+      resolve(&CartsResolver.update_cart_item/3)
+    end
+
     field :remove_cart_item, :cart_item do
       arg(:cart_item, :cart_item_input)
 
