@@ -12,7 +12,6 @@ defmodule Ruzenkit.Carts.Cart do
     field :total_price, :decimal, virtual: true
 
     timestamps(type: :utc_datetime)
-
   end
 
   @doc false
@@ -30,6 +29,6 @@ defmodule Ruzenkit.Carts.Cart do
       |> Enum.map(&Decimal.mult(&1.price_amount, &1.quantity))
       |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
 
-      %{cart | total_price: total_price}
+    %{cart | total_price: total_price}
   end
 end

@@ -225,10 +225,10 @@ defmodule Ruzenkit.Carts do
         case cart_id do
           nil ->
             add_cart_item(%{product_id: product.id, quantity: quantity})
+
           _ ->
             add_cart_item(%{product_id: product.id, quantity: quantity, cart_id: cart_id})
         end
-
     end
   end
 
@@ -302,5 +302,24 @@ defmodule Ruzenkit.Carts do
   """
   def change_cart_item(%CartItem{} = cart_item) do
     CartItem.changeset(cart_item, %{})
+  end
+
+  def total_price_for_cart(cart) do
+    cart
+    |> Repo.preload(cart_items: [product: :price])
+    |> Map.get(:cart_items, [])
+    |> Enum.map(&%{price_amount: &1.product.price.amount, quantity: &1.quantity})
+    |> Enum.map(&Decimal.mult(&1.price_amount, &1.quantity))
+    |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+  end
+
+  def total_price_for_cart_item(cart_item) do
+    cart_item
+    |> Repo.preload(product: :price)
+    |> mult_quantity_and_price()
+  end
+
+  defp mult_quantity_and_price(%{quantity: quantity, product: %{price: %{amount: price_amount}}}) do
+    Decimal.mult(price_amount, quantity)
   end
 end
