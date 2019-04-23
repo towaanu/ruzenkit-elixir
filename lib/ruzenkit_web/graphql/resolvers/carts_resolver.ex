@@ -83,8 +83,8 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
   end
 
   # TODO: Think if, it needs to be protected or not ( only connected user or admin can access it ?)
-  def delete_cart_item(_root, %{cart_item: cart_item}, _info) do
-    case Carts.delete_cart_item(cart_item) do
+  def delete_cart_item(_root, %{id: id}, _info) do
+    case Carts.delete_cart_item_by_id(id) do
       {:ok, cart_item} -> {:ok, cart_item}
       {:error, error} -> {:error, changeset_error_to_graphql("unable to delete cart item", error)}
     end

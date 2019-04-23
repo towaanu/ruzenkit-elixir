@@ -266,6 +266,12 @@ defmodule Ruzenkit.Carts do
     Repo.delete(cart_item)
   end
 
+  def delete_cart_item_by_id(id) do
+    CartItem
+    |> Repo.get!(id)
+    |> Repo.delete()
+  end
+
   def remove_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id}) do
     query =
       from ci in CartItem,
