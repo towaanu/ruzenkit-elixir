@@ -43,42 +43,18 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
     end
   end
 
-  def add_to_cart(_root, %{cart_item: cart_item, option_item_ids: []}, _info),
-    do: add_no_config_product_to_cart(cart_item)
+  def add_to_cart(root, %{cart_id: nil} = params, info) do
+    new_params = Map.delete(params, :cart_id)
+    add_to_cart(root, new_params, info)
+  end
 
-  def add_to_cart(
-        _root,
-        %{cart_id: cart_id, cart_item: cart_item, option_item_ids: option_item_ids},
-        _info
-      ) do
-    case Carts.add_configurable_item(cart_id, cart_item, option_item_ids) do
+  def add_to_cart(_root, params, _info) do
+    case Carts.add_cart_item(params) do
       {:ok, cart_item} ->
         {:ok, cart_item}
 
       {:error, error} ->
         {:error, changeset_error_to_graphql("unable to add new cart item", error)}
-
-      {:no_product_found_error, error_msg} ->
-        {:error, error_msg}
-
-      {:parent_product_error, error_msg} ->
-        {:error, error_msg}
-    end
-  end
-
-  def add_to_cart(_root, %{cart_item: cart_item}, _info),
-    do: add_no_config_product_to_cart(cart_item)
-
-  defp add_no_config_product_to_cart(cart_item) do
-    case Carts.add_cart_item(cart_item) do
-      {:ok, cart_item} ->
-        {:ok, cart_item}
-
-      {:parent_product_error, error_msg} ->
-        {:error, error_msg}
-
-      {:error, error} ->
-        {:error, changeset_error_to_graphql("unable to create add new cart item", error)}
     end
   end
 

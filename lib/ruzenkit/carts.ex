@@ -163,7 +163,22 @@ defmodule Ruzenkit.Carts do
     |> Repo.insert()
   end
 
+  defp gen_add_cart_item_params(%{id: id}, params) do
+    params
+    |> Map.delete(:sku)
+    |> Map.put(:product_id, id)
+  end
+
+  def add_cart_item(%{sku: sku} = params) do
+    Products.Product
+    |> Repo.get_by!(sku: sku)
+    |> gen_add_cart_item_params(params)
+    |> add_cart_item()
+  end
+
   def add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id}) do
+    IO.puts("HELLO CACACART CART ID #{cart_id}")
+
     query =
       from ci in CartItem,
         where: ci.product_id == ^product_id and ci.cart_id == ^cart_id
@@ -188,6 +203,7 @@ defmodule Ruzenkit.Carts do
 
   # When there is no cart yet
   def add_cart_item(%{product_id: product_id, quantity: quantity}) do
+    IO.puts("HELLO NO CART ID")
     case Products.is_parent_product(product_id) do
       true ->
         {:parent_product_error, "Can't add parent product"}

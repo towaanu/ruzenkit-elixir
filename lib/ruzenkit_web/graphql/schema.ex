@@ -279,11 +279,19 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :add_to_cart, :cart_item do
       arg :cart_id, :id
-      arg(:cart_item, :cart_item_input)
-      arg(:option_item_ids, list_of(:id))
+      arg :sku, non_null(:string)
+      arg :quantity, :integer
 
       resolve(&CartsResolver.add_to_cart/3)
     end
+
+    # field :add_to_cart, :cart_item do
+    #   arg :cart_id, :id
+    #   arg(:cart_item, :cart_item_input)
+    #   arg(:option_item_ids, list_of(:id))
+
+    #   resolve(&CartsResolver.add_to_cart/3)
+    # end
 
     field :delete_cart_item, :cart_item do
       arg :id, non_null(:id)
