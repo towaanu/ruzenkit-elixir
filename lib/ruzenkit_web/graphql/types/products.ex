@@ -61,6 +61,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :id, non_null(:id)
     field :label, :string
     field :short_label, :string
+    field :display_order, :integer
     field :configurable_option, non_null(:configurable_option), resolve: dataloader(:db)
   end
 
@@ -107,6 +108,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
   input_object :configurable_item_option_input do
     field :label, :string
     field :short_label, :string
+    field :display_order, :integer
     field :configurable_option_id, :id
   end
 end

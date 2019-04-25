@@ -147,6 +147,33 @@ defmodule RuzenkitWeb.Graphql.ProductsResolver do
   def update_configurable_option(_root, _args, _info),
     do: {:error, ResponseUtils.unauthorized_response()}
 
+  def update_configurable_item_option(
+        _root,
+        %{id: id, configurable_item_option: configurable_item_option_params},
+        %{
+          context: %{is_admin: true}
+        }
+      ) do
+    db_configurable_item_option = Products.get_configurable_item_option!(id)
+
+    case Products.update_configurable_item_option(
+           db_configurable_item_option,
+           configurable_item_option_params
+         ) do
+      {:ok, configurable_item_option} ->
+        {:ok, configurable_item_option}
+
+      error ->
+        {:error,
+         changeset_error_to_graphql("could not update configurable item option #{id}", error)}
+
+        # {:error, "could not create configurable option"}
+    end
+  end
+
+  def update_configurable_item_option(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
+
   def create_configurable_item_option(
         _root,
         %{configurable_item_option: configurable_item_option},
