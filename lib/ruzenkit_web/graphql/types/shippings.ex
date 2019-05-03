@@ -13,6 +13,7 @@ defmodule RuzenkitWeb.Graphql.Types.Shippings do
     field :name, :string
     field :description, :string
     field :shipping_hour_time, :float
+    field :price, :price, resolve: dataloader(:db)
     field :shipping_carrier, :shipping_carrier, resolve: dataloader(:db)
     field :countries, list_of(:country), resolve: dataloader(:db)
   end
@@ -21,6 +22,7 @@ defmodule RuzenkitWeb.Graphql.Types.Shippings do
     field :name, :string
     field :description, :string
     field :shipping_hour_time, :float
+    field :price, :price_input
     field :shipping_carrier_id, non_null(:id)
     field :country_ids, list_of(non_null(:id))
   end

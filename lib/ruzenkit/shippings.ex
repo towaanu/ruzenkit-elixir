@@ -201,6 +201,7 @@ defmodule Ruzenkit.Shippings do
   """
   def update_shipping_option(%ShippingOption{} = shipping_option, attrs) do
     shipping_option
+    |> Repo.preload(:price)
     |> ShippingOption.changeset(attrs)
     |> Repo.update()
   end
