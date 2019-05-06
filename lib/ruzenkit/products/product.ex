@@ -15,6 +15,7 @@ defmodule Ruzenkit.Products.Product do
     field :name, :string
     field :sku, :string
     field :ui_color, :string
+    field :ui_color_secondary, :string
     field :picture, Ruzenkit.ProductPicture.Type
 
     belongs_to :price, ProductPrice, foreign_key: :product_price_id, on_replace: :update
@@ -35,12 +36,13 @@ defmodule Ruzenkit.Products.Product do
   def changeset(product, attrs) do
 
     product
-    |> cast(attrs, [:sku, :name, :description, :ui_color, :vat_group_id])
+    |> cast(attrs, [:sku, :name, :description, :ui_color, :ui_color_secondary, :vat_group_id])
     |> no_warning_cast_attachments(attrs, [:picture])
     # |> cast_attachments(attrs, [:picture])
     |> cast_assoc(:price)
     |> validate_required([:sku, :name, :description])
     |> validate_length(:ui_color, max: 7)
+    |> validate_length(:ui_color_secondary, max: 7)
     |> unique_constraint(:sku)
     |> foreign_key_constraint(:parent_product_id)
     |> foreign_key_constraint(:vat_group_id)

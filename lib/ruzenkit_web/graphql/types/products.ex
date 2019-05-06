@@ -31,6 +31,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :name, non_null(:string)
     field :description, non_null(:string)
     field :ui_color, :string
+    field :ui_color_secondary, :string
 
     field :picture_url, :string,
       resolve: fn product, _info, _ ->
@@ -90,6 +91,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :name, non_null(:string)
     field :description, non_null(:string)
     field :ui_color, :string
+    field :ui_color_secondary, :string
     field :picture, :upload
     field :parent_product, :parent_product_input
     field :child_product, :child_product_input
