@@ -7,8 +7,9 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :ruzenkit, RuzenkitWeb.Endpoint,
+  # http: [host: "192.168.0.40", port: 4000],
   http: [port: 4000],
-  # url: [host: "dedevapi.nemak.me", port: 80, scheme: "https"],
+  url: [host: "192.168.0.40", port: 4000, scheme: "http"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
