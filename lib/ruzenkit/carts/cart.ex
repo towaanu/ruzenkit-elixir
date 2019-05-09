@@ -4,10 +4,12 @@ defmodule Ruzenkit.Carts.Cart do
   alias Ruzenkit.Accounts.User
   alias Ruzenkit.Carts.CartItem
   alias Ruzenkit.Carts.Cart
+  alias Ruzenkit.Carts.CartShippingInformation
 
   schema "carts" do
     belongs_to :user, User
     has_many :cart_items, CartItem
+    has_one :cart_shipping_information, CartShippingInformation, on_replace: :update
 
     field :total_price, :decimal, virtual: true
 
@@ -18,6 +20,7 @@ defmodule Ruzenkit.Carts.Cart do
   def changeset(cart, attrs) do
     cart
     |> cast(attrs, [:user_id])
+    |> cast_assoc(:cart_shipping_information)
     |> validate_required([])
     |> foreign_key_constraint(:user_id)
   end

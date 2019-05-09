@@ -7,6 +7,7 @@ defmodule Ruzenkit.Carts do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Carts.Cart
+  alias Ruzenkit.Carts.CartShippingInformation
   alias Ruzenkit.Products
 
   alias Ecto.Multi
@@ -204,6 +205,7 @@ defmodule Ruzenkit.Carts do
   # When there is no cart yet
   def add_cart_item(%{product_id: product_id, quantity: quantity}) do
     IO.puts("HELLO NO CART ID")
+
     case Products.is_parent_product(product_id) do
       true ->
         {:parent_product_error, "Can't add parent product"}
@@ -343,5 +345,13 @@ defmodule Ruzenkit.Carts do
 
   defp mult_quantity_and_price(%{quantity: quantity, product: %{price: %{amount: price_amount}}}) do
     Decimal.mult(price_amount, quantity)
+  end
+
+  def update_cart_address(cart_id, address) do
+    Cart
+    |> Repo.get!(cart_id)
+    |> Repo.preload(:cart_shipping_information)
+    |> Cart.changeset(%{cart_shipping_information: address})
+    |> Repo.update()
   end
 end
