@@ -94,4 +94,8 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
       {:error, error} -> {:error, changeset_error_to_graphql("unable to remove cart item", error)}
     end
   end
+
+  def find_shipping_options_for_cart(_root, %{cart_id: cart_id}, _info) do
+    {:ok, Carts.find_shipping_options_for_cart(cart_id)}
+  end
 end

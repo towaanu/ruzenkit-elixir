@@ -234,4 +234,13 @@ defmodule Ruzenkit.Shippings do
   def change_shipping_option(%ShippingOption{} = shipping_option) do
     ShippingOption.changeset(shipping_option, %{})
   end
+
+  def find_shipping_options_by_address(%{country: %{id: country_id}}) do
+    query =
+      from so in ShippingOption,
+        join: c in assoc(so, :countries),
+        where: c.id == ^country_id
+
+      Repo.all(query)
+  end
 end

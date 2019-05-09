@@ -7,8 +7,8 @@ defmodule Ruzenkit.Carts do
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Carts.Cart
-  alias Ruzenkit.Carts.CartShippingInformation
   alias Ruzenkit.Products
+  alias Ruzenkit.Shippings
 
   alias Ecto.Multi
 
@@ -353,5 +353,13 @@ defmodule Ruzenkit.Carts do
     |> Repo.preload(:cart_shipping_information)
     |> Cart.changeset(%{cart_shipping_information: address})
     |> Repo.update()
+  end
+
+  def find_shipping_options_for_cart(cart_id) do
+      Cart
+      |> Repo.get!(cart_id)
+      |> Repo.preload(cart_shipping_information: :country)
+      |> Map.get(:cart_shipping_information)
+      |> Shippings.find_shipping_options_by_address()
   end
 end
