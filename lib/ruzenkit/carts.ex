@@ -355,6 +355,14 @@ defmodule Ruzenkit.Carts do
     |> Repo.update()
   end
 
+  def update_cart_shipping(cart_id, shipping_option_id) do
+    Cart
+    |> Repo.get!(cart_id)
+    |> Repo.preload(:cart_shipping_information)
+    |> Cart.changeset(%{cart_shipping_information: %{shipping_option_id: shipping_option_id}})
+    |> Repo.update()
+  end
+
   def find_shipping_options_for_cart(cart_id) do
       Cart
       |> Repo.get!(cart_id)

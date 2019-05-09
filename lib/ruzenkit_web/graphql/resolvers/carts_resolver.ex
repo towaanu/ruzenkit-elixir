@@ -58,13 +58,33 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
     end
   end
 
-  def update_cart_address(_root, %{cart_id: cart_id, cart_shipping_information_address: cart_address }, _info) do
+  def update_cart_address(
+        _root,
+        %{cart_id: cart_id, cart_shipping_information_address: cart_address},
+        _info
+      ) do
     case Carts.update_cart_address(cart_id, cart_address) do
       {:ok, cart} ->
         {:ok, cart}
 
       {:error, error} ->
-        {:error, changeset_error_to_graphql("unable to update address for cart cart #{cart_id}", error)}
+        {:error,
+         changeset_error_to_graphql("unable to update address for cart #{cart_id}", error)}
+    end
+  end
+
+  def update_cart_shipping(
+        _root,
+        %{cart_id: cart_id, shipping_option_id: shipping_option_id},
+        _info
+      ) do
+    case Carts.update_cart_shipping(cart_id, shipping_option_id) do
+      {:ok, cart} ->
+        {:ok, cart}
+
+      {:error, error} ->
+        {:error,
+         changeset_error_to_graphql("unable to update shipping for cart #{cart_id}", error)}
     end
   end
 
