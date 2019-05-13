@@ -348,6 +348,8 @@ defmodule Ruzenkit.Carts do
   end
 
   def update_cart_address(cart_id, address) do
+    IO.puts "CART IDDDDDD #{cart_id}"
+    IO.inspect address
     Cart
     |> Repo.get!(cart_id)
     |> Repo.preload(:cart_shipping_information)

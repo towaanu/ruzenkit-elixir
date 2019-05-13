@@ -38,12 +38,10 @@ defmodule Ruzenkit.Carts.CartShippingInformation do
       :extra_info,
       :street,
       :country_id,
-      :shipping_option_id,
-      :cart_id
+      :shipping_option_id
     ])
-    |> validate_required([:first_name, :last_name, :city, :zip_code, :street, :country_id, :cart_id])
+    |> validate_required([:first_name, :last_name, :city, :zip_code, :street, :country_id])
     |> foreign_key_constraint(:country_id)
     |> foreign_key_constraint(:shipping_option_id)
-    |> foreign_key_constraint(:cart_id)
   end
 end
