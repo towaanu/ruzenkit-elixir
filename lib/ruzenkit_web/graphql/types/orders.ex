@@ -46,6 +46,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :shipping_number, :string
     field :inserted_at, :datetime
     field :updated_at, :datetime
+    field :email, :string
 
     field :user, :user, resolve: dataloader(:db)
     field :order_status, :order_status, resolve: dataloader(:db)

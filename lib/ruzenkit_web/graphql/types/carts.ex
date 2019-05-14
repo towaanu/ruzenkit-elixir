@@ -10,6 +10,7 @@ defmodule RuzenkitWeb.Graphql.Types.Carts do
     field :user, :user, resolve: dataloader(:db)
     field :cart_items, list_of(:cart_item), resolve: dataloader(:db)
     field :cart_shipping_information, :cart_shipping_information, resolve: dataloader(:db)
+    field :email, :string
 
     field :total_price, :decimal do
       resolve(fn cart, _, _ ->

@@ -12,6 +12,7 @@ defmodule Ruzenkit.Carts.Cart do
     has_one :cart_shipping_information, CartShippingInformation, on_replace: :update
 
     field :total_price, :decimal, virtual: true
+    field :email, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -19,7 +20,7 @@ defmodule Ruzenkit.Carts.Cart do
   @doc false
   def changeset(cart, attrs) do
     cart
-    |> cast(attrs, [:user_id])
+    |> cast(attrs, [:user_id, :email])
     |> cast_assoc(:cart_shipping_information)
     |> validate_required([])
     |> foreign_key_constraint(:user_id)

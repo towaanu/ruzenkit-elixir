@@ -305,6 +305,14 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&CartsResolver.update_cart_address/3)
     end
 
+    field :update_cart_address_and_email, :cart do
+      arg :cart_id, non_null(:id)
+      arg :cart_shipping_information_address, :cart_shipping_information_address_input
+      arg :email, :string
+
+      resolve(&CartsResolver.update_cart_address_and_email/3)
+    end
+
     field :update_cart_shipping, :cart do
       arg :cart_id, non_null(:id)
       arg :shipping_option_id, non_null(:id)
@@ -353,7 +361,8 @@ defmodule RuzenkitWeb.Graphql.Schema do
 
     field :create_order_from_cart, :order do
       arg(:cart_id, non_null(:id))
-      arg :order, :order_create_input
+
+      # arg :order, :order_create_input
       # arg :order_address, :order_address_input
 
       resolve(&OrdersResolver.create_order_from_cart/3)

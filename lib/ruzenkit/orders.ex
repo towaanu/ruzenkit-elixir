@@ -97,8 +97,8 @@ defmodule Ruzenkit.Orders do
   # }) do
 
   # end
-
-  def create_order_from_cart(cart_id, %{order_address: order_address, email: email}) do
+    @email "foo@bar.com"
+  def create_order_from_cart(cart_id) do
     %{id: status_id} = Repo.get_by!(OrderStatus, is_default: true)
 
     cart = Carts.get_cart_with_total(cart_id)
@@ -109,8 +109,8 @@ defmodule Ruzenkit.Orders do
       user_id: cart.user_id,
       order_status_id: status_id,
       order_items: order_items,
-      order_address: order_address,
-      email: email
+      # order_address: order_address,
+      email: cart.email
     }
 
     new_order_changeset =
