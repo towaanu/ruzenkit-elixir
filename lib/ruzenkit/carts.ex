@@ -189,7 +189,7 @@ defmodule Ruzenkit.Carts do
       nil ->
         case Products.is_parent_product(product_id) do
           true ->
-            {:parent_product_error, "Can't add parent product"}
+            {:error, :parent_product_error}
 
           false ->
             create_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id})
@@ -208,7 +208,7 @@ defmodule Ruzenkit.Carts do
 
     case Products.is_parent_product(product_id) do
       true ->
-        {:parent_product_error, "Can't add parent product"}
+        {:error, :parent_product_error}
 
       false ->
         result =

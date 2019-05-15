@@ -53,8 +53,13 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
       {:ok, cart_item} ->
         {:ok, cart_item}
 
+      {:error, :parent_product_error} ->
+        {:error, "Can't add parent product"}
+
       {:error, error} ->
         {:error, changeset_error_to_graphql("unable to add new cart item", error)}
+
+
     end
   end
 
