@@ -63,7 +63,7 @@ defmodule Ruzenkit.Orders do
     |> Repo.insert()
   end
 
-  def send_order_mail(order = %Order{user_id: user_id}) when user_id != nil  do
+  def send_order_mail(order = %Order{user_id: user_id}) when user_id != nil do
     %{user: %{profile: %{email: email}}} = Repo.preload(order, user: :profile)
     Ruzenkit.Email.order_email(email: email) |> Ruzenkit.Mailer.deliver_now()
   end
@@ -97,11 +97,30 @@ defmodule Ruzenkit.Orders do
   # }) do
 
   # end
-    @email "foo@bar.com"
+
+  defp cart_shipping_information_to_address(shipping_information) do
+    %{
+      first_name: shipping_information.first_name,
+      last_name: shipping_information.last_name,
+      street: shipping_information.street,
+      city: shipping_information.city,
+      zip_code: shipping_information.zip_code,
+      place: shipping_information.place,
+      floor: shipping_information.floor,
+      country_id: shipping_information.country.id,
+      extra_info: shipping_information.extra_info,
+      building: shipping_information.building,
+    }
+  end
+
+  @email "foo@bar.com"
   def create_order_from_cart(cart_id) do
     %{id: status_id} = Repo.get_by!(OrderStatus, is_default: true)
 
-    cart = Carts.get_cart_with_total(cart_id)
+    cart =
+      Carts.get_cart_with_total(cart_id)
+      |> Repo.preload(cart_shipping_information: :country)
+
     order_items = Enum.map(cart.cart_items, &cart_item_to_order_item/1)
 
     new_order_attrs = %{
@@ -109,6 +128,7 @@ defmodule Ruzenkit.Orders do
       user_id: cart.user_id,
       order_status_id: status_id,
       order_items: order_items,
+      order_address: cart_shipping_information_to_address(cart.cart_shipping_information),
       # order_address: order_address,
       email: cart.email
     }

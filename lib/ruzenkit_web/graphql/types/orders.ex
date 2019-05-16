@@ -34,7 +34,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :place, :string
     field :zip_code, :string
     field :street, :string
-    field :country, :string
+    field :country, :country, resolve: dataloader(:db)
 
     field :order, :order, resolve: dataloader(:db)
   end

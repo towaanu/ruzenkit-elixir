@@ -2,6 +2,7 @@ defmodule Ruzenkit.Orders.OrderAddress do
   use Ecto.Schema
   import Ecto.Changeset
   alias Ruzenkit.Orders.Order
+  alias Ruzenkit.Addresses.Country
 
 
   schema "order_addresses" do
@@ -15,7 +16,9 @@ defmodule Ruzenkit.Orders.OrderAddress do
     field :place, :string
     field :zip_code, :string
     field :street, :string
-    field :country, :string
+    # field :country, :string
+    belongs_to :country, Country
+
 
     belongs_to :order, Order
     timestamps(type: :utc_datetime)
@@ -25,7 +28,7 @@ defmodule Ruzenkit.Orders.OrderAddress do
   @doc false
   def changeset(order_address, attrs) do
     order_address
-    |> cast(attrs, [:first_name, :last_name, :city, :zip_code, :building, :floor, :place, :extra_info, :street, :country])
-    |> validate_required([:first_name, :last_name, :city, :zip_code, :street, :country])
+    |> cast(attrs, [:first_name, :last_name, :city, :zip_code, :building, :floor, :place, :extra_info, :street, :country_id])
+    |> validate_required([:first_name, :last_name, :city, :zip_code, :street, :country_id])
   end
 end
