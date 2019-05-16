@@ -146,6 +146,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve(&OrdersResolver.list_orders/3)
     end
 
+    field :orders_by_status, list_of(:order) do
+      arg(:order_status_id, non_null(:id))
+
+      resolve(&OrdersResolver.list_orders_by_status/3)
+    end
+
     field :addresses, list_of(:address) do
       resolve(&AddressesResolver.list_addresses/3)
     end

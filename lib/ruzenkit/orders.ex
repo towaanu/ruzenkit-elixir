@@ -28,6 +28,14 @@ defmodule Ruzenkit.Orders do
     Repo.all(Order)
   end
 
+  def list_orders_by_status(order_status_id) do
+    query =
+      from o in Order,
+        where: o.order_status_id == ^order_status_id
+
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single order.
 
@@ -109,7 +117,7 @@ defmodule Ruzenkit.Orders do
       floor: shipping_information.floor,
       country_id: shipping_information.country.id,
       extra_info: shipping_information.extra_info,
-      building: shipping_information.building,
+      building: shipping_information.building
     }
   end
 

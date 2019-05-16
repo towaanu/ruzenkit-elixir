@@ -28,6 +28,13 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
 
   def list_orders(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
+
+  def list_orders_by_status(_root, %{order_status_id: order_status_id}, %{context: %{is_admin: true}}) do
+     {:ok, Orders.list_orders_by_status(order_status_id)}
+  end
+
+  def list_orders_by_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+
   def create_order_from_cart(_root, %{cart_id: cart_id}, _info) do
     case Orders.create_order_from_cart(cart_id) do
       {:ok, order} -> {:ok, order}
