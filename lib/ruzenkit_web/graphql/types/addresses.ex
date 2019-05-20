@@ -25,12 +25,12 @@ defmodule RuzenkitWeb.Graphql.Types.Addresses do
   end
 
   input_object :address_input do
-    field :last_name, non_null(:string)
-    field :first_name, non_null(:string)
-    field :street, non_null(:string)
-    field :city, non_null(:string)
-    field :zip_code, non_null(:string)
-    field :country_id, non_null(:id)
+    field :last_name, :string
+    field :first_name, :string
+    field :street, :string
+    field :city, :string
+    field :zip_code, :string
+    field :country_id, :id
     field :building, :string
     field :floor, :string
     field :place, :string

@@ -36,7 +36,7 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
   input_object :profile_input do
     field :first_name, :string
     field :last_name, :string
-    field :email, non_null(:string)
+    field :email, :string
     field :profile_addresses, list_of(:profile_address_input)
   end
 
@@ -45,6 +45,7 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
   end
 
   input_object :profile_address_input do
+    field :id, :id
     field :is_default, :boolean
     field :address, non_null(:address_input)
     # field :profile_id, non_null(:id)

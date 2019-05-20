@@ -91,6 +91,17 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
 
   def me(_root, _args, _info), do: {:ok, "I don't know you :("}
 
+  def update_me_profile(_root, %{profile: profile_attrs}, %{
+        context: %{current_user: %{profile: %{id: id}}}
+      }) do
+    case Accounts.update_profile_with_id(id, profile_attrs) do
+      {:ok, profile} -> {:ok, profile}
+      {:error, :no_profile_found} -> {:error, "No profile with id #{id} found"}
+    end
+  end
+
+  def update_me_profile(_root, _args, _info), do: {:error, "No connected user"}
+
   def forgot_password(_root, %{email: email}, _info) do
     Accounts.forgot_password(email)
     {:ok, true}

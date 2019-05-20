@@ -363,8 +363,21 @@ defmodule Ruzenkit.Accounts do
   """
   def update_profile(%Profile{} = profile, attrs) do
     profile
+    |> Repo.preload(profile_addresses: :address)
     |> Profile.changeset(attrs)
     |> Repo.update()
+  end
+
+  def update_profile_with_id(id, profile_attrs) do
+    Profile
+    |> Repo.get(id)
+    |> case do
+      nil ->
+        {:error, :no_profile_found}
+
+      profile ->
+        update_profile(profile, profile_attrs)
+    end
   end
 
   @doc """

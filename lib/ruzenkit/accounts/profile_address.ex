@@ -8,7 +8,7 @@ defmodule Ruzenkit.Accounts.ProfileAddress do
   schema "profile_addresses" do
     field :is_default, :boolean, default: false
     belongs_to :profile, Profile
-    belongs_to :address, Address
+    belongs_to :address, Address, on_replace: :update
 
     timestamps(type: :utc_datetime)
 

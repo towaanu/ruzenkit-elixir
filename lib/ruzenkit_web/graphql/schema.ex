@@ -290,6 +290,12 @@ defmodule RuzenkitWeb.Graphql.Schema do
       resolve &AccountsResolver.change_password/3
     end
 
+    field :update_me_profile, :profile do
+      arg :profile, non_null(:profile_input)
+
+      resolve(&AccountsResolver.update_me_profile/3)
+    end
+
     field :create_cart, :cart do
       # arg(:cart, :cart_input)
 
