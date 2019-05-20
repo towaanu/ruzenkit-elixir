@@ -170,6 +170,7 @@ defmodule Ruzenkit.Carts do
     |> Map.put(:product_id, id)
   end
 
+  # transform sku => product_id
   def add_cart_item(%{sku: sku} = params) do
     Products.Product
     |> Repo.get_by!(sku: sku)
@@ -177,9 +178,39 @@ defmodule Ruzenkit.Carts do
     |> add_cart_item()
   end
 
-  def add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id}) do
-    IO.puts("HELLO CACACART CART ID #{cart_id}")
+  # When there is no cart yet but a user
+  def add_cart_item(%{product_id: product_id, quantity: quantity, user_id: user_id, cart_id: nil}) do
+    Multi.new()
+    |> Multi.insert(
+      :cart,
+      %Cart{}
+      |> Cart.changeset(%{user_id: user_id})
+    )
+    |> Multi.run(:cart_item, fn _repo, %{cart: %{id: cart_id}} ->
+      add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id})
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{cart_item: cart_item}} -> {:ok, cart_item}
+      {:error, _failes_operation, failed_value} -> {:error, failed_value}
+    end
+  end
 
+  # When there is no cart yet and no user
+  def add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: nil}) do
+    Multi.new()
+    |> Multi.insert(:cart, %Cart{})
+    |> Multi.run(:cart_item, fn _repo, %{cart: %{id: cart_id}} ->
+      add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id})
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{cart_item: cart_item}} -> {:ok, cart_item}
+      {:error, _failes_operation, failed_value} -> {:error, failed_value}
+    end
+  end
+
+  def add_cart_item(%{product_id: product_id, quantity: quantity, cart_id: cart_id}) do
     query =
       from ci in CartItem,
         where: ci.product_id == ^product_id and ci.cart_id == ^cart_id
@@ -199,34 +230,6 @@ defmodule Ruzenkit.Carts do
       cart_item ->
         new_quantity = quantity + cart_item.quantity
         update_cart_item(cart_item, %{quantity: new_quantity})
-    end
-  end
-
-  # When there is no cart yet
-  def add_cart_item(%{product_id: product_id, quantity: quantity}) do
-    IO.puts("HELLO NO CART ID")
-
-    case Products.is_parent_product(product_id) do
-      true ->
-        {:error, :parent_product_error}
-
-      false ->
-        result =
-          Multi.new()
-          |> Multi.insert(:cart, %Cart{})
-          |> Multi.insert(:cart_item, fn %{cart: %{id: cart_id}} ->
-            CartItem.changeset(%CartItem{}, %{
-              product_id: product_id,
-              quantity: quantity,
-              cart_id: cart_id
-            })
-          end)
-          |> Repo.transaction()
-
-        case result do
-          {:ok, %{cart: _cart, cart_item: cart_item}} -> {:ok, cart_item}
-          {:error, _failed_operation, failed_value, _changes_so_far} -> {:error, failed_value}
-        end
     end
   end
 
@@ -356,7 +359,8 @@ defmodule Ruzenkit.Carts do
   end
 
   def update_cart_address_and_email(cart_id, address, email) do
-    IO.puts "HELLLOOOOO MAIL"
+    IO.puts("HELLLOOOOO MAIL")
+
     Cart
     |> Repo.get!(cart_id)
     |> Repo.preload(:cart_shipping_information)
@@ -373,10 +377,10 @@ defmodule Ruzenkit.Carts do
   end
 
   def find_shipping_options_for_cart(cart_id) do
-      Cart
-      |> Repo.get!(cart_id)
-      |> Repo.preload(cart_shipping_information: :country)
-      |> Map.get(:cart_shipping_information)
-      |> Shippings.find_shipping_options_by_address()
+    Cart
+    |> Repo.get!(cart_id)
+    |> Repo.preload(cart_shipping_information: :country)
+    |> Map.get(:cart_shipping_information)
+    |> Shippings.find_shipping_options_by_address()
   end
 end

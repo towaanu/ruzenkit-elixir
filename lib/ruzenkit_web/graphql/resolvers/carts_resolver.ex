@@ -43,12 +43,19 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
     end
   end
 
-  def add_to_cart(root, %{cart_id: nil} = params, info) do
-    new_params = Map.delete(params, :cart_id)
-    add_to_cart(root, new_params, info)
+  def add_to_cart(_root, %{sku: sku, quantity: quantity, cart_id: nil}, %{
+        context: %{current_user: %{id: user_id}}
+      }) do
+        add_cart_item(%{sku: sku, quantity: quantity, user_id: user_id})
   end
 
-  def add_to_cart(_root, params, _info) do
+  def add_to_cart(_root, %{sku: sku, quantity: quantity, cart_id: nil, user_id: nil}, _info) do
+    add_cart_item(%{sku: sku, quantity: quantity})
+  end
+
+  def add_to_cart(_root, params, _info), do: add_cart_item(params)
+
+  defp add_cart_item(params) do
     case Carts.add_cart_item(params) do
       {:ok, cart_item} ->
         {:ok, cart_item}
@@ -58,8 +65,6 @@ defmodule RuzenkitWeb.Graphql.CartsResolver do
 
       {:error, error} ->
         {:error, changeset_error_to_graphql("unable to add new cart item", error)}
-
-
     end
   end
 
