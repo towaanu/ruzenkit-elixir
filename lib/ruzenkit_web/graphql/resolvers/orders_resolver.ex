@@ -24,16 +24,24 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
   # if not admin return error message
   def list_order_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
-  def list_orders(_root, _args, %{context: %{is_admin: true}}), do: {:ok, Orders.list_orders()}
+  def list_orders(_root, %{filter: criteria}, %{context: %{is_admin: true}}) do
+    {:ok, Orders.list_orders(criteria)}
+  end
+
+  def list_orders(_root, _args, %{context: %{is_admin: true}}) do
+    {:ok, Orders.list_orders()}
+  end
 
   def list_orders(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
 
-
-  def list_orders_by_status(_root, %{order_status_id: order_status_id}, %{context: %{is_admin: true}}) do
-     {:ok, Orders.list_orders_by_status(order_status_id)}
+  def list_orders_by_status(_root, %{order_status_id: order_status_id}, %{
+        context: %{is_admin: true}
+      }) do
+    {:ok, Orders.list_orders_by_status(order_status_id)}
   end
 
-  def list_orders_by_status(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
+  def list_orders_by_status(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
 
   def create_order_from_cart(_root, %{cart_id: cart_id}, _info) do
     case Orders.create_order_from_cart(cart_id) do
@@ -69,17 +77,21 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
   def update_order_status(_root, _args, _info),
     do: {:error, ResponseUtils.unauthorized_response()}
 
-  def change_order_status(_root, %{order_id: order_id, order_status_id: order_status_id}, %{context: %{is_admin: true}}) do
+  def change_order_status(_root, %{order_id: order_id, order_status_id: order_status_id}, %{
+        context: %{is_admin: true}
+      }) do
     case Orders.change_status_for_order(order_id, order_status_id) do
       {:ok, order} ->
         {:ok, order}
 
       {:error, error} ->
-        {:error, changeset_error_to_graphql("could not change order status for order #{order_id}", error)}
+        {:error,
+         changeset_error_to_graphql("could not change order status for order #{order_id}", error)}
     end
   end
 
-  def change_order_status(_root, _args, _info),do: {:error, ResponseUtils.unauthorized_response()}
+  def change_order_status(_root, _args, _info),
+    do: {:error, ResponseUtils.unauthorized_response()}
 
   # TODO: protect or not ?
   def get_order(_root, %{id: id}, _info) do
@@ -103,5 +115,4 @@ defmodule RuzenkitWeb.Graphql.OrdersResolver do
   end
 
   def update_order(_root, _args, _info), do: {:error, ResponseUtils.unauthorized_response()}
-
 end

@@ -143,6 +143,7 @@ defmodule RuzenkitWeb.Graphql.Schema do
     end
 
     field :orders, list_of(:order) do
+      arg :filter, :orders_filter
       resolve(&OrdersResolver.list_orders/3)
     end
 

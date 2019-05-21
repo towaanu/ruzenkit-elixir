@@ -25,7 +25,55 @@ defmodule Ruzenkit.Orders do
 
   """
   def list_orders do
-    Repo.all(Order)
+    list_orders(%{})
+  end
+
+  defp compose_orders_query({:order_status_id, order_status_id}, query) do
+    where(query, [o], o.order_status_id == ^order_status_id)
+  end
+
+  defp compose_orders_query({:id, id}, query) do
+    where(query, [o], o.id == ^id)
+  end
+
+  defp compose_orders_query({:after_order_date, date}, query) do
+    where(query, [o], o.inserted_at >= ^date)
+  end
+
+  defp compose_orders_query({:before_order_date, date}, query) do
+    where(query, [o], o.inserted_at <= ^date)
+  end
+
+  defp compose_orders_query({:email, email}, query) do
+    where(query, [o], ilike(o.email, ^"%#{email}%"))
+  end
+
+  defp compose_orders_query({:product_sku, sku}, query) do
+    query
+    |> join(:left, [o], oi in assoc(o, :order_items))
+    |> join(:left, [_o, oi], p in assoc(oi, :product))
+    |> where([_o, _ci, p], ilike(p.sku, ^"%#{sku}%"))
+  end
+
+  defp compose_orders_query({:product_name, name}, query) do
+    query
+    |> join(:left, [o], oi in assoc(o, :order_items))
+    |> join(:left, [_o, oi], p in assoc(oi, :product))
+    |> where([_o, _ci, p], ilike(p.name, ^"%#{name}%"))
+  end
+
+  defp compose_orders_query(_unsupported_param, query) do
+    query
+  end
+
+  def list_orders(criteria) do
+    base_query =
+      from o in Order,
+        order_by: o.inserted_at
+
+    criteria
+    |> Enum.reduce(base_query, &compose_orders_query/2)
+    |> Repo.all()
   end
 
   def list_orders_by_status(order_status_id) do
