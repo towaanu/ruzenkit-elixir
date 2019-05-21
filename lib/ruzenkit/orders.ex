@@ -57,9 +57,9 @@ defmodule Ruzenkit.Orders do
 
   defp compose_orders_query({:product_name, name}, query) do
     query
-    |> join(:left, [o], oi in assoc(o, :order_items))
-    |> join(:left, [_o, oi], p in assoc(oi, :product))
-    |> where([_o, _ci, p], ilike(p.name, ^"%#{name}%"))
+    |> join(:inner, [o], oi in assoc(o, :order_items))
+    |> join(:inner, [_o, oi], p in assoc(oi, :product))
+    |> where([_o, _oi, p], ilike(p.name, ^"%#{name}%"))
   end
 
   defp compose_orders_query(_unsupported_param, query) do
@@ -69,7 +69,8 @@ defmodule Ruzenkit.Orders do
   def list_orders(criteria) do
     base_query =
       from o in Order,
-        order_by: o.inserted_at
+        order_by: o.inserted_at,
+        distinct: o.id
 
     criteria
     |> Enum.reduce(base_query, &compose_orders_query/2)

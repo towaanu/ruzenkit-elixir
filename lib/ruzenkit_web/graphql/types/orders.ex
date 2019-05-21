@@ -54,7 +54,7 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
     field :order_address, :order_address, resolve: dataloader(:db)
   end
 
-  input_object :orders_filter do
+  input_object :orders_filter_input do
     field :id, :id
     field :order_status_id, :id
     field :after_order_date, :datetime
