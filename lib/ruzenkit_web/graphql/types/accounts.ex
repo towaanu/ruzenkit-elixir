@@ -28,6 +28,13 @@ defmodule RuzenkitWeb.Graphql.Types.Accounts do
     field :address, non_null(:address), resolve: dataloader(:db)
   end
 
+  input_object :users_filter_input do
+    field :id, :id
+    field :first_name, :string
+    field :last_name, :string
+    field :email, :string
+  end
+
   input_object :user_input do
     field :credential, non_null(:credential_input)
     field :profile, non_null(:profile_input)

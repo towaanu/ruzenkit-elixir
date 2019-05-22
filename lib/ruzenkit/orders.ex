@@ -32,7 +32,7 @@ defmodule Ruzenkit.Orders do
     where(query, [o], o.order_status_id == ^order_status_id)
   end
 
-  defp compose_orders_query({:id, id}, query) do
+  defp compose_orders_query({:id, id}, query) when id != "" do
     where(query, [o], o.id == ^id)
   end
 

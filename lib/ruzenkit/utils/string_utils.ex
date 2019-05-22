@@ -1,5 +1,4 @@
 defmodule Ruzenkit.Utils.StringUtils do
-
   def trim_and_downcase(_str = nil), do: nil
 
   def trim_and_downcase(str) do
@@ -16,5 +15,7 @@ defmodule Ruzenkit.Utils.StringUtils do
     |> String.upcase()
   end
 
-
+  def blank?(str_or_nil) do
+    "" == str_or_nil |> to_string() |> String.trim()
+  end
 end

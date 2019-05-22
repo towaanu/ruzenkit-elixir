@@ -4,6 +4,11 @@ defmodule RuzenkitWeb.Graphql.AccountsResolver do
   import Ruzenkit.Utils.Graphql, only: [changeset_error_to_graphql: 2]
 
   # if admin return users list
+  def list_users(_root, %{filter: criteria}, %{context: %{is_admin: true}}) do
+    users = Accounts.list_users(criteria)
+    {:ok, users}
+  end
+
   def list_users(_root, _args, %{context: %{is_admin: true}}) do
     users = Accounts.list_users()
     {:ok, users}

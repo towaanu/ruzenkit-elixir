@@ -91,6 +91,8 @@ defmodule RuzenkitWeb.Graphql.Schema do
     end
 
     field :users, list_of(:user) do
+      arg :filter, :users_filter_input
+
       resolve(&AccountsResolver.list_users/3)
     end
 

@@ -4,6 +4,7 @@ defmodule Ruzenkit.Accounts do
   """
 
   import Ecto.Query, warn: false
+  import Ruzenkit.Utils.StringUtils, only: [blank?: 1]
   alias Ruzenkit.Repo
 
   alias Ruzenkit.Accounts.User
@@ -22,8 +23,42 @@ defmodule Ruzenkit.Accounts do
       [%User{}, ...]
 
   """
+  defp compose_users_query({:email, email}, query) do
+    lower_email = String.downcase(email)
+    where(query, [_u, p], ilike(p.email, ^"%#{lower_email}%"))
+  end
+
+  defp compose_users_query({:first_name, first_name}, query) do
+    where(query, [_u, p], ilike(p.first_name, ^"%#{first_name}%"))
+  end
+
+  defp compose_users_query({:last_name, last_name}, query) do
+    where(query, [_u, p], ilike(p.first_name, ^"%#{last_name}%"))
+  end
+
+  defp compose_users_query({:id, id}, query) when id != "" do
+    where(query, [u, _p], u.id == ^id)
+  end
+
+  defp compose_users_query(_unsupported_param, query) do
+    query
+  end
+
   def list_users do
-    Repo.all(User)
+    list_users(%{})
+  end
+
+  def list_users(criteria) do
+    IO.inspect criteria
+    base_query =
+      from u in User,
+        join: p in assoc(u, :profile),
+        order_by: p.last_name,
+        distinct: u.id
+
+    criteria
+    |> Enum.reduce(base_query, &compose_users_query/2)
+    |> Repo.all()
   end
 
   @doc """
