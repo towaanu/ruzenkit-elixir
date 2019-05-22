@@ -102,4 +102,23 @@ defmodule Ruzenkit.Vat do
   def change_vat_group(%VatGroup{} = vat_group) do
     VatGroup.changeset(vat_group, %{})
   end
+
+  def compute_no_vat_amount_by_id(amount, vat_group_id) do
+    %{rate: rate} = Repo.get!(VatGroup, vat_group_id)
+    compute_no_vat_amount(amount, rate)
+  end
+
+  def compute_no_vat_amount(amount, rate) do
+
+    div_rate =
+      rate
+      |> Decimal.from_float()
+      |> Decimal.div(100)
+      |> Decimal.add(1)
+
+    amount
+    |> Decimal.div(div_rate)
+    |> Decimal.round(2)
+  end
+
 end

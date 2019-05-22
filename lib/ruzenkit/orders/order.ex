@@ -15,6 +15,8 @@ defmodule Ruzenkit.Orders.Order do
     belongs_to :order_status, OrderStatus
     has_many :order_items, OrderItem
     has_one :order_address, OrderAddress
+    field :no_vat_total, :decimal, precision: 12, scale: 2
+    field :vat_amount_total, :decimal, precision: 12, scale: 2
 
     timestamps(type: :utc_datetime)
   end
@@ -43,9 +45,11 @@ defmodule Ruzenkit.Orders.Order do
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:total, :order_status_id, :user_id, :email])
+    |> cast(attrs, [:total, :order_status_id, :user_id, :email, :no_vat_total, :vat_amount_total])
     |> cast_assoc(:order_address, with: &Ruzenkit.Orders.OrderAddress.changeset/2)
     |> validate_number(:total, greater_than_or_equal_to: 0)
+    |> validate_number(:no_vat_total, greater_than_or_equal_to: 0)
+    |> validate_number(:vat_amount_total, greater_than_or_equal_to: 0)
     |> validate_email_or_user()
     |> validate_format(:email, ~r/@/)
     |> validate_required([:total, :order_status_id])

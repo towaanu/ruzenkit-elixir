@@ -12,6 +12,7 @@ defmodule Ruzenkit.Orders do
   alias Ruzenkit.Orders.OrderItem
   alias Ruzenkit.Stocks
   alias Ruzenkit.Products
+  alias Ruzenkit.Vat
   # alias Ruzenkit.Shippings
   alias Ecto.Multi
 
@@ -180,8 +181,13 @@ defmodule Ruzenkit.Orders do
 
     order_items = Enum.map(cart.cart_items, &cart_item_to_order_item/1)
 
+    no_vat_total =
+      order_items |> Enum.map(& &1.no_vat_total) |> Enum.reduce(Decimal.new(0), &Decimal.add/2)
+
     new_order_attrs = %{
       total: cart.total_price,
+      no_vat_total: no_vat_total,
+      vat_amount_total: Decimal.sub(cart.total_price, no_vat_total),
       user_id: cart.user_id,
       order_status_id: status_id,
       order_items: order_items,
@@ -223,9 +229,17 @@ defmodule Ruzenkit.Orders do
       |> Repo.get!(product_id)
       |> Repo.preload(vat_group: :country)
 
+    no_vat_price_amount = Vat.compute_no_vat_amount_by_id(amount, vat_group.id)
+    no_vat_total = Vat.compute_no_vat_amount_by_id(Decimal.mult(quantity, amount), vat_group.id)
+    total = Decimal.mult(quantity, amount)
+
     %{
       quantity: quantity,
       price_amount: amount,
+      total: total,
+      no_vat_price_amount: no_vat_price_amount,
+      no_vat_total: no_vat_total,
+      vat_amount_total: Decimal.sub(total, no_vat_total),
       price_currency_code: code,
       price_currency_sign: sign,
       product_id: product_id,

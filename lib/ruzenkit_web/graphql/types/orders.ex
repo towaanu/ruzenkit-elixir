@@ -12,6 +12,10 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
   object :order_item do
     field :id, non_null(:id)
     field :quantity, :integer
+    field :total, :decimal
+    field :no_vat_price_amount, :decimal
+    field :no_vat_total, :decimal
+    field :vat_amount_total, :decimal
     field :price_amount, :decimal
     field :price_currency_code, :string
     field :price_currency_sign, :string
@@ -41,6 +45,9 @@ defmodule RuzenkitWeb.Graphql.Types.Orders do
 
   object :order do
     field :id, non_null(:id)
+    field :total, :decimal
+    field :no_vat_total, :decimal
+    field :vat_amount_total, :decimal
     field :total, :decimal
     field :comment, :string
     field :shipping_number, :string

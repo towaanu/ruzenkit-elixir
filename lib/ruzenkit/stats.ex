@@ -9,10 +9,25 @@ defmodule Ruzenkit.Stats do
   alias Ruzenkit.Repo
   alias Ruzenkit.Orders.Order
 
+  # defp compute_vat_amount(amount, rate) do
+  #   (rate / 100)
+  #   |> Decimal.from_float()
+  #   |> Decimal.mult(amount)
+  # end
+
+  # Prix HT = Prix TTC / (1 + TVA)
+  # Example 100 = 120 / 1.2 ( Prix TTC = 120, TVA : 20%)
   defp compute_vat_amount(amount, rate) do
-    (rate / 100)
-    |> Decimal.from_float()
-    |> Decimal.mult(amount)
+
+    div_rate =
+      rate
+      |> Decimal.from_float()
+      |> Decimal.div(100)
+      |> Decimal.add(1)
+
+    amount
+    |> Decimal.div(div_rate)
+    |> Decimal.round(2)
   end
 
   defp compute_vat_total_amount(order_items) do
@@ -91,8 +106,7 @@ defmodule Ruzenkit.Stats do
       )
       |> CSVParser.dump_to_iodata()
 
-      Path.join([:code.priv_dir(:ruzenkit), @csvs_dir, "orders.csv"])
-      |> File.write!(content)
-
+    Path.join([:code.priv_dir(:ruzenkit), @csvs_dir, "orders.csv"])
+    |> File.write!(content)
   end
 end
