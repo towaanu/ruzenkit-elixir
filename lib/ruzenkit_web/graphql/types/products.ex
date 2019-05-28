@@ -25,6 +25,15 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :configurable_item_options, list_of(:configurable_item_option), resolve: dataloader(:db)
   end
 
+  object :product_picture do
+    field :id, non_null(:id)
+    # field :picture, :string
+    field :picture_url, :string,
+      resolve: fn product_picture, _info, _ ->
+        {:ok, Products.get_arc_product_pictures_url(product_picture)}
+      end
+  end
+
   object :product do
     field :id, non_null(:id)
     field :sku, non_null(:string)
@@ -35,9 +44,10 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
 
     field :picture_url, :string,
       resolve: fn product, _info, _ ->
-        {:ok, Products.get_product_picture_url(product)}
+        {:ok, Products.get_arc_product_picture_url(product)}
       end
 
+    field :product_pictures, list_of(:product_picture), resolve: dataloader(:db)
     field :price, :product_price, resolve: dataloader(:db)
     field :parent_product, :parent_product, resolve: dataloader(:db)
     field :child_product, :child_product, resolve: dataloader(:db)
@@ -86,6 +96,11 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :currency_id, :id
   end
 
+  input_object :product_picture_input do
+    field :id, :id
+    field :picture, :upload
+  end
+
   input_object :product_input do
     field :sku, non_null(:string)
     field :name, non_null(:string)
@@ -93,6 +108,7 @@ defmodule RuzenkitWeb.Graphql.Types.Products do
     field :ui_color, :string
     field :ui_color_secondary, :string
     field :picture, :upload
+    field :product_pictures, list_of(:product_picture_input)
     field :parent_product, :parent_product_input
     field :child_product, :child_product_input
     field :price, :product_price_input

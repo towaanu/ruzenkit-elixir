@@ -1,4 +1,4 @@
-defmodule Ruzenkit.ProductPicture do
+defmodule Ruzenkit.ArcProductPictures do
   use Arc.Definition
 
   # Include ecto support (requires package arc_ecto installed):
@@ -38,9 +38,10 @@ defmodule Ruzenkit.ProductPicture do
   end
 
   # Override the storage directory:
-  def storage_dir(_version, {_file, scope}) do
+  def storage_dir(_version, {_file, %{id: id}}) do
+    IO.puts "IDDDD #{id}"
     Application.app_dir(:ruzenkit, "priv")
-    |> Path.join("uploads/products/#{scope.sku}/pictures/")
+    |> Path.join("uploads/products/#{id}/pictures/")
     # "priv/uploads/products/#{scope.sku}/pictures/"
   end
 

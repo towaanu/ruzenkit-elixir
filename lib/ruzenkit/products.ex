@@ -9,7 +9,8 @@ defmodule Ruzenkit.Products do
   alias Ruzenkit.Products.Product
   alias Ruzenkit.Products.ParentProduct
   alias Ruzenkit.Products.ChildProduct
-  alias Ruzenkit.ProductPicture
+  alias Ruzenkit.Products.ProductPicture
+  alias Ruzenkit.ArcProductPictures
   alias Ecto.Multi
   alias Ruzenkit.Stocks
 
@@ -75,9 +76,17 @@ defmodule Ruzenkit.Products do
 
   def get_product_by_sku(sku), do: Repo.get_by(Product, sku: sku)
 
-  def get_product_picture_url(product, options \\ []) do
+  def get_arc_product_picture_url(product, options \\ []) do
     path_url =
-      ProductPicture.url({product.picture, product}, options)
+      Ruzenkit.ArcProductPicture.url({product.picture, product}, options)
+      |> String.replace_prefix(Application.app_dir(:ruzenkit, "priv"), "")
+
+    URI.merge(RuzenkitWeb.Endpoint.url(), path_url)
+  end
+
+  def get_arc_product_pictures_url(%{picture: picture} = product_picture, options \\ []) do
+    path_url =
+      ArcProductPictures.url({picture, product_picture}, options)
       |> String.replace_prefix(Application.app_dir(:ruzenkit, "priv"), "")
 
     URI.merge(RuzenkitWeb.Endpoint.url(), path_url)
@@ -112,6 +121,9 @@ defmodule Ruzenkit.Products do
       Stocks.create_stock(Map.put(attrs_stock, :product_id, product_id))
       # Stocks.create_stock(%{attrs_stock | product_id: product_id})
     end)
+    |> Multi.run(:update_product_picture, fn %{product: product} ->
+      update_product_pictures_for_product(product, attrs)
+    end)
     |> Repo.transaction()
     |> case do
       {:ok, %{product: product}} ->
@@ -122,6 +134,18 @@ defmodule Ruzenkit.Products do
     end
   end
 
+  defp update_product_changeset(%Product{} = product, attrs) do
+    product
+    |> Repo.preload([
+      :price,
+      [parent_product: :configurable_options],
+      child_product: :configurable_item_options
+    ])
+    |> Product.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:price)
+    |> Ecto.Changeset.cast_assoc(:parent_product)
+    |> Ecto.Changeset.cast_assoc(:child_product)
+  end
   @doc """
   Updates a product.
 
@@ -134,19 +158,91 @@ defmodule Ruzenkit.Products do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_product(%Product{} = product, attrs) do
-    product
-    |> Repo.preload([
-      :price,
-      [parent_product: :configurable_options],
-      child_product: :configurable_item_options
-    ])
-    |> Product.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:price)
-    |> Ecto.Changeset.cast_assoc(:parent_product)
-    |> Ecto.Changeset.cast_assoc(:child_product)
-    |> Repo.update()
+
+  def update_product(%Product{id: product_id} = product, attrs) do
+    IO.puts "HELLOOOOO"
+    Multi.new()
+    |> Multi.update(:product_update, update_product_changeset(product, attrs))
+    |> Multi.run(:update_product_picture, fn %{product_update: product} ->
+      update_product_pictures_for_product(product, attrs)
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, _product} -> {:ok, Repo.get(Product, product_id)}
+      {:error, _failed_op, error} -> {:error, error}
+    end
   end
+
+  defp create_new_product_picture(%{id: id} = product_picture_params) do
+    ProductPicture
+    |> Repo.get(id)
+    |> ProductPicture.changeset(product_picture_params)
+  end
+
+  defp create_new_product_picture(%{product_id: product_id} = product_picture_params) do
+    %ProductPicture{}
+    |> ProductPicture.changeset(%{product_id: product_id})
+    |> Repo.insert!()
+    |> ProductPicture.changeset(product_picture_params)
+  end
+
+  defp update_product_pictures_for_product(%{id: product_id} = product, %{
+         product_pictures: product_pictures
+       }) do
+    delete_query =
+      from pp in ProductPicture,
+        where: pp.product_id == ^product_id
+
+    Repo.delete_all(delete_query)
+
+    case product_pictures do
+      [] ->
+        {:ok, product}
+
+      product_pictures ->
+        Multi.new()
+        |> Multi.run(:update_pictures, fn _ ->
+          product_pictures
+          |> Enum.map(&Map.delete(&1, :id))
+          |> Enum.map(&Map.put(&1, :product_id, product_id))
+          |> Enum.map(&create_new_product_picture/1)
+          |> Enum.map(fn pp ->
+            pp
+            |> Repo.update()
+            |> case do
+              {:ok, product_picture} -> {:ok, product_picture}
+              {:error, error} -> {:error, error}
+            end
+          end)
+          |> Enum.find(fn value ->
+            case value do
+              {:error, _error} -> true
+              _ -> false
+            end
+          end)
+          |> case do
+            {:error, error} -> {:error, error}
+            _ -> {:ok, product}
+          end
+        end)
+        |> Repo.transaction()
+        |> case do
+          {:ok, _res} -> {:ok, product}
+          {:error, _failed_op, error} -> {:error, error}
+        end
+
+        # |> Enum.reduce(Multi.new(), fn pp, multi ->
+        #   Multi.update(multi, "update_#{pp.id}", pp)
+        # end)
+        # |> Repo.transaction()
+        # |> case do
+        #   {:ok, _value} -> product
+        #   {:error, _failed_op, error} -> {:error, error}
+        # end
+    end
+  end
+
+  defp update_product_pictures_for_product(product, _product_params), do: {:ok, product}
 
   @doc """
   Deletes a Product.

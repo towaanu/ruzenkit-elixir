@@ -7,6 +7,7 @@ defmodule Ruzenkit.Products.Product do
   alias Ruzenkit.Products.ProductPrice
   alias Ruzenkit.Products.ChildProduct
   alias Ruzenkit.Products.ParentProduct
+  alias Ruzenkit.Products.ProductPicture
   alias Ruzenkit.Stocks.Stock
   alias Ruzenkit.Vat.VatGroup
 
@@ -16,7 +17,8 @@ defmodule Ruzenkit.Products.Product do
     field :sku, :string
     field :ui_color, :string
     field :ui_color_secondary, :string
-    field :picture, Ruzenkit.ProductPicture.Type
+    field :picture, Ruzenkit.ArcProductPicture.Type
+    has_many :product_pictures, ProductPicture, on_replace: :delete
 
     belongs_to :price, ProductPrice, foreign_key: :product_price_id, on_replace: :update
     belongs_to :vat_group, VatGroup
@@ -40,6 +42,7 @@ defmodule Ruzenkit.Products.Product do
     |> no_warning_cast_attachments(attrs, [:picture])
     # |> cast_attachments(attrs, [:picture])
     |> cast_assoc(:price)
+    # |> cast_assoc(:product_pictures)
     |> validate_required([:sku, :name, :description])
     |> validate_length(:ui_color, max: 7)
     |> validate_length(:ui_color_secondary, max: 7)
