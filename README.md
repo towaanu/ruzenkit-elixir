@@ -1,5 +1,18 @@
 # Ruzenkit
 
+---
+This project is discontinued. The goal of the project was to be a headless ecommerce CMS.
+---
+
+## docker-compose
+You can run the project with docker-compose using this command:
+```sh
+docker-compose run -w /ruzenkit --service-ports api /bin/sh
+```
+You should have an access to a container with elixir installed. You can follow the phoenix elixir part to run the server.
+
+## Phoenix elixir
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
@@ -9,12 +22,4 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+You can visit [`localhost:4000/graphiql`](http://localhost:4000/graphiql) from your browser to have a graphql playground.
