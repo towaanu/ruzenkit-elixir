@@ -1,0 +1,19 @@
+services:
+  api:
+    image: ruzenkit-api:dev
+    build: .
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/ruzenkit
+    depends_on:
+        - postgresdb
+
+  postgresdb:
+    image: postgres:alpine
+    volumes:
+      - "./dbdata:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: ruzenkit_dev

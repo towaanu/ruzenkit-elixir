@@ -73,7 +73,7 @@ config :phoenix, :plug_init_mode, :runtime
 # Configure your database
 config :ruzenkit, Ruzenkit.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "secret",
   database: "ruzenkit_dev",
-  hostname: "localhost",
+  hostname: "postgresdb",
   pool_size: 10

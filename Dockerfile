@@ -13,9 +13,7 @@ RUN \
   dpkg -i erlang-solutions_1.0_all.deb && \
   rm erlang-solutions_1.0_all.deb && \
   apt-get update -y && \
-  apt-get install -y esl-erlang && \
-  apt-get install -y elixir
+  apt-get install -y esl-erlang=1:21.3.8.17-1 && \
+  apt-get install -y elixir=1.8.2-1
 
 CMD ["/bin/bash"]
-
-# COPY ./erlang-solutions_1.0_all.deb .
